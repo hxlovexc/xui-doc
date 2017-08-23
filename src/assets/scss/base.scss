@@ -1,0 +1,101 @@
+/*
+ * @Module: 基础样式
+ * @Author: 小缘
+ * @Date: 2017-08-17 12:16:31
+ */
+@import './var.scss';
+
+html, body, #app {
+  min-height: 100%;
+}
+
+a,
+button,
+input{
+  -webkit-tap-highlight-color:rgba(255,0,0,0);
+}
+
+@font-face {
+  font-family: 'circle';
+  src: url('../fonts/circle.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+pre,
+pre code{
+  margin: 0;
+  padding: 0;
+}
+
+// 下边距
+.margin-b-15 {
+  margin-bottom: 15px;
+}
+
+.margin-b-35 {
+  margin-bottom: 35px;
+}
+
+// 左右padding
+.margin-10 {
+  margin: 10px;
+
+  &:first-child {
+    margin-left: 0;
+  }
+}
+
+// top 10
+.margin-top-10 {
+  margin-top: 10px;
+}
+
+// 文档公用
+.row {
+  margin-bottom: 40px;
+
+  // title
+  .row-title {
+    font-weight: 400;
+    line-height: 1;
+    font-size: 24px;
+    padding-left: 16px;
+    position: relative;
+    
+    &::after {
+      content: '';
+      opacity: 0.5;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      display: inline-block;
+      border-left: 3px solid $color-min;
+      transition: border 0.3s;
+    }
+
+    &:hover {
+      &::after {
+        opacity: 1;
+      }
+    }
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  p {
+    margin: 10px 0;
+  }
+
+  h4 {
+    margin: 18px 0 10px 0;
+  }
+}
+
+// 高亮
+.highlighted {
+  color: $color-min;
+}
