@@ -79,7 +79,7 @@
     <div class="row">
       <!--圆角-->
       <h3 class="row-title">带图标的按钮</h3>
-      <p>可以通过icon属性设置按钮的图标（icon只能为xui中所提供的图标）</p>
+      <p>可以通过icon属性设置按钮的图标（icon只能为xui中所提供的图标）,  <router-link to="{ name: 'icon' }">点击查看icon</router-link></p>
       <x-quote>
         <div>
           <x-button icon="x-icon-delete" class="margin-10" v-for="item in $size" :size="item" :key="item">{{item}}</x-button>
@@ -190,6 +190,20 @@
         <!--源码-->
         <source-code type="html" class="margin-top-10">{{disabledButton}}</source-code>
       </x-quote>
+    </div>
+
+    <!--API-->
+    <div class="row">
+      <h3 class="row-title">API</h3>
+      <h4>props</h4>
+      <api-table :data="apiData" :keys="keys"></api-table>
+    </div>
+
+    <!--事件-->
+    <div class="row">
+      <h3 class="row-title">事件</h3>
+      <h4>events</h4>
+      <api-table :data="eventsData" :keys="eventsKeys"></api-table>
     </div>
   </div>
 </template>
@@ -334,7 +348,6 @@
   <x-button disabled>primary</x-button>
 </x-button-group>
 `
-
   export default {
     data () {
       return {
@@ -349,7 +362,103 @@
         hollowButton,
         loadingButton,
         // 加载中状态
-        loading: false
+        loading: false,
+        // api
+        keys: [
+          {
+            label: '属性',
+            name: 'attribute'
+          },
+          {
+            label: '说明',
+            name: 'explain'
+          },
+          {
+            label: '类型',
+            name: 'type'
+          },
+          {
+            label: '可选值',
+            name: 'values'
+          },
+          {
+            label: '默认',
+            name: 'default'
+          }
+        ],
+        apiData: [
+          {
+            attribute: 'type',
+            explain: '设置按钮类型',
+            type: 'String',
+            values: 'default | primary | success | warning | danger | dark',
+            default: 'default'
+          },
+          {
+            attribute: 'radius',
+            explain: '设置按钮圆角',
+            type: 'Boolean',
+            values: 'true | false',
+            default: 'false'
+          },
+          {
+            attribute: 'hollow',
+            explain: '设置按钮为空心',
+            type: 'Boolean',
+            values: 'true | false',
+            default: 'false'
+          },
+          {
+            attribute: 'icon',
+            explain: '设置按钮图标',
+            type: 'String',
+            values: ' --- ',
+            default: 'icon模块中所有的图标'
+          },
+          {
+            attribute: 'block',
+            explain: '设置按钮自适应宽度',
+            type: 'Boolean',
+            values: 'true | false',
+            default: 'false'
+          },
+          {
+            attribute: 'size',
+            explain: '设置按钮大小',
+            type: 'String',
+            values: 'large | default | small | mini',
+            default: 'default'
+          },
+          {
+            attribute: 'loading',
+            explain: '设置按钮为loading状态',
+            type: 'Boolean',
+            values: 'true | false',
+            default: 'false'
+          }
+        ],
+        eventsKeys: [
+          {
+            label: '名称',
+            name: 'events'
+          },
+          {
+            label: '说明',
+            name: 'explain'
+          },
+          {
+            label: '参数',
+            name: 'params'
+          }
+        ],
+        // 事件
+        eventsData: [
+          {
+            events: 'click',
+            explain: '按钮点击按钮时触发的事件',
+            params: 'event'
+          }
+        ]
       }
     }
   }

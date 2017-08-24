@@ -6,6 +6,7 @@ import App from './App'
 import router from './router'
 import xui from 'assets/xui/main'
 import sourceCode from 'components/source-code.vue'
+import apiTable from 'components/api-table.vue'
 
 Vue.config.productionTip = false
 
@@ -30,6 +31,7 @@ Vue.use(xui)
 
 // 全局引入sourceCode
 Vue.component('sourceCode', sourceCode)
+Vue.component('apiTable', apiTable)
 
 /* eslint-disable no-new */
 new Vue({

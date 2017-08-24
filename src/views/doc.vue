@@ -27,6 +27,8 @@
         </li>
       </ul>
     </div>
+    <!--mask-->
+    <div class="mask"></div>
     <div class="doc-content">
       <router-view></router-view>
     </div>
@@ -104,6 +106,11 @@
       padding: $view-padding $view-padding 0 0;
       display: flex;
 
+      // 隐藏遮罩
+      .mask {
+        display: none;
+      }
+
       // 导航
       .doc-nav-list {
         width: $pc-menu-width;
@@ -167,6 +174,34 @@
   }
   // 移动端
   @media screen and (max-width: $mobile-width) {
-    
+    .doc {
+      .doc-nav-list,
+      .mask {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 99;
+      }
+
+      .mask {
+        display: block;
+        width: 100%;
+        position: fixed;
+      }
+
+      .doc-nav-list {
+        width: 80%;
+        background: $color-min;
+        z-index: 100;
+        overflow-y: auto;
+
+        &,
+        a {
+          color: #fff;
+        }
+      }
+    }
   }
 </style>
