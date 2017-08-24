@@ -41,6 +41,14 @@ export default new Router({
           component (resolve) {
             require(['views/doc/button.vue'], resolve)
           }
+        },
+        // icon
+        {
+          path: 'icon',
+          name: 'icon',
+          component (resolve) {
+            require(['views/doc/icon.vue'], resolve)
+          }
         }
       ]
     }

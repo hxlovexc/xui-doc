@@ -5689,8 +5689,8 @@ h6 {
       font-weight: bold; }
     .x-table-box .x-table th,
     .x-table-box .x-table td {
-      padding: 8px;
-      line-height: 1.6;
+      padding: 9px 14px;
+      line-height: 1.5;
       vertical-align: middle; }
       .x-table-box .x-table th > div,
       .x-table-box .x-table td > div {

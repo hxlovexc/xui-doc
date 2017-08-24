@@ -73,6 +73,7 @@
 
   #app {
     width: 100%;
+    padding-bottom: 20px;
 
     header {
       width: 100%;
