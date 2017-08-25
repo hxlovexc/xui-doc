@@ -1,7 +1,7 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from 'vue';
+import Router from 'vue-router';
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
@@ -9,13 +9,13 @@ export default new Router({
       path: '/',
       name: 'index',
       component (resolve) {
-        require(['views/index.vue'], resolve)
+        require(['views/index.vue'], resolve);
       }
     },
     {
       path: '/doc',
       component (resolve) {
-        require(['views/doc.vue'], resolve)
+        require(['views/doc.vue'], resolve);
       },
       children: [
         // 安装
@@ -23,7 +23,7 @@ export default new Router({
           path: '/',
           name: 'install',
           component (resolve) {
-            require(['views/doc/install.vue'], resolve)
+            require(['views/doc/install.vue'], resolve);
           }
         },
         // 快速上手
@@ -31,7 +31,7 @@ export default new Router({
           path: 'quickstart',
           name: 'quickstart',
           component (resolve) {
-            require(['views/doc/quickstart.vue'], resolve)
+            require(['views/doc/quickstart.vue'], resolve);
           }
         },
         // 按钮
@@ -39,7 +39,7 @@ export default new Router({
           path: 'button',
           name: 'button',
           component (resolve) {
-            require(['views/doc/button.vue'], resolve)
+            require(['views/doc/button.vue'], resolve);
           }
         },
         // icon
@@ -47,10 +47,10 @@ export default new Router({
           path: 'icon',
           name: 'icon',
           component (resolve) {
-            require(['views/doc/icon.vue'], resolve)
+            require(['views/doc/icon.vue'], resolve);
           }
         }
       ]
     }
   ]
-})
+});

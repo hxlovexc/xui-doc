@@ -16,13 +16,13 @@
 </template>
 
 <style lang="scss" scoped>
-  @import '../assets/scss/var.scss';
+  @import '../static/scss/var.scss';
 
   .hello-box {
     background: $color-min;
     text-align: center;
     color: #fff;
-    // background: url('../assets/images/166809.jpg') no-repeat;
+    // background: url('../static/images/166809.jpg') no-repeat;
     background: $color-min;
     background-size: cover;
     position: relative;

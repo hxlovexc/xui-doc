@@ -84,19 +84,19 @@
             ]
           }
         ]
-      }
+      };
     },
     methods: {
       showNav (index) {
-        this.curNav = this.curNav === index ? '' : index
+        this.curNav = this.curNav === index ? '' : index;
       }
     }
-  }
+  };
 </script>
 
 
 <style lang="scss" scoped>
-  @import '../assets/scss/var.scss';
+  @import '../static/scss/var.scss';
 
   // pc
   @media screen and (min-width: $mobile-width) {

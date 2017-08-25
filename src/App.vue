@@ -49,23 +49,23 @@
             link: '/docs'
           }
         ]
-      }
+      };
     },
     methods: {
       isElClick ({ target }) {
         if (this.showNav && this.$refs['m-nav'].contains(target) === false) {
-          this.toggleNav()
+          this.toggleNav();
         }
       },
       toggleNav () {
-        this.showNav = !this.showNav
+        this.showNav = !this.showNav;
       }
     }
-  }
+  };
 </script>
 
 <style lang="scss">
-  @import './assets/scss/var.scss';
+  @import './static/scss/var.scss';
   // pc高度
   $pc-header-height: $header-height;
   // 移动端高度

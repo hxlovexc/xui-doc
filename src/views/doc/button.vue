@@ -209,7 +209,7 @@
 </template>
 
 <script>
-  const baseButton = `<x-button>按钮</x-button>`
+  const baseButton = `<x-button>按钮</x-button>`;
 
   // 颜色分类
   const typesButton =
@@ -218,8 +218,7 @@
 <x-button type="success">success</x-button>
 <x-button type="warning">warning</x-button>
 <x-button type="danger">danger</x-button>
-<x-button type="dark">dark</x-button>
-`
+<x-button type="dark">dark</x-button>`;
   // 圆角
   const radiusButton =
 `<x-button>default</x-button>
@@ -234,8 +233,7 @@
   <x-button type="primary">primary</x-button>
   <x-button type="primary">primary</x-button>
   <x-button type="primary">primary</x-button>
-</x-button-group>
-`
+</x-button-group>`;
   // 空心按钮
   const hollowButton =
 `<x-button hollow>default</x-button>
@@ -243,8 +241,7 @@
 <x-button type="success" hollow>success</x-button>
 <x-button type="warning" hollow>warning</x-button>
 <x-button type="danger" hollow>danger</x-button>
-<x-button type="dark" hollow>dark</x-button>
-`
+<x-button type="dark" hollow>dark</x-button>`;
 
   // 带图标的按钮
   const iconButton =
@@ -265,8 +262,7 @@
 <x-button type="success" radius icon="x-icon-delete"></x-button>
 <x-button type="warning" radius icon="x-icon-delete"></x-button>
 <x-button type="danger" radius icon="x-icon-delete"></x-button>
-<x-button type="dark" radius icon="x-icon-delete"></x-button>
-`
+<x-button type="dark" radius icon="x-icon-delete"></x-button>`;
 
   // 按钮组
   const buttonGroup =
@@ -317,17 +313,17 @@
   <x-button icon="x-icon-chevron-left"></x-button>
   <x-button icon="x-icon-pause"></x-button>
   <x-button icon="x-icon-chevron-right"></x-button>
-</x-button-group>`
+</x-button-group>`;
 
   // 长按钮
-  const blockButton = `<x-button block>按钮</x-button>`
+  const blockButton = `<x-button block>按钮</x-button>`;
 
   // size分类
   const sizesButton =
 `<x-button size="large">large</x-button>
 <x-button size="default">default</x-button>
 <x-button size="small">small</x-button>
-<x-button size="mini">mini</x-button>`
+<x-button size="mini">mini</x-button>`;
 
   // 加载中按钮
   const loadingButton =
@@ -336,7 +332,7 @@
 <x-button type="success" :loading="loading">success</x-button>
 <x-button type="warning" :loading="loading">warning</x-button>
 <x-button type="danger" :loading="loading">danger</x-button>
-<x-button type="dark" :loading="loading">dark</x-button>`
+<x-button type="dark" :loading="loading">dark</x-button>`;
 
   // 禁用
   const disabledButton =
@@ -347,7 +343,7 @@
   <x-button disabled>primary</x-button>
   <x-button disabled>primary</x-button>
 </x-button-group>
-`
+`;
   export default {
     data () {
       return {
@@ -459,9 +455,9 @@
             params: 'event'
           }
         ]
-      }
+      };
     }
-  }
+  };
 </script>
 
 <style lang="scss" scoped>

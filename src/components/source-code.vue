@@ -8,9 +8,9 @@
 </template>
 
 <script>
-  import 'highlight.js/styles/atom-one-dark.css'
-  import highlightjs from 'highlight.js'
-  import Copy from 'clipboard'
+  import 'highlight.js/styles/atom-one-dark.css';
+  import highlightjs from 'highlight.js';
+  import Copy from 'clipboard';
 
   export default {
     props: {
@@ -22,26 +22,26 @@
     },
     methods: {
       copy () {
-        let text = this.$slots.default[0].text
+        let text = this.$slots.default[0].text;
         const clipboard = new Copy('.copy-button', {
           text () {
-            return text
+            return text;
           }
-        })
-
+        });
+        // 成功
         clipboard.on('success', () => {
           // 销毁
-          clipboard.destroy()
+          clipboard.destroy();
           this.$toastr('复制成功!', {
             type: 'success'
-          })
-        })
+          });
+        });
       }
     },
     mounted () {
-      highlightjs.highlightBlock(this.$el.querySelector('code'))
+      highlightjs.highlightBlock(this.$el.querySelector('code'));
     }
-  }
+  };
 </script>
 
 <style lang="scss" scoped>

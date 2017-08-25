@@ -1,71 +1,137 @@
-var path = require('path')
-var config = require('../config')
-var ExtractTextPlugin = require('extract-text-webpack-plugin')
+const config = require('../config');
+const path = require('path');
+const glob = require('glob');
+const htmlWebpackPlugin = require('html-webpack-plugin');
+//css提取
+const extractTextWebpackPlugin = require('extract-text-webpack-plugin');
 
-exports.assetsPath = function (_path) {
-  var assetsSubDirectory = process.env.NODE_ENV === 'production'
-    ? config.build.assetsSubDirectory
-    : config.dev.assetsSubDirectory
-  return path.posix.join(assetsSubDirectory, _path)
-}
+module.exports = {
+  //获取文件
+  getFiles (_path) {
+    let entries = {}, baseName;
+    glob.sync(path.resolve(__dirname, _path)).forEach((entry) => {
+      baseName = path.basename(entry, path.extname(entry));
+      entries[baseName] = entry;
+    });
+    return entries;
+  },
+  //初始化view
+  initView (view) {
+    let arr = [];
+    Object.keys(view).forEach((name) => {
+      const viewPath = view[name];
+      //参数
+      let options = {
+        //路径和名称
+        filename: path.basename(viewPath, path.extname(viewPath)) + '.html',
+        //模板地址
+        template: this.resolve(viewPath),
+        inject: true
+      };
+      //判断是否压缩
+      if (this.getPattern === 'build' && config.build.htmlMinify) {
+        options.minify = {
+          removeComments: true,
+          collapseWhitespace: true,
+          removeAttributeQuotes: true
+        };
+      };
+      //push
+      arr.push(
+        new htmlWebpackPlugin(options)
+      );
+    });
+    return arr;
+  },
+  //初始化入口
+  initMain (entry, client) {
+    let newEntry = {};
+    Object.keys(entry).forEach((name) => {
+      //js路径
+      let jsPath = this.resolve(entry[name]);
+      newEntry[name] = client ? ['./build/client'].concat(jsPath) : jsPath;
+    });
+    return newEntry;
+  },
+  //css loader
+  getCssLoader (state) {
+    const sourceMap = this.sourceMap() ? true : false;
+    //css-loader
+    let cssLoaders = {
+      loader: 'css-loader',
+      options: {
+        //压缩css
+        minimize: this.getPattern === 'build' && config.build.cssMinify,
+        sourceMap: sourceMap
+      }
+    };
 
-exports.cssLoaders = function (options) {
-  options = options || {}
+    let getLoader = (loaderName) => {
+      const styleLoader = `${state ? 'vue-' : ''}style-loader`;
+      let loaders = [cssLoaders];
+      loaderName && loaders.push({
+        loader: `${loaderName}-loader`,
+        options: {
+          sourceMap: sourceMap
+        }
+      });
 
-  var cssLoader = {
-    loader: 'css-loader',
-    options: {
-      minimize: process.env.NODE_ENV === 'production',
-      sourceMap: options.sourceMap
-    }
-  }
-
-  // generate loader string to be used with extract text plugin
-  function generateLoaders (loader, loaderOptions) {
-    var loaders = [cssLoader]
-    if (loader) {
-      loaders.push({
-        loader: loader + '-loader',
-        options: Object.assign({}, loaderOptions, {
-          sourceMap: options.sourceMap
+      //判断是否提取css
+      if (config[this.getPattern].cssExtract) {
+        return extractTextWebpackPlugin.extract({
+          fallback: styleLoader,
+          use: loaders
         })
+      };
+      
+      //loader
+      return [styleLoader].concat(loaders);
+    };
+
+    return {
+      css: getLoader(),
+      scss: getLoader('sass'),
+      sass: getLoader('sass'),
+      less: getLoader('less')
+    };
+  },
+  cssLooader () {
+    let arr = [];
+    const loaders = this.getCssLoader();
+    //遍历
+    Object.keys(loaders).forEach((item) => {
+      arr.push({
+        test: new RegExp('\\.' + item + '$'),
+        use: loaders[item]
       })
-    }
+    });
+    return arr;
+  },
+  //设置资源路径
+  resourcesPath (filePath) {
+    let dir = config[this.getPattern].resourcesDir;
+    return path.posix.join(dir, filePath);
+  },
+  //获取当前模式
+  getPattern: process.env.IS_DEV === 'true' ? 'dev' : 'build',
+  //源码追踪
+  sourceMap () {
+    //获取当前模式
+    const type = this.getPattern;
 
-    // Extract CSS when that option is specified
-    // (which is the case during production build)
-    if (options.extract) {
-      return ExtractTextPlugin.extract({
-        use: loaders,
-        fallback: 'vue-style-loader'
-      })
-    } else {
-      return ['vue-style-loader'].concat(loaders)
-    }
-  }
+    //默认配置
+    let defaultMap = type === 'dev' ? '#cheap-module-eval-source-map' : '#cheap-module-source-map';
 
-  // https://vue-loader.vuejs.org/en/configurations/extract-css.html
-  return {
-    css: generateLoaders(),
-    postcss: generateLoaders(),
-    less: generateLoaders('less'),
-    sass: generateLoaders('sass', { indentedSyntax: true }),
-    scss: generateLoaders('sass'),
-    stylus: generateLoaders('stylus'),
-    styl: generateLoaders('stylus')
-  }
-}
+    //是否添加map
+    if (config[type].sourceMap) {
+      //map类型判断
+      return typeof config[type].sourceMap === 'string' ? config[type].sourceMap : defaultMap;
+    };
 
-// Generate loaders for standalone style files (outside of .vue)
-exports.styleLoaders = function (options) {
-  var output = []
-  var loaders = exports.cssLoaders(options)
-  for (var extension in loaders) {
-    var loader = loaders[extension]
-    output.push({
-      test: new RegExp('\\.' + extension + '$'),
-      use: loader
-    })
+    return false;
+  },
+  resolve (dir) {
+    let base = '../';
+    return dir.indexOf(base) === 0 ? path.resolve(__dirname, dir) : path.resolve(__dirname, base, dir);
   }
-  return output
-}
+};

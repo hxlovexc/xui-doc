@@ -82,7 +82,7 @@ import xButton from 'xui-vue/src/components/x-button'</source-code>
     data () {
       return {
         demoCode: demoCode
-      }
+      };
     }
-  }
+  };
 </script>

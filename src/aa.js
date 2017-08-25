@@ -1,6 +1,3 @@
-import 'static/xui/css/xui.css';
-import 'static/scss/base.scss';
-
 import Vue from 'vue';
 import App from './App';
 import router from './router';

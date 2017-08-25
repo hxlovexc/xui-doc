@@ -30,35 +30,36 @@
 
 <script>
   // icon案例
-  const iconDemo = `<i class="x-icon-alert-circled"></i>`
-  import icons from './icon.js'
-  import Copy from 'clipboard'
+  import icons from './icon.js';
+  import Copy from 'clipboard';
+  
+  const iconDemo = `<i class="x-icon-alert-circled"></i>`;
 
   export default {
     data () {
       return {
         icons,
         iconDemo
-      }
+      };
     },
     methods: {
       copy (item) {
         const clipboard = new Copy('.icons', {
           text () {
-            return item
+            return item;
           }
-        })
-
+        });
+        // 复制成功
         clipboard.on('success', () => {
           // 销毁
-          clipboard.destroy()
+          clipboard.destroy();
           this.$toastr('复制成功!', {
             type: 'success'
-          })
-        })
+          });
+        });
       }
     }
-  }
+  };
 </script>
 
 <style lang="scss" scoped>

@@ -1,90 +1,68 @@
-require('./check-versions')()
+/*
+  express服务
+*/
 
-var config = require('../config')
-if (!process.env.NODE_ENV) {
-  process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
+process.env.IS_DEV = true;
+
+const express = require('express');
+const open = require('open');
+const path = require('path');
+const webpack = require('webpack');
+const config = require('../config');
+const webpackConfig = require('./webpack-dev-conf');
+//热更新
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
+const os = require('os');
+
+let app = express();
+let compiler = webpack(webpackConfig);
+
+//获取内网ip
+function getLocalIp () {
+  let ip = [];
+  let ifaces = os.networkInterfaces();
+  for (var dev in ifaces) {
+    if(ifaces[dev][1].address.indexOf('192.168') != -1) {
+      return ifaces[dev][1].address;
+    }
+  }
+  return ip;
 }
 
-var opn = require('opn')
-var path = require('path')
-var express = require('express')
-var webpack = require('webpack')
-var proxyMiddleware = require('http-proxy-middleware')
-var webpackConfig = require('./webpack.dev.conf')
-
-// default port where dev server listens for incoming traffic
-var port = process.env.PORT || config.dev.port
-// automatically open browser, if not set will be false
-var autoOpenBrowser = !!config.dev.autoOpenBrowser
-// Define HTTP proxies to your custom API backend
-// https://github.com/chimurai/http-proxy-middleware
-var proxyTable = config.dev.proxyTable
-
-var app = express()
-var compiler = webpack(webpackConfig)
-
-var devMiddleware = require('webpack-dev-middleware')(compiler, {
+//文件加载到内存
+let dev = webpackDevMiddleware(compiler, {
   publicPath: webpackConfig.output.publicPath,
   quiet: true
-})
+});
 
-var hotMiddleware = require('webpack-hot-middleware')(compiler, {
-  log: false,
-  heartbeat: 2000
-})
-// force page reload when html-webpack-plugin template changes
-compiler.plugin('compilation', function (compilation) {
-  compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
-    hotMiddleware.publish({ action: 'reload' })
-    cb()
+//热更新
+let hotUpdate = webpackHotMiddleware(compiler, {
+  log: () => {}
+});
+
+//页面代码变化的时候自动刷新
+compiler.plugin('compilation', function (build) {
+  build.plugin('html-webpack-plugin-after-emit', (data, fun) => {
+    hotUpdate.publish({ action: 'reload' });
+    fun();
   })
 })
 
-// proxy api requests
-Object.keys(proxyTable).forEach(function (context) {
-  var options = proxyTable[context]
-  if (typeof options === 'string') {
-    options = { target: options }
-  }
-  app.use(proxyMiddleware(options.filter || context, options))
-})
+app.use(dev);
+app.use(hotUpdate);
 
-// handle fallback for HTML5 history API
-app.use(require('connect-history-api-fallback')())
+//资源路径
+app.use(express.static(path.resolve(__dirname, '../demo/')));
 
-// serve webpack bundle output
-app.use(devMiddleware)
+console.log('-> 正在启动开发服务');
+dev.waitUntilValid(() => {
+  let url = `http://localhost:${config.dev.port}`;
+  console.log(`-> 开发服务启动完成`);
+  console.log(`-> 请访问${url} or http://${getLocalIp()}:${config.dev.port}`);
+  //打开浏览器
+  config.dev.autoOpen && open(url);
+});
 
-// enable hot-reload and state-preserving
-// compilation error display
-app.use(hotMiddleware)
-
-// serve pure static assets
-var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
-app.use(staticPath, express.static('./static'))
-
-var uri = 'http://localhost:' + port
-
-var _resolve
-var readyPromise = new Promise(resolve => {
-  _resolve = resolve
-})
-
-console.log('> Starting dev server...')
-devMiddleware.waitUntilValid(() => {
-  console.log('> Listening at ' + uri + '\n')
-  // when env is testing, don't need open it
-  if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
-    opn(uri)
-  }
-  _resolve()
-})
-
-var server = app.listen(port)
-
-module.exports = {
-  ready: readyPromise,
-  close: () => {
-    server.close()
-  }
-}
+//监听端口
+app.listen(config.dev.port);
