@@ -10,7 +10,7 @@
             'open': curNav === index
           }"
         >
-          <router-link exact :to="item.link">{{item.name}}</router-link>
+          <router-link exact :to="{ name: item.name }">{{item.title}}</router-link>
           <!--sub-nav-->
           <div v-if="item.subMenu">
             <ul
@@ -18,9 +18,9 @@
               :key="subIndex"
               v-for="(sub, subIndex) in item.subMenu"
             >
-              <div class="head">{{sub.name}}</div>
-              <li v-for="components in sub.components" :key="components.name">
-                <router-link exact :to="components.link">{{components.name}}</router-link>
+              <div class="head">{{sub.title}}</div>
+              <li v-for="components in sub.components" :key="components.title">
+                <router-link exact :to="{ name: components.name }">{{components.title}}</router-link>
               </li>
             </ul>
           </div>
@@ -44,40 +44,72 @@
         // 菜单
         menu: [
           {
-            name: '安装',
-            link: '/doc/'
+            title: '安装',
+            name: 'doc'
           },
           {
-            name: 'hello word',
-            link: '/doc/quickstart'
+            title: 'hello word',
+            name: 'quickstart'
           },
           {
-            name: '更新日志',
-            link: '/change-log'
+            title: '更新日志',
+            name: 'change-log'
           },
           {
-            name: '组件',
-            link: '/doc/components',
+            title: '组件',
+            name: 'components',
             subMenu: [
               {
-                name: '基础组件',
+                title: '基础组件',
                 components: [
                   {
-                    name: '按钮',
-                    link: '/doc/button'
+                    title: 'button 按钮',
+                    name: 'x-button'
                   },
                   {
-                    name: '图标',
-                    link: '/doc/icon'
+                    title: 'icon 图标',
+                    name: 'x-icon'
+                  },
+                  {
+                    title: 'quote 引用块',
+                    name: 'x-quote'
+                  },
+                  {
+                    title: 'tag 标签',
+                    name: 'x-tag'
+                  },
+                  {
+                    title: 'badge 徽章',
+                    name: 'x-badge'
+                  },
+                  {
+                    title: 'collapse 折叠面板',
+                    name: 'x-collapse'
+                  },
+                  {
+                    title: 'progress 进度条',
+                    name: 'x-progress'
+                  },
+                  {
+                    title: 'tabs 选项卡',
+                    name: 'x-tabs'
+                  },
+                  {
+                    title: 'page 分页',
+                    name: 'x-page'
+                  },
+                  {
+                    title: 'slider 滑动条',
+                    name: 'x-slider'
                   }
                 ]
               },
               {
-                name: '表单',
+                title: '表单',
                 components: [
                   {
-                    name: '按钮',
-                    link: '/doc/form'
+                    title: 'input 输入框',
+                    name: 'x-input'
                   }
                 ]
               }

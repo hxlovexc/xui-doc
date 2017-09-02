@@ -12,6 +12,7 @@ Vue.config.productionTip = false;
 
 // 类型
 Vue.prototype.$types = [
+  'default',
   'primary',
   'success',
   'warning',
@@ -25,6 +26,46 @@ Vue.prototype.$size = [
   'default',
   'small',
   'mini'
+];
+
+// api props keys
+Vue.prototype.$propsKeys = [
+  {
+    label: '属性',
+    name: 'attribute'
+  },
+  {
+    label: '说明',
+    name: 'explain'
+  },
+  {
+    label: '类型',
+    name: 'type'
+  },
+  {
+    label: '可选值',
+    name: 'values'
+  },
+  {
+    label: '默认',
+    name: 'default'
+  }
+];
+
+// api events keys
+Vue.prototype.$eventKeys = [
+  {
+    label: '名称',
+    name: 'events'
+  },
+  {
+    label: '说明',
+    name: 'explain'
+  },
+  {
+    label: '参数',
+    name: 'params'
+  }
 ];
 
 Vue.use(xui);

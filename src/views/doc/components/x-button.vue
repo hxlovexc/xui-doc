@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="row">
-      <h3 class="row-title">button</h3>
+      <h3 class="row-title">button 按钮</h3>
       <p>用于通过点击触发一个操作/事件</p>
     </div>
 
-    <!--基础-->
+    <!--基础用法-->
     <div class="row">
-      <!--基础-->
-      <h3 class="row-title">基础</h3>
+      <!--基础用法-->
+      <h3 class="row-title">基础用法</h3>
       <x-quote>
         <div>
           <x-button>按钮</x-button>
@@ -20,16 +20,15 @@
 
     <!--颜色分类-->
     <div class="row">
-      <!--基础-->
+      <!--基础用法-->
       <h3 class="row-title">颜色分类</h3>
       <p>
-        可以通过type属性设置按钮的颜色， 按钮有六种类型:
+        可以通过 type 属性设置按钮的颜色， 按钮有六种类型:
         <span class="highlighted">default, primary, success, warning, danger, dark</span>
          - 默认 <span class="highlighted">default</span>
       </p>
       <x-quote>
         <div>
-          <x-button class="margin-10">default</x-button>
           <x-button class="margin-10" v-for="item in $types" :type="item" :key="item">{{item}}</x-button>
         </div>
         <!--源码-->
@@ -41,10 +40,9 @@
     <div class="row">
       <!--圆角-->
       <h3 class="row-title">圆角</h3>
-      <p>可以通过radius设置按钮是否圆角 - 默认<span class="highlighted">false</span></p>
+      <p>可以通过 radius 设置按钮是否圆角 - 默认<span class="highlighted">false</span></p>
       <x-quote>
         <div>
-          <x-button class="margin-10" radius>default</x-button>
           <x-button class="margin-10" radius v-for="item in $types" :type="item" :key="item">{{item}}</x-button>
         </div>
         <div>
@@ -64,10 +62,9 @@
     <div class="row">
       <!--空心-->
       <h3 class="row-title">空心</h3>
-      <p>可以通过hollow设置按钮为空心 - 默认<span class="highlighted">false</span></p>
+      <p>可以通过 hollow 设置按钮为空心 - 默认<span class="highlighted">false</span></p>
       <x-quote>
         <div>
-          <x-button class="margin-10" hollow>default</x-button>
           <x-button class="margin-10" hollow v-for="item in $types" :type="item" :key="item">{{item}}</x-button>
         </div>
         <!--源码-->
@@ -79,7 +76,7 @@
     <div class="row">
       <!--圆角-->
       <h3 class="row-title">带图标的按钮</h3>
-      <p>可以通过icon属性设置按钮的图标（icon只能为xui中所提供的图标）,  <router-link to="{ name: 'icon' }">点击查看icon</router-link></p>
+      <p>可以通过 icon 属性设置按钮的图标（icon只能为xui中所提供的图标）,  <router-link to="{ name: 'icon' }">点击查看icon</router-link></p>
       <x-quote>
         <div>
           <x-button icon="x-icon-delete" class="margin-10" v-for="item in $size" :size="item" :key="item">{{item}}</x-button>
@@ -145,7 +142,7 @@
     <div class="row">
       <h3 class="row-title">size分类</h3>
       <p>
-        可以通过size属性设置按钮的大小， 按钮有四种大小:
+        可以通过 size 属性设置按钮的大小， 按钮有四种大小:
         <span class="highlighted">large(最大), default(默认), small(小的), mini(mini)</span>
          - 默认 <span class="highlighted">default</span>
       </p>
@@ -161,7 +158,7 @@
     <!--加载中按钮-->
     <div class="row">
       <h3 class="row-title">加载中按钮</h3>
-      <p>可以通过loading属性让按钮进入loading状态（进入loading状态后按钮将不能点击 - 除非移除loading状态）</p>
+      <p>可以通过 loading 属性让按钮进入loading状态（进入loading状态后按钮将不能点击 - 除非移除loading状态）</p>
       <x-quote>
         <div>
           <x-button class="margin-10" :loading="loading" @click="loading = true" >default</x-button>
@@ -175,7 +172,7 @@
     <!--禁用-->
     <div class="row">
       <h3 class="row-title">禁用</h3>
-      <p>可以通过disabled属性设置按钮为禁用状态</p>
+      <p>可以通过 disabled 属性设置按钮为禁用状态</p>
       <x-quote>
         <div>
           <x-button class="margin-10" disabled>禁用</x-button>
@@ -192,18 +189,14 @@
       </x-quote>
     </div>
 
-    <!--API-->
+    <!--props-->
     <div class="row">
       <h3 class="row-title">API</h3>
       <h4>props</h4>
-      <api-table :data="apiData" :keys="keys"></api-table>
-    </div>
-
-    <!--事件-->
-    <div class="row">
-      <h3 class="row-title">事件</h3>
+      <api-table :data="apiData" :keys="$propsKeys"></api-table>
+      <!--events-->
       <h4>events</h4>
-      <api-table :data="eventsData" :keys="eventsKeys"></api-table>
+      <api-table :data="eventsData" :keys="$eventKeys"></api-table>
     </div>
   </div>
 </template>
@@ -360,28 +353,6 @@
         // 加载中状态
         loading: false,
         // api
-        keys: [
-          {
-            label: '属性',
-            name: 'attribute'
-          },
-          {
-            label: '说明',
-            name: 'explain'
-          },
-          {
-            label: '类型',
-            name: 'type'
-          },
-          {
-            label: '可选值',
-            name: 'values'
-          },
-          {
-            label: '默认',
-            name: 'default'
-          }
-        ],
         apiData: [
           {
             attribute: 'type',
@@ -431,20 +402,6 @@
             type: 'Boolean',
             values: 'true | false',
             default: 'false'
-          }
-        ],
-        eventsKeys: [
-          {
-            label: '名称',
-            name: 'events'
-          },
-          {
-            label: '说明',
-            name: 'explain'
-          },
-          {
-            label: '参数',
-            name: 'params'
           }
         ],
         // 事件

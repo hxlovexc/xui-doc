@@ -1,8 +1,8 @@
 <template>
   <div class="icon">
     <div class="row">
-      <h3 class="row-title">icon</h3>
-      <p>图标只需要添加对应的class就能使用, 所有图标以 x-icon- 开头</p>
+      <h3 class="row-title">icon 图标</h3>
+      <p>图标只需要添加对应的 class 就能使用, 所有图标以 x-icon- 开头</p>
       <x-quote>
         <source-code type="html" class="margin-top-10">{{iconDemo}}</source-code>
       </x-quote>
@@ -10,7 +10,7 @@
     <!--集合-->
     <div class="row">
       <h3 class="row-title">列表</h3>
-      <p>图标只需要添加对应的class就能使用, 所有图标以 x-icon- 开头, 点击图标可以复制到剪贴板</p>
+      <p>点击图标可以复制到剪贴板</p>
       <x-quote>
         <!--列表-->
         <ul class="x-clear-float">
