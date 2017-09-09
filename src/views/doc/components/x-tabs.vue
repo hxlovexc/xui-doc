@@ -123,7 +123,6 @@
 </template>
 
 <script>
-  /* eslint-disable no-useless-escape */
   const base =
 `<x-tabs>
   <x-tab-item label="选项一">选项一的内容</x-tab-item>

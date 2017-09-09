@@ -10,7 +10,7 @@
             'open': curNav === index
           }"
         >
-          <router-link exact :to="{ name: item.name }">{{item.title}}</router-link>
+          <!-- <router-link exact :to="{ name: item.name }">{{item.title}}</router-link> -->
           <!--sub-nav-->
           <div v-if="item.subMenu">
             <ul
@@ -37,6 +37,7 @@
 
 <script>
   export default {
+    name: 'docname',
     data () {
       return {
         navList: 25,
@@ -87,20 +88,8 @@
                     name: 'x-collapse'
                   },
                   {
-                    title: 'progress 进度条',
-                    name: 'x-progress'
-                  },
-                  {
                     title: 'tabs 选项卡',
                     name: 'x-tabs'
-                  },
-                  {
-                    title: 'page 分页',
-                    name: 'x-page'
-                  },
-                  {
-                    title: 'slider 滑动条',
-                    name: 'x-slider'
                   }
                 ]
               },
@@ -110,6 +99,88 @@
                   {
                     title: 'input 输入框',
                     name: 'x-input'
+                  },
+                  {
+                    title: 'counter 计数器',
+                    name: 'x-counter'
+                  },
+                  {
+                    title: 'textarea 文本域',
+                    name: 'x-textarea'
+                  },
+                  {
+                    title: 'radio 单选框',
+                    name: 'x-radio'
+                  },
+                  {
+                    title: 'checkbox 多选框',
+                    name: 'x-checkbox'
+                  },
+                  {
+                    title: 'switch 开关',
+                    name: 'x-switch'
+                  },
+                  {
+                    title: 'select 选择器',
+                    name: 'x-select'
+                  },
+                  {
+                    title: 'slider 滑动条',
+                    name: 'x-slider'
+                  },
+                  {
+                    title: 'form 表单',
+                    name: 'x-form'
+                  }
+                ]
+              },
+              {
+                title: '数据组件',
+                components: [
+                  {
+                    title: 'page 分页',
+                    name: 'x-page'
+                  },
+                  {
+                    title: 'progress 进度条',
+                    name: 'x-progress'
+                  },
+                  {
+                    title: 'table 表格',
+                    name: 'x-table'
+                  }
+                ]
+              },
+              {
+                title: '试图弹窗',
+                components: [
+                  {
+                    title: 'alert 警告提示',
+                    name: 'x-alert'
+                  },
+                  {
+                    title: 'dialog 对话框',
+                    name: 'x-dialog'
+                  },
+                  {
+                    title: 'modal 模态框',
+                    name: 'x-modal'
+                  },
+                  {
+                    title: 'sidebar 侧边栏',
+                    name: 'x-sidebar'
+                  },
+                  {
+                    title: 'notice 通知提醒',
+                    name: 'x-notice'
+                  },
+                  {
+                    title: 'tooltip 文字提示',
+                    name: 'x-tooltip'
+                  },
+                  {
+                    title: 'popover 弹出层',
+                    name: 'x-popover'
                   }
                 ]
               }
@@ -155,7 +226,7 @@
         box-sizing: border-box;
 
         & > ul {
-          padding: 0 8px;
+          padding: 0 8px 8px 8px;
         }
 
         a {
@@ -221,9 +292,11 @@
         display: block;
         width: 100%;
         position: fixed;
+        display: none;
       }
 
       .doc-nav-list {
+        display: none;
         width: 80%;
         background: $color-min;
         z-index: 100;
@@ -233,6 +306,10 @@
         a {
           color: #fff;
         }
+      }
+
+      .doc-content {
+        margin: 0 18px;
       }
     }
   }

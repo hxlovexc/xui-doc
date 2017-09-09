@@ -149,7 +149,6 @@
 
 <script>
   // 基础用法
-  /* eslint-disable no-useless-escape */
   const base =
 `<template>
   <x-collapse>

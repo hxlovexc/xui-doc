@@ -7,11 +7,21 @@
 
     <!--基础-->
     <div class="row">
-      <h3 class="row-title">input 输入框</h3>
+      <h3 class="row-title">基础</h3>
       <p>基础输入框，默认宽度 100%</p>
       <x-quote>
         <x-input placeholder="请输入内容"></x-input>
         <source-code type="html" class="margin-top-10">{{base}}</source-code>
+      </x-quote>
+    </div>
+
+    <!--密码输入框-->
+    <div class="row">
+      <h3 class="row-title">密码输入框</h3>
+      <p>可以设置 input-type 为 password 让输入框变成密码输入框</p>
+      <x-quote>
+        <x-input input-type="password" placeholder="请输入内容"></x-input>
+        <source-code type="html" class="margin-top-10">{{password}}</source-code>
       </x-quote>
     </div>
 
@@ -22,6 +32,16 @@
       <x-quote>
         <x-input inline placeholder="请输入内容"></x-input>
         <source-code type="html" class="margin-top-10">{{inline}}</source-code>
+      </x-quote>
+    </div>
+
+    <!--最大数量限制-->
+    <div class="row">
+      <h3 class="row-title">限制文字数量</h3>
+      <p>可以通过 max 属性限制输入框字数</p>
+      <x-quote>
+        <x-input :max="10" placeholder="请输入内容"></x-input>
+        <source-code type="html" class="margin-top-10">{{max}}</source-code>
       </x-quote>
     </div>
 
@@ -108,7 +128,7 @@
     <!--带图标的输入框-->
     <div class="row">
       <h3 class="row-title">带图标的输入框</h3>
-      <p>可以通过 icon 属性给input右侧添加图标 - icon只能为xui中自带的图标</p>
+      <p>可以通过 icon 属性给input右侧添加图标</p>
       <x-quote>
         <x-input icon="x-icon-image" placeholder="请输入内容"></x-input>
         <source-code type="html" class="margin-top-10">{{icon}}</source-code>
@@ -121,7 +141,7 @@
       <p>可以通过 disabled 属性禁用input - 默认<span class="highlighted">false</span></p>
       <x-quote>
         <div class="margin-top-10">
-          <x-input icon="x-icon-image" disabled placeholder="请输入内容"></x-input>
+          <x-input disabled placeholder="请输入内容"></x-input>
         </div>
         <div class="margin-top-10">
           <x-input placeholder="请输入内容" disabled>
@@ -132,14 +152,44 @@
         <source-code type="html" class="margin-top-10">{{disabled}}</source-code>
       </x-quote>
     </div>
+
+    <!--事件-->
+    <div class="row">
+      <h3 class="row-title">icon点击</h3>
+      <x-quote>
+        <div class="margin-top-10">
+          <x-input icon="x-icon-search-strong" @icon-click="iconClick" placeholder="请输入内容"></x-input>
+        </div>
+        <source-code type="html" class="margin-top-10">{{iconClickDemo}}</source-code>
+      </x-quote>
+    </div>
+
+    <!--API-->
+    <div class="row">
+      <h3 class="row-title">API</h3>
+      <h4>props</h4>
+      <api-table :data="props" :keys="$propsKeys"></api-table>
+      <!--slot-->
+      <h4>slot</h4>
+      <api-table :data="slot" :keys="$propsKeys"></api-table>
+      <!--events-->
+      <h4>events</h4>
+      <api-table :data="events" :keys="$eventKeys"></api-table>
+    </div>
   </div>
 </template>
 
 <script>
   const base = `<x-input placeholder="请输入内容"></x-input>`;
 
+  // password
+  const password = `<x-input input-type="password" placeholder="请输入内容"></x-input>`;
+
   // inline
   const inline = `<x-input inline placeholder="请输入内容"></x-input>`;
+
+  // 字数限制
+  const max = `<x-input :max="10" placeholder="请输入内容"></x-input>`;
 
   // 颜色分类
   const types =
@@ -192,25 +242,161 @@
 
   // 禁用
   const disabled =
-`<x-input icon="x-icon-image" disabled placeholder="请输入内容"></x-input>
+`<x-input disabled placeholder="请输入内容"></x-input>
 
-<x-input disabled placeholder="请输入内容" disabled>
+<x-input disabled placeholder="请输入内容">
   <template slot="left">www</template>
   <template slot="right">.com</template>
 </x-input>`;
+
+  // 图标点击
+  const iconClickDemo =
+`<template>
+  <x-input icon="x-icon-search-strong" @icon-click="iconClick" placeholder="请输入内容"></x-input>
+</template>
+
+<script>
+  export default {
+    methods: {
+      iconClick (value) {
+        alert('当前输入值为:' + value);
+      }
+    }
+  };
+<\/script>`;
 
   export default {
     data () {
       return {
         base,
+        password,
         inline,
+        max,
         types,
         size,
         radius,
         icon,
         composite,
-        disabled
+        disabled,
+        iconClickDemo,
+        isFocus: false,
+        props: [
+          {
+            attribute: 'v-model',
+            explain: '数据双向绑定的值',
+            type: 'Number | String',
+            values: '---',
+            default: '---'
+          },
+          {
+            attribute: 'input-type',
+            explain: '输入框类型',
+            type: 'Number',
+            values: 'text | password',
+            default: 'text'
+          },
+          {
+            attribute: 'placeholder',
+            explain: '文本占位符',
+            type: 'String',
+            values: '---',
+            default: '---'
+          },
+          {
+            attribute: 'inline',
+            explain: '设置input为行内元素 - 默认宽度200px',
+            type: 'Boolean',
+            values: 'true | false',
+            default: 'false'
+          },
+          {
+            attribute: 'max',
+            explain: '限制输入字数',
+            type: 'Number',
+            values: '---',
+            default: '---'
+          },
+          {
+            attribute: 'type',
+            explain: '设置input颜色类型',
+            type: 'String',
+            values: 'default | primary | success | warning | danger | dark',
+            default: 'default'
+          },
+          {
+            attribute: 'size',
+            explain: '设置input大小',
+            type: 'String',
+            values: 'large | default | small',
+            default: 'default'
+          },
+          {
+            attribute: 'radius',
+            explain: '设置input为圆角',
+            type: 'Boolean',
+            values: 'true | false',
+            default: 'false'
+          },
+          {
+            attribute: 'icon',
+            explain: 'input添加图标',
+            type: 'String',
+            values: '图标class',
+            default: '---'
+          },
+          {
+            attribute: 'disabled',
+            explain: '禁用状态',
+            type: 'Boolean',
+            values: 'true | false',
+            default: 'false'
+          }
+        ],
+        slot: [
+          {
+            attribute: 'left',
+            explain: '开启复合型输入框 - input左边添加内容',
+            type: '---',
+            values: '---',
+            default: '---'
+          },
+          {
+            attribute: 'right',
+            explain: '开启复合型输入框 - input右边添加内容',
+            type: '---',
+            values: '---',
+            default: '---'
+          }
+        ],
+        // 事件
+        events: [
+          {
+            events: 'change',
+            explain: '滑动的时候value值发生了变化时触发',
+            params: 'value: input值, target: input对象'
+          },
+          {
+            events: 'focus',
+            explain: '获取光标时触发',
+            params: 'value: input值, target: input对象'
+          },
+          {
+            events: 'blur',
+            explain: '失去光标时候触发',
+            params: 'value: input值, target: input对象'
+          },
+          {
+            events: 'icon-click',
+            explain: 'input图标点击触发',
+            params: 'value: input值, target: input组件dom对象'
+          }
+        ]
       };
+    },
+    methods: {
+      iconClick (value, el) {
+        alert(`当前输入值为:${value}`);
+      }
     }
   };
 </script>

@@ -25,13 +25,15 @@
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 /*
  * @Module: 动画模块
  * @Author: 小缘
@@ -58,13 +60,15 @@
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 /*loading动画*/
 @-webkit-keyframes rotating {
   0% {
@@ -191,7 +195,7 @@ pre {
   word-wrap: break-word; }
 
 body {
-  color: #495060;
+  color: #3f536e;
   line-height: 1.5;
   font-size: 14px;
   font-family: "Helvetica Neue", Helvetica, Tahoma, Arial, "Microsoft Yahei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif; }
@@ -280,13 +284,15 @@ body {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .h1,
 h1 {
   font-weight: 400; }
@@ -411,13 +417,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-quote {
   padding: 15px;
   margin-bottom: 10px;
@@ -470,13 +478,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 /*
  * @Module: mixin
  * @Author: 小缘
@@ -503,13 +513,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-button {
   position: relative;
   display: inline-block;
@@ -525,11 +537,11 @@ h6 {
   -webkit-transition: background 0.3s, border 0.3s, color 0.3s;
   transition: background 0.3s, border 0.3s, color 0.3s; }
   .x-button:hover, .x-button:focus {
-    color: #495060;
+    color: #3f536e;
     background: #f5f5f5;
     border-color: #e2e2e2; }
   .x-button:active {
-    color: #495060;
+    color: #3f536e;
     background: #e8e8e8;
     border-color: #e8e8e8; }
   .x-button i {
@@ -676,7 +688,8 @@ h6 {
 .x-button[disabled]:active,
 .x-button[disabled]:focus {
   background: #f3f7f9;
-  border-color: #E4EAEC; }
+  border-color: #E4EAEC;
+  color: #a3afb7; }
 
 /*
  * @Module: 按钮组
@@ -704,13 +717,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-button-group {
   display: inline-block; }
   .x-button-group .x-button {
@@ -768,13 +783,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 /*
  * @Module: mixin
  * @Author: 小缘
@@ -801,13 +818,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 /*
  * @Module: input和textarea公用
  * @Author: 小缘
@@ -834,13 +853,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-input {
   width: 100%;
   color: inherit;
@@ -1007,7 +1028,8 @@ h6 {
 .x-input[disabled]:active,
 .x-input[disabled]:focus {
   background: #f3f7f9;
-  border-color: #E4EAEC; }
+  border-color: #E4EAEC;
+  color: #a3afb7; }
 
 /*
  * @Module: textarea
@@ -1035,13 +1057,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 /*
  * @Module: mixin
  * @Author: 小缘
@@ -1068,13 +1092,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 /*
  * @Module: input和textarea公用
  * @Author: 小缘
@@ -1101,13 +1127,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-textarea {
   width: 100%;
   color: inherit;
@@ -1172,6 +1200,18 @@ h6 {
   .x-textarea-dark .x-textarea:focus {
     border-color: #535c68; }
 
+.x-textarea.x-disabled,
+.x-textarea.x-disabled:hover,
+.x-textarea.x-disabled:active,
+.x-textarea.x-disabled:focus,
+.x-textarea[disabled],
+.x-textarea[disabled]:hover,
+.x-textarea[disabled]:active,
+.x-textarea[disabled]:focus {
+  background: #f3f7f9;
+  border-color: #E4EAEC;
+  color: #a3afb7; }
+
 .x-inline .x-textarea {
   display: inline-block;
   width: 420px; }
@@ -1202,13 +1242,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-counter {
   position: relative;
   display: inline-block;
@@ -1251,7 +1293,9 @@ h6 {
   .x-counter .x-min-disabled,
   .x-counter .x-max-disabled,
   .x-counter .x-min-disabled:hover,
-  .x-counter .x-max-disabled:hover {
+  .x-counter .x-max-disabled:hover,
+  .x-counter.x-disabled .x-counter-btn,
+  .x-counter.x-disabled:hover .x-counter-btn {
     color: #a3afb7;
     cursor: no-drop; }
   .x-counter.x-disabled {
@@ -1259,8 +1303,7 @@ h6 {
   .x-counter.x-disabled,
   .x-counter.x-disabled:hover .x-counter-btn {
     border-color: #E4EAEC;
-    cursor: no-drop;
-    color: inherit; }
+    cursor: no-drop; }
 
 .x-counter-large {
   line-height: 38px;
@@ -1284,7 +1327,7 @@ h6 {
 
 .x-counter-small {
   line-height: 28px;
-  font-size: 14px; }
+  font-size: 13px; }
   .x-counter-small .x-counter-input {
     width: 80px;
     height: 30px;
@@ -1373,13 +1416,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 /*
  * @Module: checkbox和radio共用
  * @Author: 小缘
@@ -1406,13 +1451,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 /*
  * @Module: 动画模块
  * @Author: 小缘
@@ -1439,13 +1486,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 /*loading动画*/
 @keyframes rotating {
   0% {
@@ -1597,21 +1646,24 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
-.x-checkbox-button-group {
+/* 弹出层 */
+/* 分页 */
+.x-checkbox-group {
+  line-height: 1;
   display: inline-block;
   vertical-align: middle; }
-  .x-checkbox-button-group.x-checkbox-button-radius .x-checkbox-button:first-child {
+  .x-checkbox-group.x-checkbox-button-radius .x-checkbox-button:first-child {
     border-radius: 4px 0 0 4px; }
-  .x-checkbox-button-group.x-checkbox-button-radius .x-checkbox-button:last-child {
+  .x-checkbox-group.x-checkbox-button-radius .x-checkbox-button:last-child {
     border-radius: 0 4px 4px 0; }
-  .x-checkbox-button-group .x-checkbox-button {
+  .x-checkbox-group .x-checkbox-button {
     position: relative;
     display: inline-block;
     line-height: 1;
@@ -1621,79 +1673,79 @@ h6 {
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
     cursor: pointer;
-    -webkit-transition: border 0.3s;
-    transition: border 0.3s; }
-    .x-checkbox-button-group .x-checkbox-button > input {
+    -webkit-transition: border 0.3s, background-color 0.3s;
+    transition: border 0.3s, background-color 0.3s; }
+    .x-checkbox-group .x-checkbox-button > input {
       display: none; }
-    .x-checkbox-button-group .x-checkbox-button > span {
+    .x-checkbox-group .x-checkbox-button > span {
       -webkit-transition: color 0.3s;
       transition: color 0.3s; }
-  .x-checkbox-button-group.x-checkbox-button-large .x-checkbox-button {
+  .x-checkbox-group.x-checkbox-button-large .x-checkbox-button {
     padding: 0 16px;
     height: 40px;
     font-size: 16px;
     line-height: 38px; }
-  .x-checkbox-button-group.x-checkbox-button-default .x-checkbox-button {
+  .x-checkbox-group.x-checkbox-button-default .x-checkbox-button {
     padding: 0 13px;
     height: 34px;
     font-size: 14px;
     line-height: 32px; }
-  .x-checkbox-button-group.x-checkbox-button-small .x-checkbox-button {
+  .x-checkbox-group.x-checkbox-button-small .x-checkbox-button {
     padding: 0 7px;
     height: 30px;
     font-size: 14px;
     line-height: 28px; }
-  .x-checkbox-button-group.x-checkbox-button-mini .x-checkbox-button {
+  .x-checkbox-group.x-checkbox-button-mini .x-checkbox-button {
     padding: 0 3px;
     height: 22px;
     font-size: 12px;
     line-height: 20px; }
-  .x-checkbox-button-group .x-checked {
+  .x-checkbox-group .x-checked {
     z-index: 9; }
-    .x-checkbox-button-group .x-checked span {
+    .x-checkbox-group .x-checked.x-checkbox-button span {
       color: #fff; }
-  .x-checkbox-button-group.x-checkbox-button-primary .x-checkbox-button.x-checked {
+  .x-checkbox-group.x-checkbox-button-primary .x-checkbox-button.x-checked {
     background: #4399ff;
     border-color: #4399ff; }
-    .x-checkbox-button-group.x-checkbox-button-primary .x-checkbox-button.x-checked:hover span {
+    .x-checkbox-group.x-checkbox-button-primary .x-checkbox-button.x-checked:hover span {
       color: #fff; }
-  .x-checkbox-button-group.x-checkbox-button-primary .x-checkbox-button:hover span {
+  .x-checkbox-group.x-checkbox-button-primary .x-checkbox-button:hover span {
     color: #4399ff; }
-  .x-checkbox-button-group.x-checkbox-button-success .x-checkbox-button.x-checked {
+  .x-checkbox-group.x-checkbox-button-success .x-checkbox-button.x-checked {
     background: #46be8a;
     border-color: #46be8a; }
-    .x-checkbox-button-group.x-checkbox-button-success .x-checkbox-button.x-checked:hover span {
+    .x-checkbox-group.x-checkbox-button-success .x-checkbox-button.x-checked:hover span {
       color: #fff; }
-  .x-checkbox-button-group.x-checkbox-button-success .x-checkbox-button:hover span {
+  .x-checkbox-group.x-checkbox-button-success .x-checkbox-button:hover span {
     color: #46be8a; }
-  .x-checkbox-button-group.x-checkbox-button-warning .x-checkbox-button.x-checked {
+  .x-checkbox-group.x-checkbox-button-warning .x-checkbox-button.x-checked {
     background: #f2a654;
     border-color: #f2a654; }
-    .x-checkbox-button-group.x-checkbox-button-warning .x-checkbox-button.x-checked:hover span {
+    .x-checkbox-group.x-checkbox-button-warning .x-checkbox-button.x-checked:hover span {
       color: #fff; }
-  .x-checkbox-button-group.x-checkbox-button-warning .x-checkbox-button:hover span {
+  .x-checkbox-group.x-checkbox-button-warning .x-checkbox-button:hover span {
     color: #f2a654; }
-  .x-checkbox-button-group.x-checkbox-button-danger .x-checkbox-button.x-checked {
+  .x-checkbox-group.x-checkbox-button-danger .x-checkbox-button.x-checked {
     background: #f96868;
     border-color: #f96868; }
-    .x-checkbox-button-group.x-checkbox-button-danger .x-checkbox-button.x-checked:hover span {
+    .x-checkbox-group.x-checkbox-button-danger .x-checkbox-button.x-checked:hover span {
       color: #fff; }
-  .x-checkbox-button-group.x-checkbox-button-danger .x-checkbox-button:hover span {
+  .x-checkbox-group.x-checkbox-button-danger .x-checkbox-button:hover span {
     color: #f96868; }
-  .x-checkbox-button-group.x-checkbox-button-dark .x-checkbox-button.x-checked {
+  .x-checkbox-group.x-checkbox-button-dark .x-checkbox-button.x-checked {
     background: #667180;
     border-color: #667180; }
-    .x-checkbox-button-group.x-checkbox-button-dark .x-checkbox-button.x-checked:hover span {
+    .x-checkbox-group.x-checkbox-button-dark .x-checkbox-button.x-checked:hover span {
       color: #fff; }
-  .x-checkbox-button-group.x-checkbox-button-dark .x-checkbox-button:hover span {
+  .x-checkbox-group.x-checkbox-button-dark .x-checkbox-button:hover span {
     color: #667180; }
-  .x-checkbox-button-group .x-checkbox-button.x-disabled,
-  .x-checkbox-button-group .x-checkbox-button.x-disabled:hover {
+  .x-checkbox-group .x-checkbox-button.x-disabled,
+  .x-checkbox-group .x-checkbox-button.x-disabled:hover {
     background: #f3f7f9;
     border-color: #E4EAEC;
     cursor: no-drop !important; }
-    .x-checkbox-button-group .x-checkbox-button.x-disabled span,
-    .x-checkbox-button-group .x-checkbox-button.x-disabled:hover span {
+    .x-checkbox-group .x-checkbox-button.x-disabled span,
+    .x-checkbox-group .x-checkbox-button.x-disabled:hover span {
       color: #a3afb7; }
 
 /*
@@ -1727,21 +1779,24 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
-.x-radio-button-group {
+/* 弹出层 */
+/* 分页 */
+.x-radio-group {
+  line-height: 1;
   display: inline-block;
   vertical-align: middle; }
-  .x-radio-button-group.x-radio-button-radius .x-radio-button:first-child {
+  .x-radio-group.x-radio-button-radius .x-radio-button:first-child {
     border-radius: 4px 0 0 4px; }
-  .x-radio-button-group.x-radio-button-radius .x-radio-button:last-child {
+  .x-radio-group.x-radio-button-radius .x-radio-button:last-child {
     border-radius: 0 4px 4px 0; }
-  .x-radio-button-group .x-radio-button {
+  .x-radio-group .x-radio-button {
     position: relative;
     display: inline-block;
     line-height: 1;
@@ -1751,79 +1806,79 @@ h6 {
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
     cursor: pointer;
-    -webkit-transition: border 0.3s;
-    transition: border 0.3s; }
-    .x-radio-button-group .x-radio-button > input {
+    -webkit-transition: border 0.3s, background-color 0.3s;
+    transition: border 0.3s, background-color 0.3s; }
+    .x-radio-group .x-radio-button > input {
       display: none; }
-    .x-radio-button-group .x-radio-button > span {
+    .x-radio-group .x-radio-button > span {
       -webkit-transition: color 0.3s;
       transition: color 0.3s; }
-  .x-radio-button-group.x-radio-button-large .x-radio-button {
+  .x-radio-group.x-radio-button-large .x-radio-button {
     padding: 0 16px;
     height: 40px;
     font-size: 16px;
     line-height: 38px; }
-  .x-radio-button-group.x-radio-button-default .x-radio-button {
+  .x-radio-group.x-radio-button-default .x-radio-button {
     padding: 0 13px;
     height: 34px;
     font-size: 14px;
     line-height: 32px; }
-  .x-radio-button-group.x-radio-button-small .x-radio-button {
+  .x-radio-group.x-radio-button-small .x-radio-button {
     padding: 0 7px;
     height: 30px;
     font-size: 14px;
     line-height: 28px; }
-  .x-radio-button-group.x-radio-button-mini .x-radio-button {
+  .x-radio-group.x-radio-button-mini .x-radio-button {
     padding: 0 3px;
     height: 22px;
     font-size: 12px;
     line-height: 20px; }
-  .x-radio-button-group .x-checked {
+  .x-radio-group .x-checked {
     z-index: 9; }
-    .x-radio-button-group .x-checked span {
+    .x-radio-group .x-checked.x-radio-button span {
       color: #fff; }
-  .x-radio-button-group.x-radio-button-primary .x-radio-button.x-checked {
+  .x-radio-group.x-radio-button-primary .x-radio-button.x-checked {
     background: #4399ff;
     border-color: #4399ff; }
-    .x-radio-button-group.x-radio-button-primary .x-radio-button.x-checked:hover span {
+    .x-radio-group.x-radio-button-primary .x-radio-button.x-checked:hover span {
       color: #fff; }
-  .x-radio-button-group.x-radio-button-primary .x-radio-button:hover span {
+  .x-radio-group.x-radio-button-primary .x-radio-button:hover span {
     color: #4399ff; }
-  .x-radio-button-group.x-radio-button-success .x-radio-button.x-checked {
+  .x-radio-group.x-radio-button-success .x-radio-button.x-checked {
     background: #46be8a;
     border-color: #46be8a; }
-    .x-radio-button-group.x-radio-button-success .x-radio-button.x-checked:hover span {
+    .x-radio-group.x-radio-button-success .x-radio-button.x-checked:hover span {
       color: #fff; }
-  .x-radio-button-group.x-radio-button-success .x-radio-button:hover span {
+  .x-radio-group.x-radio-button-success .x-radio-button:hover span {
     color: #46be8a; }
-  .x-radio-button-group.x-radio-button-warning .x-radio-button.x-checked {
+  .x-radio-group.x-radio-button-warning .x-radio-button.x-checked {
     background: #f2a654;
     border-color: #f2a654; }
-    .x-radio-button-group.x-radio-button-warning .x-radio-button.x-checked:hover span {
+    .x-radio-group.x-radio-button-warning .x-radio-button.x-checked:hover span {
       color: #fff; }
-  .x-radio-button-group.x-radio-button-warning .x-radio-button:hover span {
+  .x-radio-group.x-radio-button-warning .x-radio-button:hover span {
     color: #f2a654; }
-  .x-radio-button-group.x-radio-button-danger .x-radio-button.x-checked {
+  .x-radio-group.x-radio-button-danger .x-radio-button.x-checked {
     background: #f96868;
     border-color: #f96868; }
-    .x-radio-button-group.x-radio-button-danger .x-radio-button.x-checked:hover span {
+    .x-radio-group.x-radio-button-danger .x-radio-button.x-checked:hover span {
       color: #fff; }
-  .x-radio-button-group.x-radio-button-danger .x-radio-button:hover span {
+  .x-radio-group.x-radio-button-danger .x-radio-button:hover span {
     color: #f96868; }
-  .x-radio-button-group.x-radio-button-dark .x-radio-button.x-checked {
+  .x-radio-group.x-radio-button-dark .x-radio-button.x-checked {
     background: #667180;
     border-color: #667180; }
-    .x-radio-button-group.x-radio-button-dark .x-radio-button.x-checked:hover span {
+    .x-radio-group.x-radio-button-dark .x-radio-button.x-checked:hover span {
       color: #fff; }
-  .x-radio-button-group.x-radio-button-dark .x-radio-button:hover span {
+  .x-radio-group.x-radio-button-dark .x-radio-button:hover span {
     color: #667180; }
-  .x-radio-button-group .x-radio-button.x-disabled,
-  .x-radio-button-group .x-radio-button.x-disabled:hover {
+  .x-radio-group .x-radio-button.x-disabled,
+  .x-radio-group .x-radio-button.x-disabled:hover {
     background: #f3f7f9;
     border-color: #E4EAEC;
     cursor: no-drop !important; }
-    .x-radio-button-group .x-radio-button.x-disabled span,
-    .x-radio-button-group .x-radio-button.x-disabled:hover span {
+    .x-radio-group .x-radio-button.x-disabled span,
+    .x-radio-group .x-radio-button.x-disabled:hover span {
       color: #a3afb7; }
 
 /*
@@ -1852,13 +1907,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 /*
  * @Module: checkbox和radio共用
  * @Author: 小缘
@@ -1885,13 +1942,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 /*
  * @Module: 动画模块
  * @Author: 小缘
@@ -1918,13 +1977,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 /*loading动画*/
 @keyframes rotating {
   0% {
@@ -3873,13 +3934,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-select {
   width: 206px;
   display: inline-block;
@@ -3896,8 +3959,18 @@ h6 {
     padding: 0;
     line-height: 1;
     position: relative;
+    z-index: 1;
     -webkit-transition: border 0.3s, color 0.3s, background 0.3s;
     transition: border 0.3s, color 0.3s, background 0.3s; }
+    .x-select .x-select-head::before {
+      content: '';
+      width: 100%;
+      height: 100%;
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 999; }
     .x-select .x-select-head .x-select-input {
       width: 100%;
       height: 100%;
@@ -3918,13 +3991,21 @@ h6 {
       top: 7px;
       right: 9.5px;
       font-size: 18px;
-      color: #a3afb7; }
+      color: #a3afb7;
+      -webkit-transition: -webkit-transform 0.3s;
+      transition: -webkit-transform 0.3s;
+      transition: transform 0.3s;
+      transition: transform 0.3s, -webkit-transform 0.3s;
+      z-index: 1; }
     .x-select .x-select-head.x-radius {
       border-radius: 3px; }
+  .x-select.x-select-open .x-select-head > i {
+    -webkit-transform: rotate(180deg);
+            transform: rotate(180deg); }
   .x-select .x-select-group .x-group-label {
     display: block;
     font-size: 14px;
-    color: #37474f;
+    color: #76838f;
     line-height: 30px;
     -webkit-box-sizing: border-box;
             box-sizing: border-box;
@@ -3944,7 +4025,7 @@ h6 {
     margin-top: 4px;
     padding: 2px 0;
     border-color: #e2e2e2;
-    z-index: 10;
+    z-index: 99;
     background: #fff; }
     .x-select .x-dropdown-menu ul {
       max-height: 160px;
@@ -3958,7 +4039,7 @@ h6 {
         line-height: 32px;
         cursor: pointer;
         white-space: nowrap;
-        color: #76838f; }
+        color: #37474f; }
         .x-select .x-dropdown-menu ul li > span {
           display: inline-block;
           padding-right: 26px;
@@ -4090,25 +4171,31 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-switch {
   display: inline-block;
   vertical-align: middle;
+  line-height: 1;
   background: #fff;
   border: 1px solid #e2e2e2;
   cursor: pointer;
   position: relative;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+  overflow: hidden;
   border-radius: 20px;
   -webkit-transition: background 0.25s ease-in-out, border-color 0.25s ease-in-out;
   transition: background 0.25s ease-in-out, border-color 0.25s ease-in-out; }
+  .x-switch + .x-switch {
+    margin-left: 15px; }
   .x-switch i {
     position: absolute;
     border-radius: 20px;
@@ -4129,12 +4216,13 @@ h6 {
   .x-switch .x-switch-label {
     vertical-align: middle; }
   .x-switch.x-disabled {
-    background: #f3f7f9;
-    border-color: #E4EAEC; }
+    background: #f3f7f9 !important;
+    border-color: #E4EAEC !important; }
     .x-switch.x-disabled i {
-      opacity: 0.7; }
+      opacity: 0.7 !important;
+      background: #d2d2d2 !important; }
     .x-switch.x-disabled .x-switch-label {
-      color: #a3afb7; }
+      color: #a3afb7 !important; }
 
 .x-switch-large {
   width: 65px;
@@ -4282,13 +4370,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-slider-box {
   width: 100%;
   display: inline-block;
@@ -4397,13 +4487,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-form {
   display: block; }
   .x-form .x-form-item {
@@ -4419,7 +4511,7 @@ h6 {
               box-sizing: border-box;
       font-size: 14px;
       line-height: 1;
-      color: #495060;
+      color: #3f536e;
       padding: 10px 12px 10px 0; }
     .x-form .x-form-item .x-form-msg,
     .x-form .x-form-item .x-form-content {
@@ -4466,6 +4558,16 @@ h6 {
     .x-form-pane .x-form-item-pane .x-form-content .x-textarea,
     .x-form-pane .x-form-item-pane .x-form-content .x-select .x-select-input {
       border: none; }
+    .x-form-pane .x-form-item-pane .x-form-content .x-checkbox:first-child,
+    .x-form-pane .x-form-item-pane .x-form-content .x-radio:first-child,
+    .x-form-pane .x-form-item-pane .x-form-content .x-checkbox-group:first-child,
+    .x-form-pane .x-form-item-pane .x-form-content .x-checkbox-radio:first-child,
+    .x-form-pane .x-form-item-pane .x-form-content .x-button:first-child,
+    .x-form-pane .x-form-item-pane .x-form-content .x-switch:first-child {
+      margin-left: 15px; }
+    .x-form-pane .x-form-item-pane .x-form-content .x-checkbox-group .x-checkbox:first-child,
+    .x-form-pane .x-form-item-pane .x-form-content .x-checkbox-radio .x-radio:first-child {
+      margin-left: 0; }
 
 .x-form-pane .x-textarea-pane .x-form-label {
   width: 100%;
@@ -4504,13 +4606,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-tabs-box {
   background: #fff; }
   .x-tabs-box .x-tabs-nav {
@@ -4519,7 +4623,7 @@ h6 {
     border-bottom: 1px solid #e2e2e2; }
     .x-tabs-box .x-tabs-nav li {
       font-size: 14px;
-      color: #495060;
+      color: #3f536e;
       display: inline-block;
       vertical-align: middle;
       height: 40px;
@@ -4623,13 +4727,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-collapse {
   border: 1px solid #e2e2e2; }
   .x-collapse .x-collapse-item {
@@ -4817,13 +4923,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-badge {
   display: inline-block;
   line-height: 1;
@@ -4876,13 +4984,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-tag {
   display: inline-block;
   vertical-align: middle;
@@ -4898,11 +5008,7 @@ h6 {
     display: inline-block;
     border-radius: 100%;
     overflow: hidden;
-    cursor: pointer;
-    -webkit-transition: -webkit-transform 0.3s;
-    transition: -webkit-transform 0.3s;
-    transition: transform 0.3s;
-    transition: transform 0.3s, -webkit-transform 0.3s; }
+    cursor: pointer; }
     .x-tag .x-tag-icon:hover {
       -webkit-transform: scale(1.1);
               transform: scale(1.1); }
@@ -4988,15 +5094,17 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 /*
-  * @Module: x-alert和x-toastr共用
+  * @Module: x-alert和x-notice共用
  * @Author: 小缘
  * @Date: 2017-07-24 22:08:52
  */
@@ -5021,18 +5129,20 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-alert {
   border-radius: 4px;
   overflow: hidden;
   color: #fff;
-  font-size: 14px; }
+  font-size: 13px; }
   .x-alert .x-alert-title {
     font-size: 14px;
     font-weight: 700;
@@ -5059,7 +5169,7 @@ h6 {
     right: 12px;
     font-size: 12px;
     cursor: pointer;
-    top: 16.15px;
+    top: 15.425px;
     opacity: 0.7;
     line-height: 1; }
     .x-alert .x-alert-close:hover {
@@ -5074,6 +5184,9 @@ h6 {
     background: #f96868; }
   .x-alert.x-alert-dark {
     background: #667180; }
+
+.x-alert .x-alert-content {
+  font-size: 13px; }
 
 .x-alert-animate-enter-active,
 .x-alert-animate-leave-active {
@@ -5110,13 +5223,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 /*
   * @Module: x-dialog和x-modal共用
  * @Author: 小缘
@@ -5143,13 +5258,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-dialog-box {
   z-index: 2017;
   width: 100%;
@@ -5214,6 +5331,34 @@ h6 {
   min-width: 270px;
   max-width: 360px; }
 
+.x-dialog-box .x-dialog-content .x-dialog-info > i {
+  color: #4399ff; }
+
+.x-dialog-box .x-dialog-content .x-dialog-success > i {
+  color: #46be8a; }
+
+.x-dialog-box .x-dialog-content .x-dialog-warning > i {
+  color: #f2a654; }
+
+.x-dialog-box .x-dialog-content .x-dialog-error > i {
+  color: #f96868; }
+
+.x-dialog-box .x-dialog-content > div {
+  position: relative; }
+
+.x-dialog-box .x-dialog-show-icon > i {
+  font-size: 36px;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  position: absolute;
+  left: 0;
+  top: 50%;
+  line-height: 1; }
+
+.x-dialog-box .x-dialog-show-icon > span {
+  display: block;
+  padding-left: 42px; }
+
 .bounce-enter-active,
 .bounce-leave-active {
   -webkit-transition: opacity 0.25s;
@@ -5260,15 +5405,17 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 /*
-  * @Module: x-alert和x-toastr共用
+  * @Module: x-alert和x-notice共用
  * @Author: 小缘
  * @Date: 2017-07-24 22:08:52
  */
@@ -5293,73 +5440,77 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
-.x-toastr-box {
+/* 弹出层 */
+/* 分页 */
+.x-notice-box {
   position: fixed;
   top: 20px;
   right: 20px;
-  width: 280px;
+  width: 300px;
   z-index: 2017; }
-  .x-toastr-box .x-toastr {
-    margin-bottom: 16px; }
-  .x-toastr-box .x-toastr {
+  .x-notice-box .x-notice {
+    margin-bottom: 16px;
+    -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 5px rgba(0, 0, 0, 0.04); }
+  .x-notice-box .x-notice {
     border-radius: 4px;
     overflow: hidden;
     color: #fff;
-    font-size: 14px; }
-    .x-toastr-box .x-toastr .x-toastr-title {
+    font-size: 13px; }
+    .x-notice-box .x-notice .x-notice-title {
       font-size: 14px;
       font-weight: 700;
       margin-bottom: 4px; }
-    .x-toastr-box .x-toastr .x-toastr-content {
+    .x-notice-box .x-notice .x-notice-content {
       position: relative;
       line-height: 1.45;
       padding: 12px; }
-    .x-toastr-box .x-toastr.x-toastr-show-icon .x-toastr-content {
+    .x-notice-box .x-notice.x-notice-show-icon .x-notice-content {
       padding-left: 50.6px; }
-    .x-toastr-box .x-toastr.x-toastr-show-close .x-toastr-content {
+    .x-notice-box .x-notice.x-notice-show-close .x-notice-content {
       padding-right: 30px; }
-    .x-toastr-box .x-toastr .x-toastr-close,
-    .x-toastr-box .x-toastr .x-toastr-icon {
+    .x-notice-box .x-notice .x-notice-close,
+    .x-notice-box .x-notice .x-notice-icon {
       position: absolute; }
-    .x-toastr-box .x-toastr .x-toastr-icon {
+    .x-notice-box .x-notice .x-notice-icon {
       left: 12px;
       font-size: 32px;
       top: 50%;
       -webkit-transform: translateY(-50%);
               transform: translateY(-50%);
       line-height: 1; }
-    .x-toastr-box .x-toastr .x-toastr-close {
+    .x-notice-box .x-notice .x-notice-close {
       right: 12px;
       font-size: 12px;
       cursor: pointer;
-      top: 16.15px;
+      top: 15.425px;
       opacity: 0.7;
       line-height: 1; }
-      .x-toastr-box .x-toastr .x-toastr-close:hover {
+      .x-notice-box .x-notice .x-notice-close:hover {
         opacity: 1; }
-    .x-toastr-box .x-toastr.x-toastr-primary {
+    .x-notice-box .x-notice.x-notice-primary {
       background: #4399ff; }
-    .x-toastr-box .x-toastr.x-toastr-success {
+    .x-notice-box .x-notice.x-notice-success {
       background: #46be8a; }
-    .x-toastr-box .x-toastr.x-toastr-warning {
+    .x-notice-box .x-notice.x-notice-warning {
       background: #f2a654; }
-    .x-toastr-box .x-toastr.x-toastr-danger {
+    .x-notice-box .x-notice.x-notice-danger {
       background: #f96868; }
-    .x-toastr-box .x-toastr.x-toastr-dark {
+    .x-notice-box .x-notice.x-notice-dark {
       background: #667180; }
 
-.x-toastr-let-move-enter-active {
+.x-notice-let-move-enter-active {
   -webkit-animation: let-move 0.4s;
           animation: let-move 0.4s; }
 
-.x-toastr-let-move-leave-active {
+.x-notice-let-move-leave-active {
   -webkit-animation: let-move 0.4s reverse;
           animation: let-move 0.4s reverse; }
 
@@ -5389,13 +5540,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 /*
   * @Module: x-dialog和x-modal共用
  * @Author: 小缘
@@ -5422,13 +5575,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-modal-box {
   z-index: 2017;
   width: 100%;
@@ -5487,9 +5642,9 @@ h6 {
   .x-modal.x-modal-large {
     width: 900px; }
   .x-modal.x-modal-default {
-    width: 500px; }
+    width: 650px; }
   .x-modal.x-modal-small {
-    width: 350px; }
+    width: 450px; }
   .x-modal .x-modal-footer {
     padding-top: 10px; }
 
@@ -5545,13 +5700,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-sidebar .x-mask {
   opacity: 0.6; }
 
@@ -5627,13 +5784,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-menu {
   display: block;
   position: relative;
@@ -5718,15 +5877,38 @@ h6 {
   background: #fff; }
   .x-table-box .x-table {
     width: 100%;
-    font-size: 14px;
     border-spacing: 0;
     border-collapse: collapse;
     color: #76838f; }
     .x-table-box .x-table thead > tr > th {
       font-weight: bold; }
+      .x-table-box .x-table thead > tr > th > span,
+      .x-table-box .x-table thead > tr > th > div {
+        display: inline-block;
+        vertical-align: middle; }
+    .x-table-box .x-table thead .x-table-sort {
+      height: 100%;
+      padding-left: 5px; }
+      .x-table-box .x-table thead .x-table-sort span {
+        display: block;
+        line-height: 1;
+        font-size: 14px;
+        overflow: hidden;
+        cursor: pointer;
+        opacity: 0.6;
+        -webkit-transition: opacity 0.1s;
+        transition: opacity 0.1s;
+        position: relative;
+        z-index: 1; }
+        .x-table-box .x-table thead .x-table-sort span:first-child {
+          margin-top: 4px; }
+        .x-table-box .x-table thead .x-table-sort span:last-child {
+          margin-top: -4px; }
+        .x-table-box .x-table thead .x-table-sort span.sort-active, .x-table-box .x-table thead .x-table-sort span:hover {
+          opacity: 1;
+          z-index: 99; }
     .x-table-box .x-table th,
     .x-table-box .x-table td {
-      padding: 9px 14px;
       line-height: 1.5;
       vertical-align: middle; }
       .x-table-box .x-table th > div,
@@ -5742,9 +5924,22 @@ h6 {
         border-top: 1px solid #e4eaec; }
   .x-table-box .x-table-body {
     width: 100%;
-    position: relative; }
+    position: relative;
+    overflow: auto; }
   .x-table-box .x-table-scroll-body tbody tr:first-child td {
     border-top: none; }
+  .x-table-box.x-table-large th,
+  .x-table-box.x-table-large td {
+    padding: 10px 14px;
+    font-size: 16px; }
+  .x-table-box.x-table-default th,
+  .x-table-box.x-table-default td {
+    padding: 8px 14px;
+    font-size: 14px; }
+  .x-table-box.x-table-small th,
+  .x-table-box.x-table-small td {
+    padding: 6px 14px;
+    font-size: 12px; }
   .x-table-box.x-table-bordered tbody > tr > td,
   .x-table-box.x-table-bordered thead > tr:first-child > th {
     border: 1px solid #e4eaec; }
@@ -5752,11 +5947,162 @@ h6 {
   .x-table-box.no-border tr > th {
     border: none !important; }
   .x-table-box.x-table-hover tr:hover {
-    background: #f3f7f9; }
+    background: #f6fafe; }
   .x-table-box.x-table-striped tr:nth-child(even) {
-    background: rgba(243, 247, 249, 0.3); }
-  .x-table-box .x-table-header th {
+    background-color: #fbfbfb; }
+  .x-table-box .x-table-header {
+    background-color: #f5f5f5; }
+    .x-table-box .x-table-header th {
+      border-bottom: none; }
+
+.x-table-fixed-head.x-table-bordered {
+  overflow: hidden;
+  border-bottom: 1px solid #e4eaec; }
+  .x-table-fixed-head.x-table-bordered tr:last-child td {
     border-bottom: none; }
+
+/*
+  * @Module: 弹出框
+ * @Author: 小缘
+ * @Date: 2017-09-08 23:11:59
+ */
+/* base */
+/* 颜色 */
+/* 颜色分类 */
+/* 动画过渡 */
+/* 组件和模块 */
+/* 字体 */
+/* x-quote */
+/* 按钮 */
+/* input */
+/* x-input-group */
+/* textarea */
+/* 计数器 */
+/* checkbox和radio */
+/* 多选和单选按钮组 */
+/* 下拉选择 */
+/* 开关 */
+/* 滑块 */
+/* 表单 */
+/* 选项卡 */
+/* 折叠面板 */
+/* 徽章 */
+/* x-alert和x-notice共用 */
+/* dialog对话框 */
+/* x-dailog和x-model共用*/
+/* toastr */
+/* x-model */
+/* 侧边栏 */
+/* 表格 */
+/* 弹出层 */
+/* 分页 */
+/*
+  * @Module: 三槐
+ * @Author: 小缘
+ * @Date: 2017-09-08 23:16:36
+ */
+.x-popover-box {
+  display: inline-block; }
+
+.x-popover {
+  position: absolute;
+  display: inline-block;
+  z-index: 999; }
+  .x-popover .x-popover-text {
+    border: 1px solid rgba(204, 213, 219, 0.8);
+    background: #fff;
+    padding: 10px 10px;
+    min-width: 160px;
+    max-width: 280px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.11);
+            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.11); }
+    .x-popover .x-popover-text .x-popover-title {
+      color: #333;
+      font-size: 14px;
+      padding-bottom: 8px;
+      line-height: 1; }
+    .x-popover .x-popover-text .x-popover-content {
+      color: #3f536e;
+      font-size: 13px; }
+  .x-popover.x-popover .arrow {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid; }
+    .x-popover.x-popover .arrow:after {
+      content: "";
+      border-width: 5px;
+      position: absolute;
+      display: block;
+      width: 0;
+      height: 0;
+      border-color: transparent;
+      border-style: solid; }
+  .x-popover.x-popover-top {
+    padding-bottom: 10px; }
+    .x-popover.x-popover-top .arrow {
+      top: 100%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -10px);
+              transform: translate(-50%, -10px);
+      border-width: 5px 5px 0;
+      border-top-color: rgba(204, 213, 219, 0.8); }
+      .x-popover.x-popover-top .arrow:after {
+        bottom: 1px;
+        margin-left: -5px;
+        content: '';
+        border-top-color: #fff;
+        border-bottom-width: 0; }
+  .x-popover.x-popover-bottom {
+    padding-top: 10px;
+    top: 0; }
+    .x-popover.x-popover-bottom .arrow {
+      top: 0;
+      left: 50%;
+      margin-top: 5px;
+      margin-left: -5px;
+      border-width: 0 5px 5px;
+      border-bottom-color: rgba(204, 213, 219, 0.8); }
+      .x-popover.x-popover-bottom .arrow:after {
+        top: 1px;
+        margin-left: -5px;
+        content: " ";
+        border-top-width: 0;
+        border-bottom-color: #fff; }
+  .x-popover.x-popover-left {
+    padding-right: 10px; }
+    .x-popover.x-popover-left .arrow {
+      top: 50%;
+      left: 100%;
+      -webkit-transform: translate(-10px, -50%);
+              transform: translate(-10px, -50%);
+      border-width: 5px 0 5px 5px;
+      border-left-color: rgba(204, 213, 219, 0.8); }
+      .x-popover.x-popover-left .arrow:after {
+        right: 1px;
+        bottom: -5px;
+        content: " ";
+        border-right-width: 0;
+        border-left-color: #fff; }
+  .x-popover.x-popover-right {
+    padding-left: 10px; }
+    .x-popover.x-popover-right .arrow {
+      top: 50%;
+      left: 10px;
+      -webkit-transform: translate(-100%, -50%);
+              transform: translate(-100%, -50%);
+      border-width: 5px 5px 5px 0;
+      border-right-color: rgba(204, 213, 219, 0.8); }
+      .x-popover.x-popover-right .arrow:after {
+        bottom: -5px;
+        left: 1px;
+        content: " ";
+        border-right-color: #fff;
+        border-left-width: 0; }
 
 /*
  * @Module: 文字提示
@@ -5784,13 +6130,20 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
+/*
+  * @Module: 三槐
+ * @Author: 小缘
+ * @Date: 2017-09-08 23:16:36
+ */
 .x-tooltip-box {
   display: inline-block; }
 
@@ -5801,108 +6154,106 @@ h6 {
     display: inline-block;
     position: relative;
     max-width: 190px;
-    padding: 6px 12px;
+    padding: 8px 10px;
     color: #fff;
     text-align: center;
     background-color: rgba(0, 0, 0, 0.8);
     white-space: nowrap;
     border-radius: 4px; }
-    .x-tooltip .x-tooltip-text::after {
-      content: '';
-      display: inline-block;
-      position: absolute;
-      width: 0;
-      height: 0;
-      border-color: transparent;
-      border-style: solid; }
+  .x-tooltip.x-tooltip .arrow {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid; }
   .x-tooltip.x-tooltip-top {
     padding-bottom: 10px; }
-    .x-tooltip.x-tooltip-top .x-tooltip-text::after {
+    .x-tooltip.x-tooltip-top .arrow {
       top: 100%;
       left: 50%;
-      -webkit-transform: translateX(-50%);
-              transform: translateX(-50%);
+      -webkit-transform: translate(-50%, -10px);
+              transform: translate(-50%, -10px);
       border-width: 5px 5px 0;
       border-top-color: rgba(0, 0, 0, 0.8); }
   .x-tooltip.x-tooltip-bottom {
-    padding-top: 10px; }
-    .x-tooltip.x-tooltip-bottom .x-tooltip-text {
-      top: 0; }
-      .x-tooltip.x-tooltip-bottom .x-tooltip-text::after {
-        top: 0;
-        left: 50%;
-        -webkit-transform: translateY(-100%);
-                transform: translateY(-100%);
-        margin-left: -5px;
-        border-width: 0 5px 5px;
-        border-bottom-color: rgba(0, 0, 0, 0.8); }
+    padding-top: 10px;
+    top: 0; }
+    .x-tooltip.x-tooltip-bottom .arrow {
+      top: 0;
+      left: 50%;
+      margin-top: 5px;
+      margin-left: -5px;
+      border-width: 0 5px 5px;
+      border-bottom-color: rgba(0, 0, 0, 0.8); }
   .x-tooltip.x-tooltip-left {
     padding-right: 10px; }
-    .x-tooltip.x-tooltip-left .x-tooltip-text::after {
+    .x-tooltip.x-tooltip-left .arrow {
       top: 50%;
       left: 100%;
-      -webkit-transform: translateY(-50%);
-              transform: translateY(-50%);
+      -webkit-transform: translate(-10px, -50%);
+              transform: translate(-10px, -50%);
       border-width: 5px 0 5px 5px;
       border-left-color: rgba(0, 0, 0, 0.8); }
   .x-tooltip.x-tooltip-right {
     padding-left: 10px; }
-    .x-tooltip.x-tooltip-right .x-tooltip-text::after {
+    .x-tooltip.x-tooltip-right .arrow {
       top: 50%;
-      left: 0;
+      left: 10px;
       -webkit-transform: translate(-100%, -50%);
               transform: translate(-100%, -50%);
       border-width: 5px 5px 5px 0;
       border-right-color: rgba(0, 0, 0, 0.8); }
   .x-tooltip.x-tooltip-primary .x-tooltip-text {
     background-color: #4399ff; }
-  .x-tooltip.x-tooltip-primary.x-tooltip-top .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-primary.x-tooltip-top .arrow {
     border-top-color: #4399ff; }
-  .x-tooltip.x-tooltip-primary.x-tooltip-bottom .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-primary.x-tooltip-bottom .arrow {
     border-bottom-color: #4399ff; }
-  .x-tooltip.x-tooltip-primary.x-tooltip-left .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-primary.x-tooltip-left .arrow {
     border-left-color: #4399ff; }
-  .x-tooltip.x-tooltip-primary.x-tooltip-right .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-primary.x-tooltip-right .arrow {
     border-right-color: #4399ff; }
   .x-tooltip.x-tooltip-success .x-tooltip-text {
     background-color: #46be8a; }
-  .x-tooltip.x-tooltip-success.x-tooltip-top .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-success.x-tooltip-top .arrow {
     border-top-color: #46be8a; }
-  .x-tooltip.x-tooltip-success.x-tooltip-bottom .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-success.x-tooltip-bottom .arrow {
     border-bottom-color: #46be8a; }
-  .x-tooltip.x-tooltip-success.x-tooltip-left .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-success.x-tooltip-left .arrow {
     border-left-color: #46be8a; }
-  .x-tooltip.x-tooltip-success.x-tooltip-right .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-success.x-tooltip-right .arrow {
     border-right-color: #46be8a; }
   .x-tooltip.x-tooltip-warning .x-tooltip-text {
     background-color: #f2a654; }
-  .x-tooltip.x-tooltip-warning.x-tooltip-top .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-warning.x-tooltip-top .arrow {
     border-top-color: #f2a654; }
-  .x-tooltip.x-tooltip-warning.x-tooltip-bottom .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-warning.x-tooltip-bottom .arrow {
     border-bottom-color: #f2a654; }
-  .x-tooltip.x-tooltip-warning.x-tooltip-left .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-warning.x-tooltip-left .arrow {
     border-left-color: #f2a654; }
-  .x-tooltip.x-tooltip-warning.x-tooltip-right .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-warning.x-tooltip-right .arrow {
     border-right-color: #f2a654; }
   .x-tooltip.x-tooltip-danger .x-tooltip-text {
     background-color: #f96868; }
-  .x-tooltip.x-tooltip-danger.x-tooltip-top .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-danger.x-tooltip-top .arrow {
     border-top-color: #f96868; }
-  .x-tooltip.x-tooltip-danger.x-tooltip-bottom .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-danger.x-tooltip-bottom .arrow {
     border-bottom-color: #f96868; }
-  .x-tooltip.x-tooltip-danger.x-tooltip-left .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-danger.x-tooltip-left .arrow {
     border-left-color: #f96868; }
-  .x-tooltip.x-tooltip-danger.x-tooltip-right .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-danger.x-tooltip-right .arrow {
     border-right-color: #f96868; }
   .x-tooltip.x-tooltip-dark .x-tooltip-text {
     background-color: #667180; }
-  .x-tooltip.x-tooltip-dark.x-tooltip-top .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-dark.x-tooltip-top .arrow {
     border-top-color: #667180; }
-  .x-tooltip.x-tooltip-dark.x-tooltip-bottom .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-dark.x-tooltip-bottom .arrow {
     border-bottom-color: #667180; }
-  .x-tooltip.x-tooltip-dark.x-tooltip-left .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-dark.x-tooltip-left .arrow {
     border-left-color: #667180; }
-  .x-tooltip.x-tooltip-dark.x-tooltip-right .x-tooltip-text::after {
+  .x-tooltip.x-tooltip-dark.x-tooltip-right .arrow {
     border-right-color: #667180; }
 
 /*
@@ -5931,13 +6282,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-page {
   display: inline-block;
   font-size: 0;
@@ -6068,13 +6421,15 @@ h6 {
 /* 选项卡 */
 /* 折叠面板 */
 /* 徽章 */
-/* x-alert和x-toastr共用 */
+/* x-alert和x-notice共用 */
 /* dialog对话框 */
 /* x-dailog和x-model共用*/
 /* toastr */
 /* x-model */
 /* 侧边栏 */
 /* 表格 */
+/* 弹出层 */
+/* 分页 */
 .x-scroll-bar {
   overflow: hidden;
   position: relative;

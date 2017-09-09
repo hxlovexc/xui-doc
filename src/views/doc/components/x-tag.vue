@@ -4,9 +4,10 @@
       <h3 class="row-title">tag 标签</h3>
       <p>对不同事物的属性进行标记和分类</p>
     </div>
-    <!--基础用法-->
+
+    <!--基础-->
     <div class="row">
-      <h3 class="row-title">基础用法</h3>
+      <h3 class="row-title">基础</h3>
       <x-quote>
         <x-tag>tag</x-tag>
         <source-code type="html" class="margin-top-10">{{base}}</source-code>
@@ -182,7 +183,7 @@
         eventsData: [
           {
             events: 'close',
-            explain: '标签关闭标签点击后执行的事件(使用这个事件时closable必须为true)',
+            explain: '标签点击关闭执行的事件(使用这个事件时closable必须为true)',
             params: 'event'
           }
         ]

@@ -53,7 +53,7 @@
         clipboard.on('success', () => {
           // 销毁
           clipboard.destroy();
-          this.$toastr('复制成功!', {
+          this.$notice('复制成功!', {
             type: 'success'
           });
         });

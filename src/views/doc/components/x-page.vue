@@ -115,7 +115,6 @@
 </template>
 
 <script>
-  /* eslint-disable no-useless-escape */
   // 基础用法
   const base = `<x-page :total="500"></x-page>`;
 

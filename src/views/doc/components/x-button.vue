@@ -402,6 +402,13 @@
             type: 'Boolean',
             values: 'true | false',
             default: 'false'
+          },
+          {
+            attribute: 'disabled',
+            explain: '禁用按钮',
+            type: 'Boolean',
+            values: 'true | false',
+            default: 'false'
           }
         ],
         // 事件

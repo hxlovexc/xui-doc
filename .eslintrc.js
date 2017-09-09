@@ -21,6 +21,7 @@ module.exports = {
     'no-debugger': state,
     // 'no-console': state,
     "semi": [1, 'always'],
-    "no-extra-semi": 2
+    "no-extra-semi": 2,
+    "no-useless-escape": 0
   }
 }

@@ -74,7 +74,6 @@
 </template>
 
 <script>
-  /* eslint-disable no-useless-escape */
   const base = `<x-slider v-model="slider"></x-slider>`;
 
   // 颜色分类

@@ -7,7 +7,7 @@
 		var a = typeof exports === 'object' ? factory(require("vue")) : factory(root["Vue"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(this, function(__WEBPACK_EXTERNAL_MODULE_24__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_19__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 48);
+/******/ 	return __webpack_require__(__webpack_require__.s = 56);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -132,104 +132,282 @@ module.exports = function normalizeComponent (
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports) {
+
+// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
+var global = module.exports = typeof window != 'undefined' && window.Math == Math
+  ? window : typeof self != 'undefined' && self.Math == Math ? self
+  // eslint-disable-next-line no-new-func
+  : Function('return this')();
+if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports) {
+
+var core = module.exports = { version: '2.5.1' };
+if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var store      = __webpack_require__(37)('wks')
-  , uid        = __webpack_require__(38)
-  , Symbol     = __webpack_require__(2).Symbol
-  , USE_SYMBOL = typeof Symbol == 'function';
+var store = __webpack_require__(42)('wks');
+var uid = __webpack_require__(43);
+var Symbol = __webpack_require__(1).Symbol;
+var USE_SYMBOL = typeof Symbol == 'function';
 
-var $exports = module.exports = function(name){
+var $exports = module.exports = function (name) {
   return store[name] || (store[name] =
     USE_SYMBOL && Symbol[name] || (USE_SYMBOL ? Symbol : uid)('Symbol.' + name));
 };
 
 $exports.store = store;
 
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
-var global = module.exports = typeof window != 'undefined' && window.Math == Math
-  ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
-if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-var core = module.exports = {version: '2.4.0'};
-if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
 
 /***/ }),
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var dP         = __webpack_require__(7)
-  , createDesc = __webpack_require__(33);
-module.exports = __webpack_require__(6) ? function(object, key, value){
-  return dP.f(object, key, createDesc(1, value));
-} : function(object, key, value){
-  object[key] = value;
-  return object;
-};
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.on = on;
+exports.off = off;
+exports.once = once;
+exports.clickOutside = clickOutside;
+function on(el, event, callback) {
+  var useCapture = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
+  el.addEventListener(event, callback, useCapture);
+}
+
+function off(el, event, callback) {
+  var useCapture = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
+  el.removeEventListener(event, callback, useCapture);
+}
+
+function once(el, event, callback) {
+  function trigger() {
+    callback && callback.apply(this, arguments);
+    off(el, event, trigger);
+  }
+  on(el, event, trigger);
+}
+
+function clickOutside(el, callback, useCapture) {
+  if (typeof el === 'function') {
+    callback = el;
+    el = '';
+  }
+  function click(event) {
+    var state = false;
+
+    el = [].concat(el);
+    if (el.length) {
+      for (var i = 0; i < el.length; i++) {
+        if (el[i].contains(event.target) === false) {
+          state = true;
+          break;
+        }
+      }
+    } else {
+      state = true;
+    }
+    if (state && callback) {
+      callback();
+      off(document, 'click', click, useCapture);
+    }
+  }
+  on(document, 'click', click, useCapture);
+}
 
 /***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(12);
-module.exports = function(it){
-  if(!isObject(it))throw TypeError(it + ' is not an object!');
-  return it;
+var global = __webpack_require__(1);
+var core = __webpack_require__(2);
+var ctx = __webpack_require__(10);
+var hide = __webpack_require__(7);
+var PROTOTYPE = 'prototype';
+
+var $export = function (type, name, source) {
+  var IS_FORCED = type & $export.F;
+  var IS_GLOBAL = type & $export.G;
+  var IS_STATIC = type & $export.S;
+  var IS_PROTO = type & $export.P;
+  var IS_BIND = type & $export.B;
+  var IS_WRAP = type & $export.W;
+  var exports = IS_GLOBAL ? core : core[name] || (core[name] = {});
+  var expProto = exports[PROTOTYPE];
+  var target = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE];
+  var key, own, out;
+  if (IS_GLOBAL) source = name;
+  for (key in source) {
+    // contains in native
+    own = !IS_FORCED && target && target[key] !== undefined;
+    if (own && key in exports) continue;
+    // export native or passed
+    out = own ? target[key] : source[key];
+    // prevent global pollution for namespaces
+    exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key]
+    // bind timers to global for call from export context
+    : IS_BIND && own ? ctx(out, global)
+    // wrap global constructors for prevent change them in library
+    : IS_WRAP && target[key] == out ? (function (C) {
+      var F = function (a, b, c) {
+        if (this instanceof C) {
+          switch (arguments.length) {
+            case 0: return new C();
+            case 1: return new C(a);
+            case 2: return new C(a, b);
+          } return new C(a, b, c);
+        } return C.apply(this, arguments);
+      };
+      F[PROTOTYPE] = C[PROTOTYPE];
+      return F;
+    // make static versions for prototype methods
+    })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
+    // export proto methods to core.%CONSTRUCTOR%.methods.%NAME%
+    if (IS_PROTO) {
+      (exports.virtual || (exports.virtual = {}))[key] = out;
+      // export proto methods to core.%CONSTRUCTOR%.prototype.%NAME%
+      if (type & $export.R && expProto && !expProto[key]) hide(expProto, key, out);
+    }
+  }
 };
+// type bitmap
+$export.F = 1;   // forced
+$export.G = 2;   // global
+$export.S = 4;   // static
+$export.P = 8;   // proto
+$export.B = 16;  // bind
+$export.W = 32;  // wrap
+$export.U = 64;  // safe
+$export.R = 128; // real proto method for `library`
+module.exports = $export;
+
 
 /***/ }),
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// Thank's IE8 for his funny defineProperty
-module.exports = !__webpack_require__(17)(function(){
-  return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
-});
+var isObject = __webpack_require__(11);
+module.exports = function (it) {
+  if (!isObject(it)) throw TypeError(it + ' is not an object!');
+  return it;
+};
+
 
 /***/ }),
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var anObject       = __webpack_require__(5)
-  , IE8_DOM_DEFINE = __webpack_require__(153)
-  , toPrimitive    = __webpack_require__(154)
-  , dP             = Object.defineProperty;
-
-exports.f = __webpack_require__(6) ? Object.defineProperty : function defineProperty(O, P, Attributes){
-  anObject(O);
-  P = toPrimitive(P, true);
-  anObject(Attributes);
-  if(IE8_DOM_DEFINE)try {
-    return dP(O, P, Attributes);
-  } catch(e){ /* empty */ }
-  if('get' in Attributes || 'set' in Attributes)throw TypeError('Accessors not supported!');
-  if('value' in Attributes)O[P] = Attributes.value;
-  return O;
+var dP = __webpack_require__(8);
+var createDesc = __webpack_require__(23);
+module.exports = __webpack_require__(9) ? function (object, key, value) {
+  return dP.f(object, key, createDesc(1, value));
+} : function (object, key, value) {
+  object[key] = value;
+  return object;
 };
+
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = {};
+var anObject = __webpack_require__(6);
+var IE8_DOM_DEFINE = __webpack_require__(157);
+var toPrimitive = __webpack_require__(158);
+var dP = Object.defineProperty;
+
+exports.f = __webpack_require__(9) ? Object.defineProperty : function defineProperty(O, P, Attributes) {
+  anObject(O);
+  P = toPrimitive(P, true);
+  anObject(Attributes);
+  if (IE8_DOM_DEFINE) try {
+    return dP(O, P, Attributes);
+  } catch (e) { /* empty */ }
+  if ('get' in Attributes || 'set' in Attributes) throw TypeError('Accessors not supported!');
+  if ('value' in Attributes) O[P] = Attributes.value;
+  return O;
+};
+
 
 /***/ }),
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
+// Thank's IE8 for his funny defineProperty
+module.exports = !__webpack_require__(15)(function () {
+  return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a != 7;
+});
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// optional / simple context binding
+var aFunction = __webpack_require__(14);
+module.exports = function (fn, that, length) {
+  aFunction(fn);
+  if (that === undefined) return fn;
+  switch (length) {
+    case 1: return function (a) {
+      return fn.call(that, a);
+    };
+    case 2: return function (a, b) {
+      return fn.call(that, a, b);
+    };
+    case 3: return function (a, b, c) {
+      return fn.call(that, a, b, c);
+    };
+  }
+  return function (/* ...args */) {
+    return fn.apply(that, arguments);
+  };
+};
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports) {
+
+module.exports = function (it) {
+  return typeof it === 'object' ? it !== null : typeof it === 'function';
+};
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports) {
+
+module.exports = {};
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 
 
-var find = function find(object, name, callback) {
-  var childrens = object.$children;
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.find = find;
+exports.parent = parent;
+function find(name, callback) {
+  var childrens = this.$children;
   var components = [];
   if (childrens.length) {
     childrens.forEach(function (item) {
@@ -245,10 +423,10 @@ var find = function find(object, name, callback) {
     });
   }
   return components;
-};
+}
 
-var parent = function parent(object, name, callback) {
-  var parent = object.$parent;
+function parent(name, callback) {
+  var parent = this.$parent;
   var parentName = parent.$options.name;
 
   while (parent && parentName !== name) {
@@ -258,214 +436,188 @@ var parent = function parent(object, name, callback) {
     }
   }
   return parent;
-};
-
-module.exports = {
-  find: find,
-  parent: parent
-};
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var global    = __webpack_require__(2)
-  , core      = __webpack_require__(3)
-  , ctx       = __webpack_require__(11)
-  , hide      = __webpack_require__(4)
-  , PROTOTYPE = 'prototype';
-
-var $export = function(type, name, source){
-  var IS_FORCED = type & $export.F
-    , IS_GLOBAL = type & $export.G
-    , IS_STATIC = type & $export.S
-    , IS_PROTO  = type & $export.P
-    , IS_BIND   = type & $export.B
-    , IS_WRAP   = type & $export.W
-    , exports   = IS_GLOBAL ? core : core[name] || (core[name] = {})
-    , expProto  = exports[PROTOTYPE]
-    , target    = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE]
-    , key, own, out;
-  if(IS_GLOBAL)source = name;
-  for(key in source){
-    // contains in native
-    own = !IS_FORCED && target && target[key] !== undefined;
-    if(own && key in exports)continue;
-    // export native or passed
-    out = own ? target[key] : source[key];
-    // prevent global pollution for namespaces
-    exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key]
-    // bind timers to global for call from export context
-    : IS_BIND && own ? ctx(out, global)
-    // wrap global constructors for prevent change them in library
-    : IS_WRAP && target[key] == out ? (function(C){
-      var F = function(a, b, c){
-        if(this instanceof C){
-          switch(arguments.length){
-            case 0: return new C;
-            case 1: return new C(a);
-            case 2: return new C(a, b);
-          } return new C(a, b, c);
-        } return C.apply(this, arguments);
-      };
-      F[PROTOTYPE] = C[PROTOTYPE];
-      return F;
-    // make static versions for prototype methods
-    })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
-    // export proto methods to core.%CONSTRUCTOR%.methods.%NAME%
-    if(IS_PROTO){
-      (exports.virtual || (exports.virtual = {}))[key] = out;
-      // export proto methods to core.%CONSTRUCTOR%.prototype.%NAME%
-      if(type & $export.R && expProto && !expProto[key])hide(expProto, key, out);
-    }
-  }
-};
-// type bitmap
-$export.F = 1;   // forced
-$export.G = 2;   // global
-$export.S = 4;   // static
-$export.P = 8;   // proto
-$export.B = 16;  // bind
-$export.W = 32;  // wrap
-$export.U = 64;  // safe
-$export.R = 128; // real proto method for `library` 
-module.exports = $export;
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// optional / simple context binding
-var aFunction = __webpack_require__(16);
-module.exports = function(fn, that, length){
-  aFunction(fn);
-  if(that === undefined)return fn;
-  switch(length){
-    case 1: return function(a){
-      return fn.call(that, a);
-    };
-    case 2: return function(a, b){
-      return fn.call(that, a, b);
-    };
-    case 3: return function(a, b, c){
-      return fn.call(that, a, b, c);
-    };
-  }
-  return function(/* ...args */){
-    return fn.apply(that, arguments);
-  };
-};
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports) {
-
-module.exports = function(it){
-  return typeof it === 'object' ? it !== null : typeof it === 'function';
-};
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports) {
-
-var hasOwnProperty = {}.hasOwnProperty;
-module.exports = function(it, key){
-  return hasOwnProperty.call(it, key);
-};
+}
 
 /***/ }),
 /* 14 */
 /***/ (function(module, exports) {
 
-var toString = {}.toString;
-
-module.exports = function(it){
-  return toString.call(it).slice(8, -1);
+module.exports = function (it) {
+  if (typeof it != 'function') throw TypeError(it + ' is not a function!');
+  return it;
 };
+
 
 /***/ }),
 /* 15 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-module.exports = { "default": __webpack_require__(151), __esModule: true };
+module.exports = function (exec) {
+  try {
+    return !!exec();
+  } catch (e) {
+    return true;
+  }
+};
+
 
 /***/ }),
 /* 16 */
 /***/ (function(module, exports) {
 
-module.exports = function(it){
-  if(typeof it != 'function')throw TypeError(it + ' is not a function!');
-  return it;
+var hasOwnProperty = {}.hasOwnProperty;
+module.exports = function (it, key) {
+  return hasOwnProperty.call(it, key);
 };
+
 
 /***/ }),
 /* 17 */
 /***/ (function(module, exports) {
 
-module.exports = function(exec){
-  try {
-    return !!exec();
-  } catch(e){
-    return true;
-  }
+var toString = {}.toString;
+
+module.exports = function (it) {
+  return toString.call(it).slice(8, -1);
 };
+
 
 /***/ }),
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(12)
-  , document = __webpack_require__(2).document
-  // in old IE typeof document.createElement is 'object'
-  , is = isObject(document) && isObject(document.createElement);
-module.exports = function(it){
-  return is ? document.createElement(it) : {};
+// 7.1.13 ToObject(argument)
+var defined = __webpack_require__(21);
+module.exports = function (it) {
+  return Object(defined(it));
 };
+
 
 /***/ }),
 /* 19 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-// to indexed object, toObject with fallback for non-array-like ES3 strings
-var IObject = __webpack_require__(35)
-  , defined = __webpack_require__(20);
-module.exports = function(it){
-  return IObject(defined(it));
-};
+module.exports = __WEBPACK_EXTERNAL_MODULE_19__;
 
 /***/ }),
 /* 20 */
 /***/ (function(module, exports) {
 
-// 7.2.1 RequireObjectCoercible(argument)
-module.exports = function(it){
-  if(it == undefined)throw TypeError("Can't call method on  " + it);
-  return it;
+// 7.1.4 ToInteger
+var ceil = Math.ceil;
+var floor = Math.floor;
+module.exports = function (it) {
+  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
 };
+
 
 /***/ }),
 /* 21 */
 /***/ (function(module, exports) {
 
-// 7.1.4 ToInteger
-var ceil  = Math.ceil
-  , floor = Math.floor;
-module.exports = function(it){
-  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
+// 7.2.1 RequireObjectCoercible(argument)
+module.exports = function (it) {
+  if (it == undefined) throw TypeError("Can't call method on  " + it);
+  return it;
 };
+
 
 /***/ }),
 /* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var shared = __webpack_require__(37)('keys')
-  , uid    = __webpack_require__(38);
-module.exports = function(key){
-  return shared[key] || (shared[key] = uid(key));
+var isObject = __webpack_require__(11);
+var document = __webpack_require__(1).document;
+// typeof document.createElement is 'object' in old IE
+var is = isObject(document) && isObject(document.createElement);
+module.exports = function (it) {
+  return is ? document.createElement(it) : {};
 };
+
 
 /***/ }),
 /* 23 */
+/***/ (function(module, exports) {
+
+module.exports = function (bitmap, value) {
+  return {
+    enumerable: !(bitmap & 1),
+    configurable: !(bitmap & 2),
+    writable: !(bitmap & 4),
+    value: value
+  };
+};
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.14 / 15.2.3.14 Object.keys(O)
+var $keys = __webpack_require__(163);
+var enumBugKeys = __webpack_require__(44);
+
+module.exports = Object.keys || function keys(O) {
+  return $keys(O, enumBugKeys);
+};
+
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// to indexed object, toObject with fallback for non-array-like ES3 strings
+var IObject = __webpack_require__(41);
+var defined = __webpack_require__(21);
+module.exports = function (it) {
+  return IObject(defined(it));
+};
+
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 7.1.15 ToLength
+var toInteger = __webpack_require__(20);
+var min = Math.min;
+module.exports = function (it) {
+  return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
+};
+
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var shared = __webpack_require__(42)('keys');
+var uid = __webpack_require__(43);
+module.exports = function (key) {
+  return shared[key] || (shared[key] = uid(key));
+};
+
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var def = __webpack_require__(8).f;
+var has = __webpack_require__(16);
+var TAG = __webpack_require__(3)('toStringTag');
+
+module.exports = function (it, tag, stat) {
+  if (it && !has(it = stat ? it : it.prototype, TAG)) def(it, TAG, { configurable: true, value: tag });
+};
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = { "default": __webpack_require__(175), __esModule: true };
+
+/***/ }),
+/* 30 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -655,93 +807,68 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 24 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_24__;
-
-/***/ }),
-/* 25 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var def = __webpack_require__(7).f
-  , has = __webpack_require__(13)
-  , TAG = __webpack_require__(1)('toStringTag');
+"use strict";
 
-module.exports = function(it, tag, stat){
-  if(it && !has(it = stat ? it : it.prototype, TAG))def(it, TAG, {configurable: true, value: tag});
+// 25.4.1.5 NewPromiseCapability(C)
+var aFunction = __webpack_require__(14);
+
+function PromiseCapability(C) {
+  var resolve, reject;
+  this.promise = new C(function ($$resolve, $$reject) {
+    if (resolve !== undefined || reject !== undefined) throw TypeError('Bad Promise constructor');
+    resolve = $$resolve;
+    reject = $$reject;
+  });
+  this.resolve = aFunction(resolve);
+  this.reject = aFunction(reject);
+}
+
+module.exports.f = function (C) {
+  return new PromiseCapability(C);
 };
 
+
 /***/ }),
-/* 26 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(52),
+  __webpack_require__(60),
   /* template */
-  __webpack_require__(53),
+  __webpack_require__(61),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-button/x-button.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-button.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-34d70dd2", Component.options)
-  } else {
-    hotAPI.reload("data-v-34d70dd2", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 27 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(57),
+  __webpack_require__(65),
   /* template */
-  __webpack_require__(58),
+  __webpack_require__(66),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-input/x-input.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-input.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-c5f69444", Component.options)
-  } else {
-    hotAPI.reload("data-v-c5f69444", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 28 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -790,16 +917,21 @@ exports.default = {
   },
 
   methods: {
-    input: function input(event) {
-      var el = event.target;
-      this.$emit('input', el.value);
-      this.$emit('change', el);
+    input: function input(_ref) {
+      var target = _ref.target;
+
+      this.$emit('input', target.value);
+      this.$emit('change', target.value, target);
     },
-    blur: function blur(event) {
-      this.$emit('blur', event.target);
+    blur: function blur(_ref2) {
+      var target = _ref2.target;
+
+      this.$emit('blur', target.value, target);
     },
-    focus: function focus(event) {
-      this.$emit('focus', event.target);
+    focus: function focus(_ref3) {
+      var target = _ref3.target;
+
+      this.$emit('focus', target.value, target);
     }
   },
   watch: {
@@ -811,7 +943,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 29 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -839,7 +971,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 30 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -849,10 +981,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _queryComponents = __webpack_require__(9);
+var _queryComponents = __webpack_require__(13);
 
 exports.default = {
-  name: 'x-checkbox',
   props: {
     value: {},
     type: {
@@ -878,41 +1009,46 @@ exports.default = {
     return {
       model: '',
       state: this.value,
-      isDisabled: '',
-      parent: ''
+      PARENT: _queryComponents.parent.call(this, 'x-checkbox-group')
     };
   },
 
   methods: {
-    change: function change(e) {
-      var checked = e.target.checked;
-      if (this.parent) {
-        this.parent.change(this.label);
+    change: function change(_ref) {
+      var _this = this;
+
+      var target = _ref.target;
+
+      this.changeVal(target.checked);
+      this.$nextTick(function () {
+        _this.$emit('change', _this.state);
+        _this.$emit('input', _this.state);
+      });
+    },
+    changeVal: function changeVal(checked) {
+      if (this.PARENT) {
+        this.PARENT.change(this.label);
       } else {
         this.updateState(checked);
-        this.emitValue();
-        this.$emit('change', e);
       }
     },
     updateState: function updateState(val) {
       this.state = val ? this.label || true : false;
-    },
-    emitValue: function emitValue() {
-      this.$emit('input', this.state);
     }
   },
-  mounted: function mounted() {
-    this.parent = (0, _queryComponents.parent)(this, 'x-checkbox-group');
-
-    if (this.checked) {
-      this.parent ? this.parent.change(this.label, true) : this.emitValue();
-      this.updateState(true);
+  watch: {
+    value: function value(_value) {
+      if (_value === this.state) return;
+      this.changeVal(this.label ? _value === this.label : _value);
     }
+  },
+  created: function created() {
+    this.checked && this.changeVal(true);
   }
 };
 
 /***/ }),
-/* 31 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -922,10 +1058,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _queryComponents = __webpack_require__(9);
+var _queryComponents = __webpack_require__(13);
 
 exports.default = {
-  name: 'x-radio',
   props: {
     value: {},
     type: {
@@ -948,14 +1083,14 @@ exports.default = {
   computed: {
     model: {
       get: function get() {
-        return this.parent ? this.parent.value : this.value;
+        return this.PARENT ? this.PARENT.value : this.value;
       },
       set: function set(value) {
-        this.parent ? this.parent.change(value) : this.change(value);
+        this.PARENT ? this.PARENT.change(value) : this.change(value);
       }
     },
-    parent: function parent() {
-      return (0, _queryComponents.parent)(this, 'x-radio-group');
+    PARENT: function PARENT() {
+      return _queryComponents.parent.call(this, 'x-radio-group');
     }
   },
   methods: {
@@ -969,141 +1104,156 @@ exports.default = {
   },
   mounted: function mounted() {
     if (this.checked) {
-      this.parent ? this.parent.change(this.label, true) : this.emit(this.label);
+      this.PARENT ? this.PARENT.change(this.label, true) : this.emit(this.label);
     }
   }
-};
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.on = on;
-exports.off = off;
-exports.once = once;
-exports.clickOutside = clickOutside;
-function on(el, event, callback) {
-  var useCapture = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-
-  el.addEventListener(event, callback, useCapture);
-}
-
-function off(el, event, callback) {
-  var useCapture = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-
-  el.removeEventListener(event, callback, useCapture);
-}
-
-function once(el, event, callback) {
-  function trigger() {
-    callback && callback.apply(this, arguments);
-    off(el, event, trigger);
-  }
-  on(el, event, trigger);
-}
-
-function clickOutside(el, callback, useCapture) {
-  if (typeof el === 'function') {
-    callback = el;
-    el = '';
-  }
-  function click(event) {
-    var state = false;
-
-    el = [].concat(el);
-    if (el.length) {
-      for (var i = 0; i < el.length; i++) {
-        if (el[i].contains(event.target) === false) {
-          state = true;
-          break;
-        }
-      }
-    } else {
-      state = true;
-    }
-    if (state && callback) {
-      callback();
-      off(document, 'click', click, useCapture);
-    }
-  }
-  on(document, 'click', click, useCapture);
-}
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports) {
-
-module.exports = function(bitmap, value){
-  return {
-    enumerable  : !(bitmap & 1),
-    configurable: !(bitmap & 2),
-    writable    : !(bitmap & 4),
-    value       : value
-  };
-};
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 19.1.2.14 / 15.2.3.14 Object.keys(O)
-var $keys       = __webpack_require__(156)
-  , enumBugKeys = __webpack_require__(39);
-
-module.exports = Object.keys || function keys(O){
-  return $keys(O, enumBugKeys);
-};
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// fallback for non-array-like ES3 and non-enumerable old V8 strings
-var cof = __webpack_require__(14);
-module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
-  return cof(it) == 'String' ? it.split('') : Object(it);
-};
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 7.1.15 ToLength
-var toInteger = __webpack_require__(21)
-  , min       = Math.min;
-module.exports = function(it){
-  return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
-};
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var global = __webpack_require__(2)
-  , SHARED = '__core-js_shared__'
-  , store  = global[SHARED] || (global[SHARED] = {});
-module.exports = function(key){
-  return store[key] || (store[key] = {});
 };
 
 /***/ }),
 /* 38 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-var id = 0
-  , px = Math.random();
-module.exports = function(key){
-  return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
-};
+"use strict";
+
+var $at = __webpack_require__(156)(true);
+
+// 21.1.3.27 String.prototype[@@iterator]()
+__webpack_require__(39)(String, 'String', function (iterated) {
+  this._t = String(iterated); // target
+  this._i = 0;                // next index
+// 21.1.5.2.1 %StringIteratorPrototype%.next()
+}, function () {
+  var O = this._t;
+  var index = this._i;
+  var point;
+  if (index >= O.length) return { value: undefined, done: true };
+  point = $at(O, index);
+  this._i += point.length;
+  return { value: point, done: false };
+});
+
 
 /***/ }),
 /* 39 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var LIBRARY = __webpack_require__(40);
+var $export = __webpack_require__(5);
+var redefine = __webpack_require__(159);
+var hide = __webpack_require__(7);
+var has = __webpack_require__(16);
+var Iterators = __webpack_require__(12);
+var $iterCreate = __webpack_require__(160);
+var setToStringTag = __webpack_require__(28);
+var getPrototypeOf = __webpack_require__(166);
+var ITERATOR = __webpack_require__(3)('iterator');
+var BUGGY = !([].keys && 'next' in [].keys()); // Safari has buggy iterators w/o `next`
+var FF_ITERATOR = '@@iterator';
+var KEYS = 'keys';
+var VALUES = 'values';
+
+var returnThis = function () { return this; };
+
+module.exports = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED) {
+  $iterCreate(Constructor, NAME, next);
+  var getMethod = function (kind) {
+    if (!BUGGY && kind in proto) return proto[kind];
+    switch (kind) {
+      case KEYS: return function keys() { return new Constructor(this, kind); };
+      case VALUES: return function values() { return new Constructor(this, kind); };
+    } return function entries() { return new Constructor(this, kind); };
+  };
+  var TAG = NAME + ' Iterator';
+  var DEF_VALUES = DEFAULT == VALUES;
+  var VALUES_BUG = false;
+  var proto = Base.prototype;
+  var $native = proto[ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT];
+  var $default = $native || getMethod(DEFAULT);
+  var $entries = DEFAULT ? !DEF_VALUES ? $default : getMethod('entries') : undefined;
+  var $anyNative = NAME == 'Array' ? proto.entries || $native : $native;
+  var methods, key, IteratorPrototype;
+  // Fix native
+  if ($anyNative) {
+    IteratorPrototype = getPrototypeOf($anyNative.call(new Base()));
+    if (IteratorPrototype !== Object.prototype && IteratorPrototype.next) {
+      // Set @@toStringTag to native iterators
+      setToStringTag(IteratorPrototype, TAG, true);
+      // fix for some old engines
+      if (!LIBRARY && !has(IteratorPrototype, ITERATOR)) hide(IteratorPrototype, ITERATOR, returnThis);
+    }
+  }
+  // fix Array#{values, @@iterator}.name in V8 / FF
+  if (DEF_VALUES && $native && $native.name !== VALUES) {
+    VALUES_BUG = true;
+    $default = function values() { return $native.call(this); };
+  }
+  // Define iterator
+  if ((!LIBRARY || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
+    hide(proto, ITERATOR, $default);
+  }
+  // Plug for library
+  Iterators[NAME] = $default;
+  Iterators[TAG] = returnThis;
+  if (DEFAULT) {
+    methods = {
+      values: DEF_VALUES ? $default : getMethod(VALUES),
+      keys: IS_SET ? $default : getMethod(KEYS),
+      entries: $entries
+    };
+    if (FORCED) for (key in methods) {
+      if (!(key in proto)) redefine(proto, key, methods[key]);
+    } else $export($export.P + $export.F * (BUGGY || VALUES_BUG), NAME, methods);
+  }
+  return methods;
+};
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports) {
+
+module.exports = true;
+
+
+/***/ }),
+/* 41 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// fallback for non-array-like ES3 and non-enumerable old V8 strings
+var cof = __webpack_require__(17);
+// eslint-disable-next-line no-prototype-builtins
+module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
+  return cof(it) == 'String' ? it.split('') : Object(it);
+};
+
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var global = __webpack_require__(1);
+var SHARED = '__core-js_shared__';
+var store = global[SHARED] || (global[SHARED] = {});
+module.exports = function (key) {
+  return store[key] || (store[key] = {});
+};
+
+
+/***/ }),
+/* 43 */
+/***/ (function(module, exports) {
+
+var id = 0;
+var px = Math.random();
+module.exports = function (key) {
+  return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
+};
+
+
+/***/ }),
+/* 44 */
 /***/ (function(module, exports) {
 
 // IE 8- don't enum bug keys
@@ -1111,170 +1261,79 @@ module.exports = (
   'constructor,hasOwnProperty,isPrototypeOf,propertyIsEnumerable,toLocaleString,toString,valueOf'
 ).split(',');
 
-/***/ }),
-/* 40 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 7.1.13 ToObject(argument)
-var defined = __webpack_require__(20);
-module.exports = function(it){
-  return Object(defined(it));
-};
-
-/***/ }),
-/* 41 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-
-exports.default = function (instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-};
-
-/***/ }),
-/* 42 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-exports.__esModule = true;
-
-var _defineProperty = __webpack_require__(167);
-
-var _defineProperty2 = _interopRequireDefault(_defineProperty);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      (0, _defineProperty2.default)(target, descriptor.key, descriptor);
-    }
-  }
-
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-}();
-
-/***/ }),
-/* 43 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var LIBRARY        = __webpack_require__(44)
-  , $export        = __webpack_require__(10)
-  , redefine       = __webpack_require__(175)
-  , hide           = __webpack_require__(4)
-  , has            = __webpack_require__(13)
-  , Iterators      = __webpack_require__(8)
-  , $iterCreate    = __webpack_require__(176)
-  , setToStringTag = __webpack_require__(25)
-  , getPrototypeOf = __webpack_require__(179)
-  , ITERATOR       = __webpack_require__(1)('iterator')
-  , BUGGY          = !([].keys && 'next' in [].keys()) // Safari has buggy iterators w/o `next`
-  , FF_ITERATOR    = '@@iterator'
-  , KEYS           = 'keys'
-  , VALUES         = 'values';
-
-var returnThis = function(){ return this; };
-
-module.exports = function(Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCED){
-  $iterCreate(Constructor, NAME, next);
-  var getMethod = function(kind){
-    if(!BUGGY && kind in proto)return proto[kind];
-    switch(kind){
-      case KEYS: return function keys(){ return new Constructor(this, kind); };
-      case VALUES: return function values(){ return new Constructor(this, kind); };
-    } return function entries(){ return new Constructor(this, kind); };
-  };
-  var TAG        = NAME + ' Iterator'
-    , DEF_VALUES = DEFAULT == VALUES
-    , VALUES_BUG = false
-    , proto      = Base.prototype
-    , $native    = proto[ITERATOR] || proto[FF_ITERATOR] || DEFAULT && proto[DEFAULT]
-    , $default   = $native || getMethod(DEFAULT)
-    , $entries   = DEFAULT ? !DEF_VALUES ? $default : getMethod('entries') : undefined
-    , $anyNative = NAME == 'Array' ? proto.entries || $native : $native
-    , methods, key, IteratorPrototype;
-  // Fix native
-  if($anyNative){
-    IteratorPrototype = getPrototypeOf($anyNative.call(new Base));
-    if(IteratorPrototype !== Object.prototype){
-      // Set @@toStringTag to native iterators
-      setToStringTag(IteratorPrototype, TAG, true);
-      // fix for some old engines
-      if(!LIBRARY && !has(IteratorPrototype, ITERATOR))hide(IteratorPrototype, ITERATOR, returnThis);
-    }
-  }
-  // fix Array#{values, @@iterator}.name in V8 / FF
-  if(DEF_VALUES && $native && $native.name !== VALUES){
-    VALUES_BUG = true;
-    $default = function values(){ return $native.call(this); };
-  }
-  // Define iterator
-  if((!LIBRARY || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])){
-    hide(proto, ITERATOR, $default);
-  }
-  // Plug for library
-  Iterators[NAME] = $default;
-  Iterators[TAG]  = returnThis;
-  if(DEFAULT){
-    methods = {
-      values:  DEF_VALUES ? $default : getMethod(VALUES),
-      keys:    IS_SET     ? $default : getMethod(KEYS),
-      entries: $entries
-    };
-    if(FORCED)for(key in methods){
-      if(!(key in proto))redefine(proto, key, methods[key]);
-    } else $export($export.P + $export.F * (BUGGY || VALUES_BUG), NAME, methods);
-  }
-  return methods;
-};
-
-/***/ }),
-/* 44 */
-/***/ (function(module, exports) {
-
-module.exports = true;
 
 /***/ }),
 /* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(2).document && document.documentElement;
+var document = __webpack_require__(1).document;
+module.exports = document && document.documentElement;
+
 
 /***/ }),
 /* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// getting tag from 19.1.3.6 Object.prototype.toString()
-var cof = __webpack_require__(14)
-  , TAG = __webpack_require__(1)('toStringTag')
-  // ES3 wrong here
-  , ARG = cof(function(){ return arguments; }()) == 'Arguments';
-
-// fallback for IE11 Script Access Denied error
-var tryGet = function(it, key){
+// call something on iterator step with safe closing on error
+var anObject = __webpack_require__(6);
+module.exports = function (iterator, fn, value, entries) {
   try {
-    return it[key];
-  } catch(e){ /* empty */ }
+    return entries ? fn(anObject(value)[0], value[1]) : fn(value);
+  // 7.4.6 IteratorClose(iterator, completion)
+  } catch (e) {
+    var ret = iterator['return'];
+    if (ret !== undefined) anObject(ret.call(iterator));
+    throw e;
+  }
 };
 
-module.exports = function(it){
+
+/***/ }),
+/* 47 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// check on default Array iterator
+var Iterators = __webpack_require__(12);
+var ITERATOR = __webpack_require__(3)('iterator');
+var ArrayProto = Array.prototype;
+
+module.exports = function (it) {
+  return it !== undefined && (Iterators.Array === it || ArrayProto[ITERATOR] === it);
+};
+
+
+/***/ }),
+/* 48 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var classof = __webpack_require__(49);
+var ITERATOR = __webpack_require__(3)('iterator');
+var Iterators = __webpack_require__(12);
+module.exports = __webpack_require__(2).getIteratorMethod = function (it) {
+  if (it != undefined) return it[ITERATOR]
+    || it['@@iterator']
+    || Iterators[classof(it)];
+};
+
+
+/***/ }),
+/* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// getting tag from 19.1.3.6 Object.prototype.toString()
+var cof = __webpack_require__(17);
+var TAG = __webpack_require__(3)('toStringTag');
+// ES3 wrong here
+var ARG = cof(function () { return arguments; }()) == 'Arguments';
+
+// fallback for IE11 Script Access Denied error
+var tryGet = function (it, key) {
+  try {
+    return it[key];
+  } catch (e) { /* empty */ }
+};
+
+module.exports = function (it) {
   var O, T, B;
   return it === undefined ? 'Undefined' : it === null ? 'Null'
     // @@toStringTag case
@@ -1285,88 +1344,232 @@ module.exports = function(it){
     : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
 };
 
+
 /***/ }),
-/* 47 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ctx                = __webpack_require__(11)
-  , invoke             = __webpack_require__(191)
-  , html               = __webpack_require__(45)
-  , cel                = __webpack_require__(18)
-  , global             = __webpack_require__(2)
-  , process            = global.process
-  , setTask            = global.setImmediate
-  , clearTask          = global.clearImmediate
-  , MessageChannel     = global.MessageChannel
-  , counter            = 0
-  , queue              = {}
-  , ONREADYSTATECHANGE = 'onreadystatechange'
-  , defer, channel, port;
-var run = function(){
+var ITERATOR = __webpack_require__(3)('iterator');
+var SAFE_CLOSING = false;
+
+try {
+  var riter = [7][ITERATOR]();
+  riter['return'] = function () { SAFE_CLOSING = true; };
+  // eslint-disable-next-line no-throw-literal
+  Array.from(riter, function () { throw 2; });
+} catch (e) { /* empty */ }
+
+module.exports = function (exec, skipClosing) {
+  if (!skipClosing && !SAFE_CLOSING) return false;
+  var safe = false;
+  try {
+    var arr = [7];
+    var iter = arr[ITERATOR]();
+    iter.next = function () { return { done: safe = true }; };
+    arr[ITERATOR] = function () { return iter; };
+    exec(arr);
+  } catch (e) { /* empty */ }
+  return safe;
+};
+
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.created = created;
+exports.computationsPosition = computationsPosition;
+
+var _vue = __webpack_require__(19);
+
+var _vue2 = _interopRequireDefault(_vue);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function created(data, component) {
+  var Instance = _vue2.default.extend(component);
+  var tip = new Instance({
+    el: document.createElement('div'),
+    data: data
+  });
+  document.body.appendChild(tip.$el);
+  return tip;
+}
+
+function computationsPosition(direction, el, boxEl) {
+  var left = 0,
+      top = 0;
+  var position = el.getBoundingClientRect();
+  var tipPosition = boxEl.getBoundingClientRect();
+
+  switch (direction) {
+    case 'top':
+      left = position.left + position.width / 2 - tipPosition.width / 2;
+      top = position.top - tipPosition.height;
+      break;
+    case 'bottom':
+      left = position.left + position.width / 2 - tipPosition.width / 2;
+      top = position.top + position.height;
+      break;
+    case 'left':
+      left = position.left - tipPosition.width;
+      top = position.top + position.height / 2 - tipPosition.height / 2;
+      break;
+    case 'right':
+      left = position.left + position.width;
+      top = position.top + position.height / 2 - tipPosition.height / 2;
+      break;
+  }
+
+  left = left + document.body.scrollLeft;
+  top = top + document.body.scrollTop;
+  return { left: left, top: top };
+}
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 7.3.20 SpeciesConstructor(O, defaultConstructor)
+var anObject = __webpack_require__(6);
+var aFunction = __webpack_require__(14);
+var SPECIES = __webpack_require__(3)('species');
+module.exports = function (O, D) {
+  var C = anObject(O).constructor;
+  var S;
+  return C === undefined || (S = anObject(C)[SPECIES]) == undefined ? D : aFunction(S);
+};
+
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var ctx = __webpack_require__(10);
+var invoke = __webpack_require__(201);
+var html = __webpack_require__(45);
+var cel = __webpack_require__(22);
+var global = __webpack_require__(1);
+var process = global.process;
+var setTask = global.setImmediate;
+var clearTask = global.clearImmediate;
+var MessageChannel = global.MessageChannel;
+var Dispatch = global.Dispatch;
+var counter = 0;
+var queue = {};
+var ONREADYSTATECHANGE = 'onreadystatechange';
+var defer, channel, port;
+var run = function () {
   var id = +this;
-  if(queue.hasOwnProperty(id)){
+  // eslint-disable-next-line no-prototype-builtins
+  if (queue.hasOwnProperty(id)) {
     var fn = queue[id];
     delete queue[id];
     fn();
   }
 };
-var listener = function(event){
+var listener = function (event) {
   run.call(event.data);
 };
 // Node.js 0.9+ & IE10+ has setImmediate, otherwise:
-if(!setTask || !clearTask){
-  setTask = function setImmediate(fn){
-    var args = [], i = 1;
-    while(arguments.length > i)args.push(arguments[i++]);
-    queue[++counter] = function(){
+if (!setTask || !clearTask) {
+  setTask = function setImmediate(fn) {
+    var args = [];
+    var i = 1;
+    while (arguments.length > i) args.push(arguments[i++]);
+    queue[++counter] = function () {
+      // eslint-disable-next-line no-new-func
       invoke(typeof fn == 'function' ? fn : Function(fn), args);
     };
     defer(counter);
     return counter;
   };
-  clearTask = function clearImmediate(id){
+  clearTask = function clearImmediate(id) {
     delete queue[id];
   };
   // Node.js 0.8-
-  if(__webpack_require__(14)(process) == 'process'){
-    defer = function(id){
+  if (__webpack_require__(17)(process) == 'process') {
+    defer = function (id) {
       process.nextTick(ctx(run, id, 1));
     };
+  // Sphere (JS game engine) Dispatch API
+  } else if (Dispatch && Dispatch.now) {
+    defer = function (id) {
+      Dispatch.now(ctx(run, id, 1));
+    };
   // Browsers with MessageChannel, includes WebWorkers
-  } else if(MessageChannel){
-    channel = new MessageChannel;
-    port    = channel.port2;
+  } else if (MessageChannel) {
+    channel = new MessageChannel();
+    port = channel.port2;
     channel.port1.onmessage = listener;
     defer = ctx(port.postMessage, port, 1);
   // Browsers with postMessage, skip WebWorkers
   // IE8 has postMessage, but it's sync & typeof its postMessage is 'object'
-  } else if(global.addEventListener && typeof postMessage == 'function' && !global.importScripts){
-    defer = function(id){
+  } else if (global.addEventListener && typeof postMessage == 'function' && !global.importScripts) {
+    defer = function (id) {
       global.postMessage(id + '', '*');
     };
     global.addEventListener('message', listener, false);
   // IE8-
-  } else if(ONREADYSTATECHANGE in cel('script')){
-    defer = function(id){
-      html.appendChild(cel('script'))[ONREADYSTATECHANGE] = function(){
+  } else if (ONREADYSTATECHANGE in cel('script')) {
+    defer = function (id) {
+      html.appendChild(cel('script'))[ONREADYSTATECHANGE] = function () {
         html.removeChild(this);
         run.call(id);
       };
     };
   // Rest old browsers
   } else {
-    defer = function(id){
+    defer = function (id) {
       setTimeout(ctx(run, id, 1), 0);
     };
   }
 }
 module.exports = {
-  set:   setTask,
+  set: setTask,
   clear: clearTask
 };
 
+
 /***/ }),
-/* 48 */
+/* 54 */
+/***/ (function(module, exports) {
+
+module.exports = function (exec) {
+  try {
+    return { e: false, v: exec() };
+  } catch (e) {
+    return { e: true, v: e };
+  }
+};
+
+
+/***/ }),
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var anObject = __webpack_require__(6);
+var isObject = __webpack_require__(11);
+var newPromiseCapability = __webpack_require__(31);
+
+module.exports = function (C, x) {
+  anObject(C);
+  if (isObject(x) && x.constructor === C) return x;
+  var promiseCapability = newPromiseCapability.f(C);
+  var resolve = promiseCapability.resolve;
+  resolve(x);
+  return promiseCapability.promise;
+};
+
+
+/***/ }),
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1376,161 +1579,161 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _xQuote = __webpack_require__(49);
+var _xQuote = __webpack_require__(57);
 
 var _xQuote2 = _interopRequireDefault(_xQuote);
 
-var _xButton = __webpack_require__(26);
+var _xButton = __webpack_require__(32);
 
 var _xButton2 = _interopRequireDefault(_xButton);
 
-var _xButtonGroup = __webpack_require__(54);
+var _xButtonGroup = __webpack_require__(62);
 
 var _xButtonGroup2 = _interopRequireDefault(_xButtonGroup);
 
-var _xInput = __webpack_require__(27);
+var _xInput = __webpack_require__(33);
 
 var _xInput2 = _interopRequireDefault(_xInput);
 
-var _xTextarea = __webpack_require__(59);
+var _xTextarea = __webpack_require__(67);
 
 var _xTextarea2 = _interopRequireDefault(_xTextarea);
 
-var _xCounter = __webpack_require__(62);
+var _xCounter = __webpack_require__(70);
 
 var _xCounter2 = _interopRequireDefault(_xCounter);
 
-var _xCheckboxGroup = __webpack_require__(65);
+var _xCheckboxGroup = __webpack_require__(73);
 
 var _xCheckboxGroup2 = _interopRequireDefault(_xCheckboxGroup);
 
-var _xCheckboxButton = __webpack_require__(68);
+var _xCheckboxButton = __webpack_require__(76);
 
 var _xCheckboxButton2 = _interopRequireDefault(_xCheckboxButton);
 
-var _xCheckbox = __webpack_require__(71);
+var _xCheckbox = __webpack_require__(79);
 
 var _xCheckbox2 = _interopRequireDefault(_xCheckbox);
 
-var _xRadioGroup = __webpack_require__(74);
+var _xRadioGroup = __webpack_require__(82);
 
 var _xRadioGroup2 = _interopRequireDefault(_xRadioGroup);
 
-var _xRadioButton = __webpack_require__(77);
+var _xRadioButton = __webpack_require__(85);
 
 var _xRadioButton2 = _interopRequireDefault(_xRadioButton);
 
-var _xRadio = __webpack_require__(80);
+var _xRadio = __webpack_require__(88);
 
 var _xRadio2 = _interopRequireDefault(_xRadio);
 
-var _xSelect = __webpack_require__(83);
+var _xSelect = __webpack_require__(91);
 
 var _xSelect2 = _interopRequireDefault(_xSelect);
 
-var _xOption = __webpack_require__(86);
+var _xOption = __webpack_require__(94);
 
 var _xOption2 = _interopRequireDefault(_xOption);
 
-var _xSelectGroup = __webpack_require__(89);
+var _xSelectGroup = __webpack_require__(97);
 
 var _xSelectGroup2 = _interopRequireDefault(_xSelectGroup);
 
-var _xSwitch = __webpack_require__(92);
+var _xSwitch = __webpack_require__(100);
 
 var _xSwitch2 = _interopRequireDefault(_xSwitch);
 
-var _xSlider = __webpack_require__(95);
+var _xSlider = __webpack_require__(103);
 
 var _xSlider2 = _interopRequireDefault(_xSlider);
 
-var _xScrollBar = __webpack_require__(101);
+var _xScrollBar = __webpack_require__(109);
 
 var _xScrollBar2 = _interopRequireDefault(_xScrollBar);
 
-var _xTabs = __webpack_require__(104);
+var _xTabs = __webpack_require__(112);
 
 var _xTabs2 = _interopRequireDefault(_xTabs);
 
-var _xTabItem = __webpack_require__(106);
+var _xTabItem = __webpack_require__(114);
 
 var _xTabItem2 = _interopRequireDefault(_xTabItem);
 
-var _xCollapse = __webpack_require__(109);
+var _xCollapse = __webpack_require__(117);
 
 var _xCollapse2 = _interopRequireDefault(_xCollapse);
 
-var _xCollapseItem = __webpack_require__(112);
+var _xCollapseItem = __webpack_require__(120);
 
 var _xCollapseItem2 = _interopRequireDefault(_xCollapseItem);
 
-var _xProgress = __webpack_require__(115);
+var _xProgress = __webpack_require__(123);
 
 var _xProgress2 = _interopRequireDefault(_xProgress);
 
-var _xBadge = __webpack_require__(118);
+var _xBadge = __webpack_require__(126);
 
 var _xBadge2 = _interopRequireDefault(_xBadge);
 
-var _xForm = __webpack_require__(121);
+var _xForm = __webpack_require__(129);
 
 var _xForm2 = _interopRequireDefault(_xForm);
 
-var _xFormItem = __webpack_require__(124);
+var _xFormItem = __webpack_require__(132);
 
 var _xFormItem2 = _interopRequireDefault(_xFormItem);
 
-var _xTag = __webpack_require__(127);
+var _xTag = __webpack_require__(135);
 
 var _xTag2 = _interopRequireDefault(_xTag);
 
-var _xAlert = __webpack_require__(130);
+var _xAlert = __webpack_require__(138);
 
 var _xAlert2 = _interopRequireDefault(_xAlert);
 
-var _xModal = __webpack_require__(133);
+var _xModal = __webpack_require__(141);
 
 var _xModal2 = _interopRequireDefault(_xModal);
 
-var _xSidebar = __webpack_require__(136);
+var _xSidebar = __webpack_require__(144);
 
 var _xSidebar2 = _interopRequireDefault(_xSidebar);
 
-var _xMenu = __webpack_require__(139);
+var _xMenu = __webpack_require__(147);
 
 var _xMenu2 = _interopRequireDefault(_xMenu);
 
-var _xMenuItem = __webpack_require__(142);
+var _xMenuItem = __webpack_require__(150);
 
 var _xMenuItem2 = _interopRequireDefault(_xMenuItem);
 
-var _xTable = __webpack_require__(145);
+var _xTable = __webpack_require__(153);
 
 var _xTable2 = _interopRequireDefault(_xTable);
 
-var _xTableColumn = __webpack_require__(150);
+var _xTableColumn = __webpack_require__(174);
 
 var _xTableColumn2 = _interopRequireDefault(_xTableColumn);
 
-var _xTooltip = __webpack_require__(161);
+var _xPopover = __webpack_require__(180);
 
-var _xTooltip2 = _interopRequireDefault(_xTooltip);
+var _xPopover2 = _interopRequireDefault(_xPopover);
 
-var _xPage = __webpack_require__(163);
+var _xPage = __webpack_require__(182);
 
 var _xPage2 = _interopRequireDefault(_xPage);
 
-var _xDialog = __webpack_require__(166);
+var _xDialog = __webpack_require__(185);
 
 var _xDialog2 = _interopRequireDefault(_xDialog);
 
-var _xToastr = __webpack_require__(199);
+var _xNotice = __webpack_require__(210);
 
-var _xToastr2 = _interopRequireDefault(_xToastr);
+var _xNotice2 = _interopRequireDefault(_xNotice);
 
-var _clickOutside = __webpack_require__(206);
+var _xTooltip = __webpack_require__(217);
 
-var _clickOutside2 = _interopRequireDefault(_clickOutside);
+var _xTooltip2 = _interopRequireDefault(_xTooltip);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1569,19 +1772,17 @@ var xui = {
   xMenuItem: _xMenuItem2.default,
   xTable: _xTable2.default,
   xTableColumn: _xTableColumn2.default,
-  xTooltip: _xTooltip2.default,
+  xPopover: _xPopover2.default,
   xPage: _xPage2.default
 };
 
 var methods = {
-  alert: _xDialog2.default.alert,
-  confirm: _xDialog2.default.confirm,
-  prompt: _xDialog2.default.prompt,
-  toastr: _xToastr2.default.toastr
+  dialog: _xDialog2.default,
+  notice: _xNotice2.default
 };
 
 var directives = {
-  clickoutside: _clickOutside2.default
+  tooltip: _xTooltip2.default
 };
 
 function install(Vue) {
@@ -1609,41 +1810,25 @@ if (typeof window !== 'undefined' && window.Vue) {
 exports.default = xui;
 
 /***/ }),
-/* 49 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(50),
+  __webpack_require__(58),
   /* template */
-  __webpack_require__(51),
+  __webpack_require__(59),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-quote/x-quote.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-quote.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-59c75f42", Component.options)
-  } else {
-    hotAPI.reload("data-v-59c75f42", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 50 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1665,8 +1850,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 51 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 59 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -1678,16 +1863,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     ]
   }, [_vm._t("default")], 2)
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-59c75f42", module.exports)
-  }
-}
 
 /***/ }),
-/* 52 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1742,8 +1920,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 53 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 61 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('button', {
@@ -1771,50 +1949,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     class: _vm.icon
   }) : _vm._e(), _vm._v(" "), (_vm.$slots.default) ? _c('span', [_vm._t("default")], 2) : _vm._e()])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-34d70dd2", module.exports)
-  }
-}
 
 /***/ }),
-/* 54 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(55),
+  __webpack_require__(63),
   /* template */
-  __webpack_require__(56),
+  __webpack_require__(64),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-button-group/x-button-group.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-button-group.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-3c9725dc", Component.options)
-  } else {
-    hotAPI.reload("data-v-3c9725dc", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 55 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1836,8 +1991,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 56 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 64 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -1850,16 +2005,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     ]
   }, [_vm._t("default")], 2)
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-3c9725dc", module.exports)
-  }
-}
 
 /***/ }),
-/* 57 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1869,7 +2017,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _xInputBox = __webpack_require__(28);
+var _xInputBox = __webpack_require__(34);
 
 var _xInputBox2 = _interopRequireDefault(_xInputBox);
 
@@ -1888,14 +2036,14 @@ exports.default = {
   },
   methods: {
     iconClick: function iconClick() {
-      this.$emit('icon-click', this.$el);
+      this.$emit('icon-click', this.$el.querySelector('input').value, this.$el);
     }
   }
 };
 
 /***/ }),
-/* 58 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 66 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -1939,50 +2087,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "x-input-group-right"
   }, [_vm._t("right")], 2) : _vm._e()])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-c5f69444", module.exports)
-  }
-}
 
 /***/ }),
-/* 59 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(60),
+  __webpack_require__(68),
   /* template */
-  __webpack_require__(61),
+  __webpack_require__(69),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-textarea/x-textarea.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-textarea.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-69d61952", Component.options)
-  } else {
-    hotAPI.reload("data-v-69d61952", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 60 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1992,7 +2117,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _xInputBox = __webpack_require__(28);
+var _xInputBox = __webpack_require__(34);
 
 var _xInputBox2 = _interopRequireDefault(_xInputBox);
 
@@ -2003,8 +2128,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 61 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 69 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -2039,50 +2164,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   })])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-69d61952", module.exports)
-  }
-}
 
 /***/ }),
-/* 62 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(63),
+  __webpack_require__(71),
   /* template */
-  __webpack_require__(64),
+  __webpack_require__(72),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-counter/x-counter.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-counter.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-7fcd057c", Component.options)
-  } else {
-    hotAPI.reload("data-v-7fcd057c", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 63 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2127,12 +2229,6 @@ exports.default = {
   },
 
   methods: {
-    focus: function focus(event) {
-      this.$emit('focus', event.target);
-    },
-    blur: function blur(event) {
-      this.$emit('change', event.target);
-    },
     input: function input(event) {
       var value = event.target.value;
 
@@ -2217,8 +2313,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 64 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 72 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -2254,9 +2350,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "value": _vm.inputValue
     },
     on: {
-      "input": _vm.input,
-      "blur": _vm.blur,
-      "focus": _vm.focus
+      "input": _vm.input
     }
   }), _vm._v(" "), _c('div', {
     staticClass: "x-counter-btn x-counter-add",
@@ -2273,50 +2367,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "x-icon-plus"
   })])])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-7fcd057c", module.exports)
-  }
-}
 
 /***/ }),
-/* 65 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(66),
+  __webpack_require__(74),
   /* template */
-  __webpack_require__(67),
+  __webpack_require__(75),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-checkbox-group/x-checkbox-group.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-checkbox-group.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-30ad5e32", Component.options)
-  } else {
-    hotAPI.reload("data-v-30ad5e32", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 66 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2326,11 +2397,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _xCheckboxGroup_xRadioGroup = __webpack_require__(29);
+var _xCheckboxGroup_xRadioGroup = __webpack_require__(35);
 
 var _xCheckboxGroup_xRadioGroup2 = _interopRequireDefault(_xCheckboxGroup_xRadioGroup);
 
-var _queryComponents = __webpack_require__(9);
+var _queryComponents = __webpack_require__(13);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2349,20 +2420,27 @@ exports.default = {
       default: false
     }
   },
+  data: function data() {
+    return {
+      model: []
+    };
+  },
+
   methods: {
-    change: function change(value, isDel) {
+    change: function change(value) {
       var index = this.model.indexOf(value);
       if (index === -1) {
         this.model.push(value);
       } else {
-        !isDel && this.model.splice(index, 1);
+        this.model.splice(index, 1);
       }
+      this.$emit('input', this.model);
+      this.$emit('change', this.model);
     },
     updateState: function updateState(value) {
       this.model = value;
 
-      var subCheckbox = (0, _queryComponents.find)(this, 'x-checkbox');
-      subCheckbox.forEach(function (item) {
+      _queryComponents.find.call(this, 'x-checkbox', function (item) {
         item.state = value.indexOf(item.label) > -1;
       });
     }
@@ -2378,66 +2456,42 @@ exports.default = {
 };
 
 /***/ }),
-/* 67 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 75 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "x-checkbox-group",
     class: [
-      _vm.button && ("x-checkbox-button-" + _vm.size),
-      _vm.button && ("x-checkbox-button-" + _vm.type),
-      _vm.button && 'x-checkbox-button-group',
+      _vm.size && ("x-checkbox-button-" + _vm.size),
+      _vm.type && ("x-checkbox-button-" + _vm.type),
       {
-        'x-checkbox-button-radius': _vm.radius && _vm.button
+        'x-checkbox-button-radius': _vm.radius
       }
     ]
   }, [_vm._t("default")], 2)
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-30ad5e32", module.exports)
-  }
-}
 
 /***/ }),
-/* 68 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(69),
+  __webpack_require__(77),
   /* template */
-  __webpack_require__(70),
+  __webpack_require__(78),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-checkbox-button/x-checkbox-button.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-checkbox-button.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-9270137c", Component.options)
-  } else {
-    hotAPI.reload("data-v-9270137c", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 69 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2447,19 +2501,20 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _xCheckbox = __webpack_require__(30);
+var _xCheckbox = __webpack_require__(36);
 
 var _xCheckbox2 = _interopRequireDefault(_xCheckbox);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
+  name: 'x-checkbox',
   mixins: [_xCheckbox2.default]
 };
 
 /***/ }),
-/* 70 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 78 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('label', {
@@ -2483,50 +2538,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }), _vm._v(" "), _c('span', [_vm._t("default")], 2)])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-9270137c", module.exports)
-  }
-}
 
 /***/ }),
-/* 71 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(72),
+  __webpack_require__(80),
   /* template */
-  __webpack_require__(73),
+  __webpack_require__(81),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-checkbox/x-checkbox.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-checkbox.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-042c2c9c", Component.options)
-  } else {
-    hotAPI.reload("data-v-042c2c9c", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 72 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2536,19 +2568,20 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _xCheckbox = __webpack_require__(30);
+var _xCheckbox = __webpack_require__(36);
 
 var _xCheckbox2 = _interopRequireDefault(_xCheckbox);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
+  name: 'x-checkbox',
   mixins: [_xCheckbox2.default]
 };
 
 /***/ }),
-/* 73 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 81 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('label', {
@@ -2576,50 +2609,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "x-icon-done"
   }), _vm._v(" "), (_vm.$slots.default) ? _c('span', [_vm._t("default")], 2) : _vm._e()])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-042c2c9c", module.exports)
-  }
-}
 
 /***/ }),
-/* 74 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(75),
+  __webpack_require__(83),
   /* template */
-  __webpack_require__(76),
+  __webpack_require__(84),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-radio-group/x-radio-group.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-radio-group.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-fcb25e38", Component.options)
-  } else {
-    hotAPI.reload("data-v-fcb25e38", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 75 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2629,7 +2639,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _xCheckboxGroup_xRadioGroup = __webpack_require__(29);
+var _xCheckboxGroup_xRadioGroup = __webpack_require__(35);
 
 var _xCheckboxGroup_xRadioGroup2 = _interopRequireDefault(_xCheckboxGroup_xRadioGroup);
 
@@ -2643,75 +2653,51 @@ exports.default = {
       type: [String, Number]
     }
   },
-
   methods: {
     change: function change(value) {
       this.$emit('input', value);
+      this.$emit('change', value);
     }
   }
 };
 
 /***/ }),
-/* 76 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 84 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "x-radio-group",
     class: [
-      _vm.button && 'x-radio-button-group',
-      _vm.button && ("x-radio-button-" + _vm.size),
-      _vm.button && ("x-radio-button-" + _vm.type),
+      _vm.size && ("x-radio-button-" + _vm.size),
+      _vm.type && ("x-radio-button-" + _vm.type),
       {
-        'x-radio-button-radius': _vm.button && _vm.radius
+        'x-radio-button-radius': _vm.radius
       }
     ]
   }, [_vm._t("default")], 2)
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-fcb25e38", module.exports)
-  }
-}
 
 /***/ }),
-/* 77 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(78),
+  __webpack_require__(86),
   /* template */
-  __webpack_require__(79),
+  __webpack_require__(87),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-radio-button/x-radio-button.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-radio-button.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-621d0912", Component.options)
-  } else {
-    hotAPI.reload("data-v-621d0912", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 78 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2721,19 +2707,20 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _xRadio = __webpack_require__(31);
+var _xRadio = __webpack_require__(37);
 
 var _xRadio2 = _interopRequireDefault(_xRadio);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
+  name: 'x-radio',
   mixins: [_xRadio2.default]
 };
 
 /***/ }),
-/* 79 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 87 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('label', {
@@ -2766,50 +2753,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }), _vm._v(" "), _c('span', [_vm._t("default")], 2)])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-621d0912", module.exports)
-  }
-}
 
 /***/ }),
-/* 80 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(81),
+  __webpack_require__(89),
   /* template */
-  __webpack_require__(82),
+  __webpack_require__(90),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-radio/x-radio.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-radio.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-2c762780", Component.options)
-  } else {
-    hotAPI.reload("data-v-2c762780", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 81 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2819,19 +2783,20 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _xRadio = __webpack_require__(31);
+var _xRadio = __webpack_require__(37);
 
 var _xRadio2 = _interopRequireDefault(_xRadio);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
+  name: 'x-radio',
   mixins: [_xRadio2.default]
 };
 
 /***/ }),
-/* 82 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 90 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('label', {
@@ -2866,50 +2831,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }), _vm._v(" "), _c('i'), _vm._v(" "), (_vm.$slots.default) ? _c('span', [_vm._t("default")], 2) : _vm._e()])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-2c762780", module.exports)
-  }
-}
 
 /***/ }),
-/* 83 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(84),
+  __webpack_require__(92),
   /* template */
-  __webpack_require__(85),
+  __webpack_require__(93),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-select/x-select.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-select.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-74055112", Component.options)
-  } else {
-    hotAPI.reload("data-v-74055112", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 84 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2918,6 +2860,9 @@ module.exports = Component.exports
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _dom = __webpack_require__(4);
+
 exports.default = {
   name: 'x-select',
   props: {
@@ -2971,12 +2916,14 @@ exports.default = {
       selected: {},
       hoverIndex: -1,
       options: [],
-      filterOptionsLength: false
+      filterOptionsLength: false,
+      adHoc: []
     };
   },
 
   methods: {
     toggleShow: function toggleShow() {
+      if (this.disabled) return;
       if (this.show) {
         this.hideOptions();
       } else {
@@ -2985,16 +2932,16 @@ exports.default = {
     },
     showOptions: function showOptions() {
       this.show = true;
-      document.addEventListener('click', this.isElClick);
-      document.addEventListener('keydown', this.keydown);
+      (0, _dom.on)(document, 'click', this.isElClick);
+      (0, _dom.on)(document, 'keydown', this.keydown);
       this.$emit('show-change', this.show, this.$el);
 
       this.hoverIndex = this.curLabel && this.curIndex !== '' ? this.curIndex : -1;
     },
     hideOptions: function hideOptions() {
       this.show = false;
-      document.removeEventListener('click', this.isElClick);
-      document.removeEventListener('keydown', this.keydown);
+      (0, _dom.off)(document, 'click', this.isElClick);
+      (0, _dom.off)(document, 'keydown', this.keydown);
       this.$emit('show-change', this.show, this.$el);
     },
     isElClick: function isElClick(_ref) {
@@ -3005,8 +2952,9 @@ exports.default = {
         this.hideOptions();
       }
     },
-    optionsChange: function optionsChange(index) {
+    optionsChange: function optionsChange(index, isChange) {
       var data = this.options[index];
+      this.hoverIndex = index;
       if (this.multiple) {
         var value = this.value.slice();
         var valueIndex = value.indexOf(data.value);
@@ -3016,12 +2964,21 @@ exports.default = {
         } else {
           value.splice(valueIndex, 1);
         }
-        this.$emit('input', value);
-      } else {
-        this.hideOptions();
 
-        if (this.curIndex === index) return;
-        this.$emit('input', data.value);
+        this.adHoc = this.adHoc.concat(value);
+        if (isChange) {
+          this.$emit('input', this.adHoc);
+          this.$emit('change', this.adHoc);
+        }
+      } else {
+        var _value = data.value;
+        if (isChange) {
+          this.hideOptions();
+
+          if (this.value === _value) return;
+          this.$emit('input', _value);
+          this.$emit('change', _value);
+        }
       }
       this.curIndex = index;
     },
@@ -3069,7 +3026,7 @@ exports.default = {
         case 13:
           if (this.hoverIndex === -1) return;
           event.preventDefault();
-          this.optionsChange(this.hoverIndex);
+          this.optionsChange(this.hoverIndex, true);
           break;
 
         case 27:
@@ -3109,9 +3066,9 @@ exports.default = {
     }
   },
   watch: {
-    value: function value(_value) {
+    value: function value(_value2) {
+      this.adHoc = [];
       this.selectLabel();
-      this.$emit('change', _value);
     }
   },
   mounted: function mounted() {
@@ -3120,14 +3077,17 @@ exports.default = {
 };
 
 /***/ }),
-/* 85 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 93 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "x-select",
     class: [
-      ("x-select-" + _vm.type)
+      ("x-select-" + _vm.type),
+      {
+        'x-select-open': _vm.show
+      }
     ]
   }, [_c('div', {
     staticClass: "x-select-head",
@@ -3149,8 +3109,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "type": "text",
       "title": _vm.query,
-      "placeholder": _vm.placeholder,
-      "readonly": _vm.filter === false
+      "placeholder": _vm.placeholder
     },
     domProps: {
       "value": (_vm.query)
@@ -3179,50 +3138,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     ref: "options-box"
   }, [_vm._t("default")], 2)])]) : _vm._e()], 1)
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-74055112", module.exports)
-  }
-}
 
 /***/ }),
-/* 86 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(87),
+  __webpack_require__(95),
   /* template */
-  __webpack_require__(88),
+  __webpack_require__(96),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-select/x-option.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-option.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-2898400b", Component.options)
-  } else {
-    hotAPI.reload("data-v-2898400b", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 87 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3232,7 +3168,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _queryComponents = __webpack_require__(9);
+var _queryComponents = __webpack_require__(13);
 
 exports.default = {
   name: 'x-option',
@@ -3242,17 +3178,21 @@ exports.default = {
       required: true
     },
     label: {
-      type: [String, Number, Boolean],
-      default: ''
+      type: [String, Number],
+      required: true
     },
     disabled: {
+      type: Boolean,
+      default: false
+    },
+    selected: {
       type: Boolean,
       default: false
     }
   },
   data: function data() {
     return {
-      PARENT: (0, _queryComponents.parent)(this, 'x-select'),
+      PARENT: _queryComponents.parent.call(this, 'x-select'),
       index: 0,
       show: true
     };
@@ -3261,16 +3201,14 @@ exports.default = {
   methods: {
     optionClick: function optionClick() {
       if (this.disabled) return;
-      var PARENT = this.PARENT;
-      PARENT.hoverIndex = this.index;
-      PARENT.optionsChange(this.index);
+      this.PARENT.optionsChange(this.index, true);
     },
     optionHover: function optionHover() {
       this.disabled === false && (this.PARENT.hoverIndex = this.index);
     }
   },
   computed: {
-    selected: function selected() {
+    isSelected: function isSelected() {
       var PARENT = this.PARENT;
       if (PARENT.multiple) {
         return PARENT.value.indexOf(this.value) > -1;
@@ -3278,17 +3216,19 @@ exports.default = {
       return PARENT.value === this.value;
     }
   },
-  mounted: function mounted() {
+  created: function created() {
     var options = this.PARENT.options;
     options.push(this);
     this.index = options.indexOf(this);
     this.PARENT.filterOptionsLength++;
+
+    this.selected && this.PARENT.optionsChange(this.index);
   }
 };
 
 /***/ }),
-/* 88 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 96 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('li', {
@@ -3300,61 +3240,38 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }],
     class: {
       'x-disabled': _vm.disabled,
-      'x-select-selected': _vm.selected,
+      'x-select-selected': _vm.isSelected,
       'x-select-option-hover': _vm.PARENT.hoverIndex === _vm.index
     },
     on: {
       "mouseenter": _vm.optionHover,
       "click": _vm.optionClick
     }
-  }, [_c('span', [_vm._t("default", [_vm._v(_vm._s(_vm.label))])], 2), _vm._v(" "), (_vm.selected) ? _c('i', {
+  }, [_c('span', [_vm._t("default", [_vm._v(_vm._s(_vm.label))])], 2), _vm._v(" "), (_vm.isSelected) ? _c('i', {
     staticClass: "x-icon-done"
   }) : _vm._e()])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-2898400b", module.exports)
-  }
-}
 
 /***/ }),
-/* 89 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(90),
+  __webpack_require__(98),
   /* template */
-  __webpack_require__(91),
+  __webpack_require__(99),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-select-group/x-select-group.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-select-group.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-b75d205c", Component.options)
-  } else {
-    hotAPI.reload("data-v-b75d205c", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 90 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3372,8 +3289,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 91 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 99 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -3382,50 +3299,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "x-group-label"
   }, [_vm._v(_vm._s(_vm.label))]), _vm._v(" "), _vm._t("default")], 2)
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-b75d205c", module.exports)
-  }
-}
 
 /***/ }),
-/* 92 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(93),
+  __webpack_require__(101),
   /* template */
-  __webpack_require__(94),
+  __webpack_require__(102),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-switch/x-switch.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-switch.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-4370d012", Component.options)
-  } else {
-    hotAPI.reload("data-v-4370d012", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 93 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3489,8 +3383,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 94 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 102 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -3510,50 +3404,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "x-switch-label x-unselect"
   }, [_vm._v(_vm._s(_vm.label))]) : _vm._e()])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-4370d012", module.exports)
-  }
-}
 
 /***/ }),
-/* 95 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(96),
+  __webpack_require__(104),
   /* template */
-  __webpack_require__(100),
+  __webpack_require__(108),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-slider/x-slider.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-slider.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-d5ddda9c", Component.options)
-  } else {
-    hotAPI.reload("data-v-d5ddda9c", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 96 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3563,9 +3434,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _dom = __webpack_require__(32);
+var _dom = __webpack_require__(4);
 
-var _sliderButton = __webpack_require__(97);
+var _sliderButton = __webpack_require__(105);
 
 var _sliderButton2 = _interopRequireDefault(_sliderButton);
 
@@ -3727,41 +3598,25 @@ exports.default = {
 };
 
 /***/ }),
-/* 97 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(98),
+  __webpack_require__(106),
   /* template */
-  __webpack_require__(99),
+  __webpack_require__(107),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-slider/slider-button.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] slider-button.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-3f30d872", Component.options)
-  } else {
-    hotAPI.reload("data-v-3f30d872", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 98 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3784,8 +3639,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 99 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 107 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -3802,17 +3657,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "x-tooltip-text"
   }, [_vm._v(_vm._s(_vm.value))])])])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-3f30d872", module.exports)
-  }
-}
 
 /***/ }),
-/* 100 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 108 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -3863,50 +3711,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "x-slider-tip"
   })], 1)
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-d5ddda9c", module.exports)
-  }
-}
 
 /***/ }),
-/* 101 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(102),
+  __webpack_require__(110),
   /* template */
-  __webpack_require__(103),
+  __webpack_require__(111),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-scroll-bar/x-scroll-bar.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-scroll-bar.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-541b171c", Component.options)
-  } else {
-    hotAPI.reload("data-v-541b171c", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 102 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3982,8 +3807,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 103 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 111 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -4016,21 +3841,14 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   })])])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-541b171c", module.exports)
-  }
-}
 
 /***/ }),
-/* 104 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(105),
+  __webpack_require__(113),
   /* template */
   null,
   /* scopeId */
@@ -4038,27 +3856,12 @@ var Component = __webpack_require__(0)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-tabs/x-tabs.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-49b0dfd2", Component.options)
-  } else {
-    hotAPI.reload("data-v-49b0dfd2", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 105 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4205,41 +4008,25 @@ exports.default = {
 };
 
 /***/ }),
-/* 106 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(107),
+  __webpack_require__(115),
   /* template */
-  __webpack_require__(108),
+  __webpack_require__(116),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-tabs/x-tab-item.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-tab-item.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-2555121f", Component.options)
-  } else {
-    hotAPI.reload("data-v-2555121f", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 107 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4289,8 +4076,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 108 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 116 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -4302,50 +4089,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }]
   }, [_vm._t("default")], 2)
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-2555121f", module.exports)
-  }
-}
 
 /***/ }),
-/* 109 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(110),
+  __webpack_require__(118),
   /* template */
-  __webpack_require__(111),
+  __webpack_require__(119),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-collapse/x-collapse.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-collapse.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-36d5d372", Component.options)
-  } else {
-    hotAPI.reload("data-v-36d5d372", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 110 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4409,8 +4173,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 111 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 119 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -4420,50 +4184,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._t("default")], 2)
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-36d5d372", module.exports)
-  }
-}
 
 /***/ }),
-/* 112 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(113),
+  __webpack_require__(121),
   /* template */
-  __webpack_require__(114),
+  __webpack_require__(122),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-collapse/x-collapse-item.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-collapse-item.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-e4497284", Component.options)
-  } else {
-    hotAPI.reload("data-v-e4497284", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 113 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4498,8 +4239,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 114 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 122 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -4526,50 +4267,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "x-collapse-content"
   }, [_vm._t("default")], 2)])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-e4497284", module.exports)
-  }
-}
 
 /***/ }),
-/* 115 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(116),
+  __webpack_require__(124),
   /* template */
-  __webpack_require__(117),
+  __webpack_require__(125),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-progress/x-progress.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-progress.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-75a1c372", Component.options)
-  } else {
-    hotAPI.reload("data-v-75a1c372", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 116 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4624,8 +4342,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 117 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 125 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -4671,50 +4389,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     })
   }) : _vm._e()])])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-75a1c372", module.exports)
-  }
-}
 
 /***/ }),
-/* 118 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(119),
+  __webpack_require__(127),
   /* template */
-  __webpack_require__(120),
+  __webpack_require__(128),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-badge/x-badge.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-badge.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-fbe0a8e0", Component.options)
-  } else {
-    hotAPI.reload("data-v-fbe0a8e0", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 119 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4741,8 +4436,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 120 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 128 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('span', {
@@ -4756,50 +4451,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     ]
   }, [_vm._t("default")], 2)
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-fbe0a8e0", module.exports)
-  }
-}
 
 /***/ }),
-/* 121 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(122),
+  __webpack_require__(130),
   /* template */
-  __webpack_require__(123),
+  __webpack_require__(131),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-form/x-form.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-form.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-75cf35dc", Component.options)
-  } else {
-    hotAPI.reload("data-v-75cf35dc", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 122 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4826,8 +4498,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 123 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 131 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -4840,50 +4512,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     ]
   }, [_vm._t("default")], 2)
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-75cf35dc", module.exports)
-  }
-}
 
 /***/ }),
-/* 124 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(125),
+  __webpack_require__(133),
   /* template */
-  __webpack_require__(126),
+  __webpack_require__(134),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-form/x-form-item.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-form-item.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1892b91e", Component.options)
-  } else {
-    hotAPI.reload("data-v-1892b91e", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 125 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4894,10 +4543,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = {
   props: {
-    width: {
-      type: String,
-      default: ''
-    },
     label: {
       type: String,
       default: ''
@@ -4917,7 +4562,7 @@ exports.default = {
   },
   computed: {
     labelW: function labelW() {
-      if (this.FORM.labelPosition === 'top') return;
+      if (this.FORM.labelPosition === 'top' || this.isTextarea) return '';
       return this.labelWidth || this.FORM.labelWidth;
     },
     FORM: function FORM() {
@@ -4927,8 +4572,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 126 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 134 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -4951,50 +4596,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "x-form-msg"
   }, [_vm._v(_vm._s(_vm.placeholder))]) : _vm._e()])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-1892b91e", module.exports)
-  }
-}
 
 /***/ }),
-/* 127 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(128),
+  __webpack_require__(136),
   /* template */
-  __webpack_require__(129),
+  __webpack_require__(137),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-tag/x-tag.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-tag.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-080485fe", Component.options)
-  } else {
-    hotAPI.reload("data-v-080485fe", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 128 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5034,8 +4656,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 129 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 137 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('transition', {
@@ -5063,50 +4685,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "x-icon-close-round"
   })]) : _vm._e()])])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-080485fe", module.exports)
-  }
-}
 
 /***/ }),
-/* 130 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(131),
+  __webpack_require__(139),
   /* template */
-  __webpack_require__(132),
+  __webpack_require__(140),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-alert/x-alert.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-alert.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-15a23502", Component.options)
-  } else {
-    hotAPI.reload("data-v-15a23502", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 131 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5129,9 +4728,13 @@ exports.default = {
       type: Boolean,
       default: true
     },
-    showClose: {
+    closable: {
       type: Boolean,
       default: false
+    },
+    icon: {
+      type: String,
+      default: ''
     }
   },
   data: function data() {
@@ -5156,8 +4759,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 132 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 140 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('transition', {
@@ -5170,67 +4773,44 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       'x-alert-' + _vm.type,
       {
         'x-alert-show-icon': _vm.showIcon,
-        'x-alert-show-close': _vm.showClose
+        'x-alert-show-close': _vm.closable
       }
     ]
   }, [_c('div', {
     staticClass: "x-alert-content"
   }, [_c('i', {
     staticClass: "x-alert-icon",
-    class: _vm.showIcon && _vm.icons[_vm.type]
+    class: _vm.showIcon && (this.icon || _vm.icons[_vm.type])
   }), _vm._v(" "), (_vm.title) ? _c('div', {
     staticClass: "x-alert-title"
-  }, [_vm._v(_vm._s(_vm.title))]) : _vm._e(), _vm._v(" "), _vm._t("default"), _vm._v(" "), (_vm.showClose) ? _c('i', {
+  }, [_vm._v(_vm._s(_vm.title))]) : _vm._e(), _vm._v(" "), _vm._t("default"), _vm._v(" "), (_vm.closable) ? _c('i', {
     staticClass: "x-alert-close x-icon-close-round",
     on: {
       "click": _vm.close
     }
   }) : _vm._e()], 2)]) : _vm._e()])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-15a23502", module.exports)
-  }
-}
 
 /***/ }),
-/* 133 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(134),
+  __webpack_require__(142),
   /* template */
-  __webpack_require__(135),
+  __webpack_require__(143),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-modal/x-modal.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-modal.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-e5c0d4b8", Component.options)
-  } else {
-    hotAPI.reload("data-v-e5c0d4b8", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 134 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5239,6 +4819,9 @@ module.exports = Component.exports
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _dom = __webpack_require__(4);
+
 exports.default = {
   props: {
     value: {
@@ -5265,7 +4848,11 @@ exports.default = {
       type: Boolean,
       default: true
     },
-    close: Function
+    close: Function,
+    escClose: {
+      type: Boolean,
+      default: true
+    }
   },
   data: function data() {
     return {
@@ -5275,22 +4862,39 @@ exports.default = {
 
   watch: {
     value: function value(_value) {
-      if (_value !== this.isShow) this.isShow = _value;
+      if (_value !== this.isShow) {
+        _value ? this.bindEvent() : this.hide();
+        this.isShow = _value;
+      }
     }
   },
   methods: {
-    hideModal: function hideModal() {
+    hide: function hide() {
       this.$emit('input', false);
+      this.$emit('close');
+      (0, _dom.off)(window, 'keyup', this.escCloseFun);
+    },
+    escCloseFun: function escCloseFun(_ref) {
+      var keyCode = _ref.keyCode;
+
+      keyCode === 27 && this.escClose && this.hide();
+    },
+    bindEvent: function bindEvent() {
+      this.$emit('open');
+      (0, _dom.on)(window, 'keyup', this.escCloseFun);
     },
     clickClose: function clickClose() {
-      this.close ? this.close(this.hideModal) : this.hideModal();
+      this.close ? this.close(this.hide) : this.hide();
     }
+  },
+  mounted: function mounted() {
+    this.value && this.bindEvent();
   }
 };
 
 /***/ }),
-/* 135 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 143 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('transition', {
@@ -5332,50 +4936,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "x-modal-footer x-text-r"
   }, [_vm._t("footer")], 2) : _vm._e()], 2)])])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-e5c0d4b8", module.exports)
-  }
-}
 
 /***/ }),
-/* 136 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(137),
+  __webpack_require__(145),
   /* template */
-  __webpack_require__(138),
+  __webpack_require__(146),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-sidebar/x-sidebar.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-sidebar.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-a3675ffc", Component.options)
-  } else {
-    hotAPI.reload("data-v-a3675ffc", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 137 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5384,6 +4965,9 @@ module.exports = Component.exports
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _dom = __webpack_require__(4);
+
 exports.default = {
   props: {
     value: {
@@ -5393,6 +4977,14 @@ exports.default = {
     direction: {
       type: String,
       default: 'left'
+    },
+    mask: {
+      type: Boolean,
+      default: true
+    },
+    escClose: {
+      type: Boolean,
+      default: true
     }
   },
   data: function data() {
@@ -5403,7 +4995,10 @@ exports.default = {
 
   watch: {
     value: function value(_value) {
-      if (_value !== this.show) this.show = _value;
+      if (_value !== this.show) {
+        this.show = _value;
+        _value && this.bindEvent();
+      }
     }
   },
   methods: {
@@ -5411,13 +5006,23 @@ exports.default = {
       this.show = false;
       this.$emit('input', false);
       this.$emit('close', this.$el);
+      (0, _dom.off)(window, 'keyup', this.escCloseFun);
+    },
+    escCloseFun: function escCloseFun(_ref) {
+      var keyCode = _ref.keyCode;
+
+      keyCode === 27 && this.escClose && this.maskClick();
+    },
+    bindEvent: function bindEvent() {
+      this.$emit('open');
+      (0, _dom.on)(window, 'keyup', this.escCloseFun);
     }
   }
 };
 
 /***/ }),
-/* 138 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 146 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('transition', {
@@ -5432,62 +5037,39 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "show"
     }],
     staticClass: "x-sidebar"
-  }, [_c('div', {
+  }, [(_vm.mask) ? _c('div', {
     staticClass: "x-mask",
     on: {
       "click": _vm.maskClick
     }
-  }), _vm._v(" "), _c('div', {
+  }) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "x-sidebar-content",
     class: [
       'x-sidebar-' + _vm.direction
     ]
   }, [_vm._t("default")], 2)])])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-a3675ffc", module.exports)
-  }
-}
 
 /***/ }),
-/* 139 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(140),
+  __webpack_require__(148),
   /* template */
-  __webpack_require__(141),
+  __webpack_require__(149),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-menu/x-menu.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-menu.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-aa927e9c", Component.options)
-  } else {
-    hotAPI.reload("data-v-aa927e9c", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 140 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5522,8 +5104,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 141 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 149 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -5537,50 +5119,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "x-menu-list "
   }, [_vm._t("default")], 2)])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-aa927e9c", module.exports)
-  }
-}
 
 /***/ }),
-/* 142 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(143),
+  __webpack_require__(151),
   /* template */
-  __webpack_require__(144),
+  __webpack_require__(152),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-menu/x-menu-item.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-menu-item.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-5fbca17e", Component.options)
-  } else {
-    hotAPI.reload("data-v-5fbca17e", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 143 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5617,8 +5176,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 144 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 152 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('li', {
@@ -5631,16 +5190,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._t("default")], 2)
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-5fbca17e", module.exports)
-  }
-}
 
 /***/ }),
-/* 145 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5650,13 +5202,21 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _xTableHead = __webpack_require__(146);
+var _from = __webpack_require__(154);
+
+var _from2 = _interopRequireDefault(_from);
+
+var _xTableHead = __webpack_require__(169);
 
 var _xTableHead2 = _interopRequireDefault(_xTableHead);
 
-var _xTableWidth = __webpack_require__(147);
+var _xTableWidth = __webpack_require__(170);
 
 var _xTableWidth2 = _interopRequireDefault(_xTableWidth);
+
+var _utils = __webpack_require__(173);
+
+var _dom = __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5691,53 +5251,140 @@ exports.default = {
       default: false
     },
     height: {
+      type: Number,
+      default: function _default() {
+        return 0;
+      }
+    },
+    size: {
       type: String,
-      default: ''
+      default: 'default'
     }
   },
   data: function data() {
     return {
-      column: []
+      list: this.data,
+      column: [],
+      headWidths: [],
+      scrollWidth: (0, _utils.getScrollbarWidth)() + 'px',
+      showScroll: false
     };
   },
-  render: function render(h) {
-    var _this = this;
 
+  methods: {
+    sort: function sort(key, type) {
+      this.data.sort(function (a, b) {
+        if (type === 'up') {
+          return a[key] > b[key];
+        }
+        return a[key] < b[key];
+      });
+    },
+    calculateColWidth: function calculateColWidth() {
+      var _this = this;
+
+      if (this.height) {
+        this.$nextTick(function () {
+          var tableBodyHeight = _this.$refs['table'].offsetHeight;
+          var tdList = _this.$refs.table.querySelectorAll('tbody tr')[0].querySelectorAll('td');
+          var column = _this.column;
+          var headWidths = [];
+
+          _this.showScroll = tableBodyHeight > _this.height;
+
+          tdList = (0, _from2.default)(tdList);
+          tdList.forEach(function (item, index) {
+            headWidths.push({
+              width: column[index].width || item.offsetWidth
+            });
+          });
+          _this.headWidths = headWidths;
+        });
+      }
+    }
+  },
+  watch: {
+    data: function data(value) {
+      this.calculateColWidth();
+    }
+  },
+  render: function render(h) {
+    var _this2 = this;
+
+    var fixedHead = this.height ? h(
+      'div',
+      {
+        'class': 'x-table-header',
+        style: {
+          'padding-right': this.showScroll ? this.scrollWidth : ''
+        }
+      },
+      [h(
+        'table',
+        { 'class': 'x-table' },
+        [h(
+          'x-table-width',
+          {
+            attrs: { list: this.headWidths }
+          },
+          []
+        ), h(
+          'x-table-thead',
+          {
+            on: {
+              'sort': this.sort
+            },
+            attrs: { data: this.column }
+          },
+          []
+        )]
+      )]
+    ) : null;
     var tableClass = {
       'x-table-box': true,
       'x-table-bordered': this.bordered,
       'x-table-striped': this.striped,
       'x-table-hover': this.hover,
-      'no-border': this.noBorder
+      'no-border': this.noBorder,
+      'x-table-fixed-head': this.height
     };
 
     tableClass['x-text-' + this.textAlign[0]] = true;
+
+    tableClass['x-table-' + this.size] = true;
+
     return h(
       'div',
       {
         'class': tableClass
       },
-      [this.$slots.default, h(
+      [this.$slots.default, fixedHead, h(
         'div',
         {
           'class': {
             'x-table-body': true,
             'x-table-scroll-body': this.height
+          },
+          style: {
+            maxHeight: this.height ? this.height - 1 + 'px' : 'auto'
           }
         },
         [h(
           'table',
-          { 'class': 'x-table' },
-          [h(
-            'x-table-width',
+          { 'class': 'x-table', ref: 'table' },
+          [this.height ? null : h(
+            'x-table-thead',
             {
-              attrs: { list: this.column }
+              on: {
+                'sort': this.sort
+              },
+              attrs: { data: this.column }
             },
             []
           ), h(
-            'x-table-thead',
+            'x-table-width',
             {
-              attrs: { data: this.column }
+              attrs: { list: this.column }
             },
             []
           ), h(
@@ -5747,7 +5394,7 @@ exports.default = {
               return h(
                 'tr',
                 null,
-                [_this._l(_this.column, function (col) {
+                [_this2._l(_this2.column, function (col) {
                   return h(
                     'td',
                     null,
@@ -5765,11 +5412,316 @@ exports.default = {
   components: {
     xTableThead: _xTableHead2.default,
     xTableWidth: _xTableWidth2.default
+  },
+  mounted: function mounted() {
+    this.calculateColWidth();
+    (0, _dom.on)(window, 'resize', (0, _utils.debounce)(this.calculateColWidth, 200));
   }
 };
 
 /***/ }),
-/* 146 */
+/* 154 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = { "default": __webpack_require__(155), __esModule: true };
+
+/***/ }),
+/* 155 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(38);
+__webpack_require__(167);
+module.exports = __webpack_require__(2).Array.from;
+
+
+/***/ }),
+/* 156 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var toInteger = __webpack_require__(20);
+var defined = __webpack_require__(21);
+// true  -> String#at
+// false -> String#codePointAt
+module.exports = function (TO_STRING) {
+  return function (that, pos) {
+    var s = String(defined(that));
+    var i = toInteger(pos);
+    var l = s.length;
+    var a, b;
+    if (i < 0 || i >= l) return TO_STRING ? '' : undefined;
+    a = s.charCodeAt(i);
+    return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
+      ? TO_STRING ? s.charAt(i) : a
+      : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
+  };
+};
+
+
+/***/ }),
+/* 157 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = !__webpack_require__(9) && !__webpack_require__(15)(function () {
+  return Object.defineProperty(__webpack_require__(22)('div'), 'a', { get: function () { return 7; } }).a != 7;
+});
+
+
+/***/ }),
+/* 158 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 7.1.1 ToPrimitive(input [, PreferredType])
+var isObject = __webpack_require__(11);
+// instead of the ES6 spec version, we didn't implement @@toPrimitive case
+// and the second argument - flag - preferred type is a string
+module.exports = function (it, S) {
+  if (!isObject(it)) return it;
+  var fn, val;
+  if (S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it))) return val;
+  if (typeof (fn = it.valueOf) == 'function' && !isObject(val = fn.call(it))) return val;
+  if (!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it))) return val;
+  throw TypeError("Can't convert object to primitive value");
+};
+
+
+/***/ }),
+/* 159 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(7);
+
+
+/***/ }),
+/* 160 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var create = __webpack_require__(161);
+var descriptor = __webpack_require__(23);
+var setToStringTag = __webpack_require__(28);
+var IteratorPrototype = {};
+
+// 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
+__webpack_require__(7)(IteratorPrototype, __webpack_require__(3)('iterator'), function () { return this; });
+
+module.exports = function (Constructor, NAME, next) {
+  Constructor.prototype = create(IteratorPrototype, { next: descriptor(1, next) });
+  setToStringTag(Constructor, NAME + ' Iterator');
+};
+
+
+/***/ }),
+/* 161 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
+var anObject = __webpack_require__(6);
+var dPs = __webpack_require__(162);
+var enumBugKeys = __webpack_require__(44);
+var IE_PROTO = __webpack_require__(27)('IE_PROTO');
+var Empty = function () { /* empty */ };
+var PROTOTYPE = 'prototype';
+
+// Create object with fake `null` prototype: use iframe Object with cleared prototype
+var createDict = function () {
+  // Thrash, waste and sodomy: IE GC bug
+  var iframe = __webpack_require__(22)('iframe');
+  var i = enumBugKeys.length;
+  var lt = '<';
+  var gt = '>';
+  var iframeDocument;
+  iframe.style.display = 'none';
+  __webpack_require__(45).appendChild(iframe);
+  iframe.src = 'javascript:'; // eslint-disable-line no-script-url
+  // createDict = iframe.contentWindow.Object;
+  // html.removeChild(iframe);
+  iframeDocument = iframe.contentWindow.document;
+  iframeDocument.open();
+  iframeDocument.write(lt + 'script' + gt + 'document.F=Object' + lt + '/script' + gt);
+  iframeDocument.close();
+  createDict = iframeDocument.F;
+  while (i--) delete createDict[PROTOTYPE][enumBugKeys[i]];
+  return createDict();
+};
+
+module.exports = Object.create || function create(O, Properties) {
+  var result;
+  if (O !== null) {
+    Empty[PROTOTYPE] = anObject(O);
+    result = new Empty();
+    Empty[PROTOTYPE] = null;
+    // add "__proto__" for Object.getPrototypeOf polyfill
+    result[IE_PROTO] = O;
+  } else result = createDict();
+  return Properties === undefined ? result : dPs(result, Properties);
+};
+
+
+/***/ }),
+/* 162 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var dP = __webpack_require__(8);
+var anObject = __webpack_require__(6);
+var getKeys = __webpack_require__(24);
+
+module.exports = __webpack_require__(9) ? Object.defineProperties : function defineProperties(O, Properties) {
+  anObject(O);
+  var keys = getKeys(Properties);
+  var length = keys.length;
+  var i = 0;
+  var P;
+  while (length > i) dP.f(O, P = keys[i++], Properties[P]);
+  return O;
+};
+
+
+/***/ }),
+/* 163 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var has = __webpack_require__(16);
+var toIObject = __webpack_require__(25);
+var arrayIndexOf = __webpack_require__(164)(false);
+var IE_PROTO = __webpack_require__(27)('IE_PROTO');
+
+module.exports = function (object, names) {
+  var O = toIObject(object);
+  var i = 0;
+  var result = [];
+  var key;
+  for (key in O) if (key != IE_PROTO) has(O, key) && result.push(key);
+  // Don't enum bug & hidden keys
+  while (names.length > i) if (has(O, key = names[i++])) {
+    ~arrayIndexOf(result, key) || result.push(key);
+  }
+  return result;
+};
+
+
+/***/ }),
+/* 164 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// false -> Array#indexOf
+// true  -> Array#includes
+var toIObject = __webpack_require__(25);
+var toLength = __webpack_require__(26);
+var toAbsoluteIndex = __webpack_require__(165);
+module.exports = function (IS_INCLUDES) {
+  return function ($this, el, fromIndex) {
+    var O = toIObject($this);
+    var length = toLength(O.length);
+    var index = toAbsoluteIndex(fromIndex, length);
+    var value;
+    // Array#includes uses SameValueZero equality algorithm
+    // eslint-disable-next-line no-self-compare
+    if (IS_INCLUDES && el != el) while (length > index) {
+      value = O[index++];
+      // eslint-disable-next-line no-self-compare
+      if (value != value) return true;
+    // Array#indexOf ignores holes, Array#includes - not
+    } else for (;length > index; index++) if (IS_INCLUDES || index in O) {
+      if (O[index] === el) return IS_INCLUDES || index || 0;
+    } return !IS_INCLUDES && -1;
+  };
+};
+
+
+/***/ }),
+/* 165 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var toInteger = __webpack_require__(20);
+var max = Math.max;
+var min = Math.min;
+module.exports = function (index, length) {
+  index = toInteger(index);
+  return index < 0 ? max(index + length, 0) : min(index, length);
+};
+
+
+/***/ }),
+/* 166 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
+var has = __webpack_require__(16);
+var toObject = __webpack_require__(18);
+var IE_PROTO = __webpack_require__(27)('IE_PROTO');
+var ObjectProto = Object.prototype;
+
+module.exports = Object.getPrototypeOf || function (O) {
+  O = toObject(O);
+  if (has(O, IE_PROTO)) return O[IE_PROTO];
+  if (typeof O.constructor == 'function' && O instanceof O.constructor) {
+    return O.constructor.prototype;
+  } return O instanceof Object ? ObjectProto : null;
+};
+
+
+/***/ }),
+/* 167 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var ctx = __webpack_require__(10);
+var $export = __webpack_require__(5);
+var toObject = __webpack_require__(18);
+var call = __webpack_require__(46);
+var isArrayIter = __webpack_require__(47);
+var toLength = __webpack_require__(26);
+var createProperty = __webpack_require__(168);
+var getIterFn = __webpack_require__(48);
+
+$export($export.S + $export.F * !__webpack_require__(50)(function (iter) { Array.from(iter); }), 'Array', {
+  // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
+  from: function from(arrayLike /* , mapfn = undefined, thisArg = undefined */) {
+    var O = toObject(arrayLike);
+    var C = typeof this == 'function' ? this : Array;
+    var aLen = arguments.length;
+    var mapfn = aLen > 1 ? arguments[1] : undefined;
+    var mapping = mapfn !== undefined;
+    var index = 0;
+    var iterFn = getIterFn(O);
+    var length, result, step, iterator;
+    if (mapping) mapfn = ctx(mapfn, aLen > 2 ? arguments[2] : undefined, 2);
+    // if object isn't iterable or it's array with default iterator - use simple case
+    if (iterFn != undefined && !(C == Array && isArrayIter(iterFn))) {
+      for (iterator = iterFn.call(O), result = new C(); !(step = iterator.next()).done; index++) {
+        createProperty(result, index, mapping ? call(iterator, mapfn, [step.value, index], true) : step.value);
+      }
+    } else {
+      length = toLength(O.length);
+      for (result = new C(length); length > index; index++) {
+        createProperty(result, index, mapping ? mapfn(O[index], index) : O[index]);
+      }
+    }
+    result.length = index;
+    return result;
+  }
+});
+
+
+/***/ }),
+/* 168 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $defineProperty = __webpack_require__(8);
+var createDesc = __webpack_require__(23);
+
+module.exports = function (object, index, value) {
+  if (index in object) $defineProperty.f(object, index, createDesc(0, value));
+  else object[index] = value;
+};
+
+
+/***/ }),
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5787,18 +5739,78 @@ exports.default = {
       }
     }
   },
+  methods: {
+    sort: function sort(data, type) {
+      if (data.sortMethod) {
+        data.sortType = data.sortMethod(data.name, type);
+      } else {
+        data.sortType = type;
+        this.$emit('sort', data.name, type);
+      }
+    }
+  },
   render: function render(h) {
+    var _this = this;
+
     return h(
-      "thead",
+      'thead',
       null,
       [h(
-        "tr",
+        'tr',
         null,
         [this._l(this.data, function (item, index) {
           return h(
-            "th",
+            'th',
             null,
-            [item.renderHead(h)]
+            [h(
+              'span',
+              null,
+              [item.renderHead(h)]
+            ), item.sort ? h(
+              'div',
+              { 'class': 'x-table-sort' },
+              [h(
+                'span',
+                {
+                  on: {
+                    'click': function click() {
+                      return _this.sort(item, 'up');
+                    }
+                  },
+
+                  'class': {
+                    'sort-active': item.sortType === 'up'
+                  },
+                  attrs: { title: '\u5347\u5E8F'
+                  }
+                },
+                [h(
+                  'i',
+                  { 'class': 'x-icon-chevron-up' },
+                  []
+                )]
+              ), h(
+                'span',
+                {
+                  on: {
+                    'click': function click() {
+                      return _this.sort(item, 'down');
+                    }
+                  },
+
+                  'class': {
+                    'sort-active': item.sortType === 'down'
+                  },
+                  attrs: { title: '\u964D\u5E8F'
+                  }
+                },
+                [h(
+                  'i',
+                  { 'class': 'x-icon-chevron-down' },
+                  []
+                )]
+              )]
+            ) : '']
           );
         })]
       )]
@@ -5807,41 +5819,25 @@ exports.default = {
 };
 
 /***/ }),
-/* 147 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(148),
+  __webpack_require__(171),
   /* template */
-  __webpack_require__(149),
+  __webpack_require__(172),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-table/x-table-width.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-table-width.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-c4fcfec2", Component.options)
-  } else {
-    hotAPI.reload("data-v-c4fcfec2", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 148 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5857,29 +5853,71 @@ exports.default = {
 };
 
 /***/ }),
-/* 149 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 172 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('colgroup', _vm._l((_vm.list), function(item) {
     return _c('col', {
       key: item.width,
       attrs: {
-        "width": item.width
+        "width": item.width || ''
       }
     })
   }))
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-c4fcfec2", module.exports)
+
+/***/ }),
+/* 173 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.getScrollbarWidth = getScrollbarWidth;
+exports.debounce = debounce;
+function getScrollbarWidth() {
+  var $p = document.createElement('p');
+  var styles = {
+    width: '100px',
+    height: '100px',
+    overflowY: 'scroll'
+  };
+  var scrollbarWidth = void 0;
+  for (var i in styles) {
+    $p.style[i] = styles[i];
   }
+  document.body.appendChild($p);
+  scrollbarWidth = $p.offsetWidth - $p.clientWidth;
+  $p.remove();
+  return scrollbarWidth;
+}
+
+function debounce(fun) {
+  var waitTime = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
+
+  var timeout = '';
+  function method() {
+    var self = this,
+        arg = arguments;
+    clearTimeout(timeout);
+    timeout = setTimeout(function () {
+      fun.apply(self, arg);
+    }, waitTime);
+  }
+
+  method.clear = function () {
+    clearTimeout(timeout);
+    timeout = '';
+  };
+  return method;
 }
 
 /***/ }),
-/* 150 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5889,7 +5927,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _assign = __webpack_require__(15);
+var _assign = __webpack_require__(29);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -5899,8 +5937,7 @@ exports.default = {
   props: {
     label: {
       type: String,
-      default: '',
-      required: true
+      default: ''
     },
     width: {
       type: Number,
@@ -5915,6 +5952,13 @@ exports.default = {
       default: true
     },
     renderHead: {
+      type: Function
+    },
+    sort: {
+      type: Boolean,
+      default: false
+    },
+    sortMethod: {
       type: Function
     }
   },
@@ -5934,6 +5978,9 @@ exports.default = {
       width: this.width,
       name: this.name,
       show: this.show,
+      sort: this.sort,
+      sortMethod: this.sortMethod,
+      sortType: '',
 
       renderHead: function renderHead(h) {
         var head = _this.$slots.head;
@@ -5967,159 +6014,80 @@ exports.default = {
 };
 
 /***/ }),
-/* 151 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(152);
-module.exports = __webpack_require__(3).Object.assign;
+__webpack_require__(176);
+module.exports = __webpack_require__(2).Object.assign;
+
 
 /***/ }),
-/* 152 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.3.1 Object.assign(target, source)
-var $export = __webpack_require__(10);
+var $export = __webpack_require__(5);
 
-$export($export.S + $export.F, 'Object', {assign: __webpack_require__(155)});
+$export($export.S + $export.F, 'Object', { assign: __webpack_require__(177) });
 
-/***/ }),
-/* 153 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = !__webpack_require__(6) && !__webpack_require__(17)(function(){
-  return Object.defineProperty(__webpack_require__(18)('div'), 'a', {get: function(){ return 7; }}).a != 7;
-});
 
 /***/ }),
-/* 154 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 7.1.1 ToPrimitive(input [, PreferredType])
-var isObject = __webpack_require__(12);
-// instead of the ES6 spec version, we didn't implement @@toPrimitive case
-// and the second argument - flag - preferred type is a string
-module.exports = function(it, S){
-  if(!isObject(it))return it;
-  var fn, val;
-  if(S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
-  if(typeof (fn = it.valueOf) == 'function' && !isObject(val = fn.call(it)))return val;
-  if(!S && typeof (fn = it.toString) == 'function' && !isObject(val = fn.call(it)))return val;
-  throw TypeError("Can't convert object to primitive value");
-};
-
-/***/ }),
-/* 155 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // 19.1.2.1 Object.assign(target, source, ...)
-var getKeys  = __webpack_require__(34)
-  , gOPS     = __webpack_require__(159)
-  , pIE      = __webpack_require__(160)
-  , toObject = __webpack_require__(40)
-  , IObject  = __webpack_require__(35)
-  , $assign  = Object.assign;
+var getKeys = __webpack_require__(24);
+var gOPS = __webpack_require__(178);
+var pIE = __webpack_require__(179);
+var toObject = __webpack_require__(18);
+var IObject = __webpack_require__(41);
+var $assign = Object.assign;
 
 // should work with symbols and should have deterministic property order (V8 bug)
-module.exports = !$assign || __webpack_require__(17)(function(){
-  var A = {}
-    , B = {}
-    , S = Symbol()
-    , K = 'abcdefghijklmnopqrst';
+module.exports = !$assign || __webpack_require__(15)(function () {
+  var A = {};
+  var B = {};
+  // eslint-disable-next-line no-undef
+  var S = Symbol();
+  var K = 'abcdefghijklmnopqrst';
   A[S] = 7;
-  K.split('').forEach(function(k){ B[k] = k; });
+  K.split('').forEach(function (k) { B[k] = k; });
   return $assign({}, A)[S] != 7 || Object.keys($assign({}, B)).join('') != K;
-}) ? function assign(target, source){ // eslint-disable-line no-unused-vars
-  var T     = toObject(target)
-    , aLen  = arguments.length
-    , index = 1
-    , getSymbols = gOPS.f
-    , isEnum     = pIE.f;
-  while(aLen > index){
-    var S      = IObject(arguments[index++])
-      , keys   = getSymbols ? getKeys(S).concat(getSymbols(S)) : getKeys(S)
-      , length = keys.length
-      , j      = 0
-      , key;
-    while(length > j)if(isEnum.call(S, key = keys[j++]))T[key] = S[key];
+}) ? function assign(target, source) { // eslint-disable-line no-unused-vars
+  var T = toObject(target);
+  var aLen = arguments.length;
+  var index = 1;
+  var getSymbols = gOPS.f;
+  var isEnum = pIE.f;
+  while (aLen > index) {
+    var S = IObject(arguments[index++]);
+    var keys = getSymbols ? getKeys(S).concat(getSymbols(S)) : getKeys(S);
+    var length = keys.length;
+    var j = 0;
+    var key;
+    while (length > j) if (isEnum.call(S, key = keys[j++])) T[key] = S[key];
   } return T;
 } : $assign;
 
-/***/ }),
-/* 156 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var has          = __webpack_require__(13)
-  , toIObject    = __webpack_require__(19)
-  , arrayIndexOf = __webpack_require__(157)(false)
-  , IE_PROTO     = __webpack_require__(22)('IE_PROTO');
-
-module.exports = function(object, names){
-  var O      = toIObject(object)
-    , i      = 0
-    , result = []
-    , key;
-  for(key in O)if(key != IE_PROTO)has(O, key) && result.push(key);
-  // Don't enum bug & hidden keys
-  while(names.length > i)if(has(O, key = names[i++])){
-    ~arrayIndexOf(result, key) || result.push(key);
-  }
-  return result;
-};
 
 /***/ }),
-/* 157 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// false -> Array#indexOf
-// true  -> Array#includes
-var toIObject = __webpack_require__(19)
-  , toLength  = __webpack_require__(36)
-  , toIndex   = __webpack_require__(158);
-module.exports = function(IS_INCLUDES){
-  return function($this, el, fromIndex){
-    var O      = toIObject($this)
-      , length = toLength(O.length)
-      , index  = toIndex(fromIndex, length)
-      , value;
-    // Array#includes uses SameValueZero equality algorithm
-    if(IS_INCLUDES && el != el)while(length > index){
-      value = O[index++];
-      if(value != value)return true;
-    // Array#toIndex ignores holes, Array#includes - not
-    } else for(;length > index; index++)if(IS_INCLUDES || index in O){
-      if(O[index] === el)return IS_INCLUDES || index || 0;
-    } return !IS_INCLUDES && -1;
-  };
-};
-
-/***/ }),
-/* 158 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var toInteger = __webpack_require__(21)
-  , max       = Math.max
-  , min       = Math.min;
-module.exports = function(index, length){
-  index = toInteger(index);
-  return index < 0 ? max(index + length, 0) : min(index, length);
-};
-
-/***/ }),
-/* 159 */
+/* 178 */
 /***/ (function(module, exports) {
 
 exports.f = Object.getOwnPropertySymbols;
 
+
 /***/ }),
-/* 160 */
+/* 179 */
 /***/ (function(module, exports) {
 
 exports.f = {}.propertyIsEnumerable;
 
+
 /***/ }),
-/* 161 */
+/* 180 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6129,20 +6097,22 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _vue = __webpack_require__(24);
+var _xPopoverContent = __webpack_require__(181);
 
-var _vue2 = _interopRequireDefault(_vue);
+var _xPopoverContent2 = _interopRequireDefault(_xPopoverContent);
 
-var _xTooltipContent = __webpack_require__(162);
+var _popover = __webpack_require__(51);
 
-var _xTooltipContent2 = _interopRequireDefault(_xTooltipContent);
-
-var _dom = __webpack_require__(32);
+var _dom = __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
   props: {
+    value: {
+      type: Boolean,
+      default: false
+    },
     trigger: {
       type: String,
       default: 'hover'
@@ -6151,43 +6121,40 @@ exports.default = {
       type: String,
       default: 'top'
     },
-    type: {
+    title: {
       type: String,
       default: ''
     }
   },
   data: function data() {
     return {
-      tip: '',
+      popover: '',
 
       timeout: '',
-      focusEl: ''
+      focusEl: '',
+      showPopover: this.value
     };
   },
 
   methods: {
-    createTip: function createTip() {
-      var Instance = _vue2.default.extend(_xTooltipContent2.default);
-      var tip = new Instance({
-        el: document.createElement('div'),
-        data: {
-          direction: this.direction,
-          type: this.type,
-          content: this.$slots.content
-        }
-      });
-      this.tip = tip;
-      document.body.appendChild(tip.$el);
+    createpopover: function createpopover() {
+      var data = {
+        show: this.show,
+        direction: this.direction,
+        title: this.$slots.title || this.title,
+        content: this.$slots.content
+      };
+      var popover = this.popover = (0, _popover.created)(data, _xPopoverContent2.default);
 
-      this.trigger === 'hover' && this.tipContentBindEvent();
-      return tip;
+      this.trigger === 'hover' && this.popoverContentBindEvent();
+      return popover;
     },
     bindEvent: function bindEvent() {
       var $el = this.$el;
 
       if (process.env.NODE_ENV !== 'production') {
         if (!this.$slots.content) {
-          console.error('xui -> (x-tooltip组件) : slot中的content不能为空');
+          console.error('xui -> (x-popover组件) : slot中的content不能为空');
           return;
         }
       }
@@ -6224,14 +6191,14 @@ exports.default = {
           break;
       }
     },
-    tipContentBindEvent: function tipContentBindEvent() {
-      var tipEl = this.tip.$el;
-      (0, _dom.on)(tipEl, 'mouseenter', this.mouseenterOpen);
-      (0, _dom.on)(tipEl, 'mouseleave', this.mouseleave);
+    popoverContentBindEvent: function popoverContentBindEvent() {
+      var popoverEl = this.popover.$el;
+      (0, _dom.on)(popoverEl, 'mouseenter', this.mouseenterOpen);
+      (0, _dom.on)(popoverEl, 'mouseleave', this.mouseleave);
     },
     clickOpen: function clickOpen(event) {
       this.show();
-      (0, _dom.clickOutside)(this.tip.$el, this.hide, true);
+      (0, _dom.clickOutside)(this.popover.$el, this.hide, true);
     },
     mousedownShow: function mousedownShow() {
       this.show();
@@ -6249,47 +6216,30 @@ exports.default = {
       }, 50);
     },
     hide: function hide() {
-      this.tip.show = false;
+      this.showPopover = this.popover.show = false;
+      this.$emit('input', this.showPopover);
     },
     show: function show() {
       var _this2 = this;
 
-      var tip = this.tip || this.createTip(),
-          left = 0,
-          top = 0;
-      var position = this.$el.getBoundingClientRect();
+      var popover = this.popover || this.createpopover();
 
-      tip.show = true;
+      this.showPopover = popover.show = true;
+      this.$emit('input', this.showPopover);
       this.$nextTick(function () {
-        var tipPosition = tip.$el.getBoundingClientRect();
+        var _computationsPosition = (0, _popover.computationsPosition)(_this2.direction, _this2.$el, popover.$el),
+            left = _computationsPosition.left,
+            top = _computationsPosition.top;
 
-        switch (_this2.direction) {
-          case 'top':
-            left = position.left + position.width / 2 - tipPosition.width / 2;
-            top = position.top - tipPosition.height;
-            break;
-          case 'bottom':
-            left = position.left + position.width / 2 - tipPosition.width / 2;
-            top = position.top + position.height;
-            break;
-          case 'left':
-            left = position.left - tipPosition.width;
-            top = position.top + position.height / 2 - tipPosition.height / 2;
-            break;
-          case 'right':
-            left = position.left + position.width;
-            top = position.top + position.height / 2 - tipPosition.height / 2;
-            break;
-        }
-        tip.left = left;
-        tip.top = top;
+        popover.left = left;
+        popover.top = top;
       });
     }
   },
   render: function render(h) {
     return h(
       'div',
-      { 'class': 'x-tooltip-box' },
+      { 'class': 'x-popover-box' },
       [this.$slots.default]
     );
   },
@@ -6301,12 +6251,12 @@ exports.default = {
         (0, _dom.off)($el, 'click', this.clickOpen, true);
         break;
       case 'hover':
-        if (this.tip === '') return;
-        var $tipEl = this.tip.$el;
+        if (this.popover === '') return;
+        var $popoverEl = this.popover.$el;
         (0, _dom.off)($el, 'mouseenter', this.mouseenterOpen);
         (0, _dom.off)($el, 'mouseleave', this.mouseleave);
-        (0, _dom.off)($tipEl, 'mouseenter', this.mouseenterOpen);
-        (0, _dom.off)($tipEl, 'mouseleave', this.mouseleave);
+        (0, _dom.off)($popoverEl, 'mouseenter', this.mouseenterOpen);
+        (0, _dom.off)($popoverEl, 'mouseleave', this.mouseleave);
         break;
       case 'focus':
         if (this.focusEl) {
@@ -6318,14 +6268,33 @@ exports.default = {
         break;
     }
   },
+
+  watch: {
+    value: function value(_value) {
+      if (_value === this.showPopover) return;
+      if (this.popover === '') {
+        this.show();
+      } else {
+        this.showPopover = this.popover.show = _value;
+      }
+    }
+  },
   mounted: function mounted() {
+    var _this3 = this;
+
     this.bindEvent();
+
+    setTimeout(function () {
+      _this3.$nextTick(function () {
+        _this3.showPopover === false && _this3.value && _this3.show();
+      });
+    }, 10);
   }
 };
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(30)))
 
 /***/ }),
-/* 162 */
+/* 181 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6340,6 +6309,7 @@ exports.default = {
       direction: '',
       type: '',
       content: '',
+      title: '',
       show: false,
       left: '',
       top: ''
@@ -6347,14 +6317,10 @@ exports.default = {
   },
   render: function render(h) {
     var tipClass = {
-      'x-tooltip': true
+      'x-popover': true
     };
 
-    if (this.type) {
-      tipClass['x-tooltip-' + this.type] = true;
-    }
-
-    tipClass['x-tooltip-' + this.direction] = true;
+    tipClass['x-popover-' + this.direction] = true;
 
     var tipStyle = {
       left: this.left + 'px',
@@ -6370,49 +6336,45 @@ exports.default = {
       },
       [h(
         'div',
-        { 'class': 'x-tooltip-text' },
-        [this.content]
+        { 'class': 'x-popover-text' },
+        [this.title ? h(
+          'div',
+          { 'class': 'x-popover-title' },
+          [this.title]
+        ) : null, h(
+          'div',
+          { 'class': 'x-popover-content' },
+          [this.content]
+        )]
+      ), h(
+        'span',
+        { 'class': 'arrow' },
+        []
       )]
     );
   }
 };
 
 /***/ }),
-/* 163 */
+/* 182 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(164),
+  __webpack_require__(183),
   /* template */
-  __webpack_require__(165),
+  __webpack_require__(184),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-page/x-page.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-page.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-f14cea9c", Component.options)
-  } else {
-    hotAPI.reload("data-v-f14cea9c", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 164 */
+/* 183 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6582,8 +6544,8 @@ exports.default = {
 };
 
 /***/ }),
-/* 165 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 184 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -6670,16 +6632,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }), _vm._v(" "), _c('span', [_vm._v("页")])]) : _vm._e()])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-f14cea9c", module.exports)
-  }
-}
 
 /***/ }),
-/* 166 */
+/* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6689,27 +6644,27 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _classCallCheck2 = __webpack_require__(41);
+var _classCallCheck2 = __webpack_require__(186);
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = __webpack_require__(42);
+var _createClass2 = __webpack_require__(187);
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _assign = __webpack_require__(15);
+var _assign = __webpack_require__(29);
 
 var _assign2 = _interopRequireDefault(_assign);
 
-var _promise = __webpack_require__(170);
+var _promise = __webpack_require__(191);
 
 var _promise2 = _interopRequireDefault(_promise);
 
-var _vue = __webpack_require__(24);
+var _vue = __webpack_require__(19);
 
 var _vue2 = _interopRequireDefault(_vue);
 
-var _xDialog = __webpack_require__(196);
+var _xDialog = __webpack_require__(207);
 
 var _xDialog2 = _interopRequireDefault(_xDialog);
 
@@ -6719,7 +6674,8 @@ var instance = '';
 
 var defaultConfig = {
   title: '提示',
-  type: 'alert',
+  dialogType: 'alert',
+  type: '',
   message: '',
   radius: true,
   inputValue: '',
@@ -6731,7 +6687,17 @@ var defaultConfig = {
   close: '',
   confirm: '',
   maskClose: true,
-  promptRequired: false
+  promptRequired: true,
+  mask: true,
+  icon: '',
+  escClose: true
+};
+
+var icons = {
+  success: 'x-icon-checkmark-circle',
+  error: 'x-icon-alert',
+  warning: 'x-icon-cancel',
+  info: 'x-icon-information-circled'
 };
 
 function initInstance() {
@@ -6754,8 +6720,10 @@ function showDialog(options) {
 
 function createDialog(options, confirm, close) {
   var config = {};
+
+  options.icon = options.icon || icons[options.type] || '';
   if (process.env.NODE_ENV !== 'production') {
-    if (options.type !== 'prompt' && !options.message) {
+    if (options.dialogType !== 'prompt' && !options.message) {
       console.error('xui -> (x-dialog组件) : message不能为空');
       return;
     }
@@ -6764,7 +6732,6 @@ function createDialog(options, confirm, close) {
   if (instance === '') {
     initInstance();
   }
-
   if (process.env.NODE_ENV !== 'production') {
     if (typeof window.Promise !== 'function') {
       console.info('xui -> (x-dialog组件) : 当前浏览器不支持Promise如果想使用Promise可以引入es6-promise');
@@ -6801,7 +6768,7 @@ var Dialog = function () {
         options = {};
       }
       return createDialog((0, _assign2.default)({
-        type: 'alert',
+        dialogType: 'alert',
         message: message
       }, options), confirm, close);
     }
@@ -6814,7 +6781,7 @@ var Dialog = function () {
         options = {};
       }
       return createDialog((0, _assign2.default)({
-        type: 'confirm',
+        dialogType: 'confirm',
         message: message,
         showCloseButton: true
       }, options), _confirm, close);
@@ -6822,265 +6789,182 @@ var Dialog = function () {
   }, {
     key: 'prompt',
     value: function prompt(options, confirm, close) {
+      if (typeof options === 'function') {
+        close = confirm;
+        confirm = options;
+        options = {};
+      }
       return createDialog((0, _assign2.default)({
-        type: 'prompt',
+        dialogType: 'prompt',
         showCloseButton: true
       }, options), confirm, close);
+    }
+  }, {
+    key: 'close',
+    value: function close() {
+      instance.hide();
     }
   }]);
   return Dialog;
 }();
 
 exports.default = new Dialog();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(30)))
 
 /***/ }),
-/* 167 */
+/* 186 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(168), __esModule: true };
+"use strict";
 
-/***/ }),
-/* 168 */
-/***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(169);
-var $Object = __webpack_require__(3).Object;
-module.exports = function defineProperty(it, key, desc){
-  return $Object.defineProperty(it, key, desc);
+exports.__esModule = true;
+
+exports.default = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
 };
 
 /***/ }),
-/* 169 */
+/* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $export = __webpack_require__(10);
+"use strict";
+
+
+exports.__esModule = true;
+
+var _defineProperty = __webpack_require__(188);
+
+var _defineProperty2 = _interopRequireDefault(_defineProperty);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      (0, _defineProperty2.default)(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+/***/ }),
+/* 188 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = { "default": __webpack_require__(189), __esModule: true };
+
+/***/ }),
+/* 189 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(190);
+var $Object = __webpack_require__(2).Object;
+module.exports = function defineProperty(it, key, desc) {
+  return $Object.defineProperty(it, key, desc);
+};
+
+
+/***/ }),
+/* 190 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $export = __webpack_require__(5);
 // 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
-$export($export.S + $export.F * !__webpack_require__(6), 'Object', {defineProperty: __webpack_require__(7).f});
+$export($export.S + $export.F * !__webpack_require__(9), 'Object', { defineProperty: __webpack_require__(8).f });
+
 
 /***/ }),
-/* 170 */
+/* 191 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(171), __esModule: true };
+module.exports = { "default": __webpack_require__(192), __esModule: true };
 
 /***/ }),
-/* 171 */
+/* 192 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(172);
-__webpack_require__(173);
-__webpack_require__(180);
-__webpack_require__(184);
-module.exports = __webpack_require__(3).Promise;
+__webpack_require__(193);
+__webpack_require__(38);
+__webpack_require__(194);
+__webpack_require__(198);
+__webpack_require__(205);
+__webpack_require__(206);
+module.exports = __webpack_require__(2).Promise;
+
 
 /***/ }),
-/* 172 */
+/* 193 */
 /***/ (function(module, exports) {
 
 
 
 /***/ }),
-/* 173 */
+/* 194 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+__webpack_require__(195);
+var global = __webpack_require__(1);
+var hide = __webpack_require__(7);
+var Iterators = __webpack_require__(12);
+var TO_STRING_TAG = __webpack_require__(3)('toStringTag');
 
-var $at  = __webpack_require__(174)(true);
+var DOMIterables = ('CSSRuleList,CSSStyleDeclaration,CSSValueList,ClientRectList,DOMRectList,DOMStringList,' +
+  'DOMTokenList,DataTransferItemList,FileList,HTMLAllCollection,HTMLCollection,HTMLFormElement,HTMLSelectElement,' +
+  'MediaList,MimeTypeArray,NamedNodeMap,NodeList,PaintRequestList,Plugin,PluginArray,SVGLengthList,SVGNumberList,' +
+  'SVGPathSegList,SVGPointList,SVGStringList,SVGTransformList,SourceBufferList,StyleSheetList,TextTrackCueList,' +
+  'TextTrackList,TouchList').split(',');
 
-// 21.1.3.27 String.prototype[@@iterator]()
-__webpack_require__(43)(String, 'String', function(iterated){
-  this._t = String(iterated); // target
-  this._i = 0;                // next index
-// 21.1.5.2.1 %StringIteratorPrototype%.next()
-}, function(){
-  var O     = this._t
-    , index = this._i
-    , point;
-  if(index >= O.length)return {value: undefined, done: true};
-  point = $at(O, index);
-  this._i += point.length;
-  return {value: point, done: false};
-});
-
-/***/ }),
-/* 174 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var toInteger = __webpack_require__(21)
-  , defined   = __webpack_require__(20);
-// true  -> String#at
-// false -> String#codePointAt
-module.exports = function(TO_STRING){
-  return function(that, pos){
-    var s = String(defined(that))
-      , i = toInteger(pos)
-      , l = s.length
-      , a, b;
-    if(i < 0 || i >= l)return TO_STRING ? '' : undefined;
-    a = s.charCodeAt(i);
-    return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
-      ? TO_STRING ? s.charAt(i) : a
-      : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
-  };
-};
-
-/***/ }),
-/* 175 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(4);
-
-/***/ }),
-/* 176 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var create         = __webpack_require__(177)
-  , descriptor     = __webpack_require__(33)
-  , setToStringTag = __webpack_require__(25)
-  , IteratorPrototype = {};
-
-// 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
-__webpack_require__(4)(IteratorPrototype, __webpack_require__(1)('iterator'), function(){ return this; });
-
-module.exports = function(Constructor, NAME, next){
-  Constructor.prototype = create(IteratorPrototype, {next: descriptor(1, next)});
-  setToStringTag(Constructor, NAME + ' Iterator');
-};
-
-/***/ }),
-/* 177 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
-var anObject    = __webpack_require__(5)
-  , dPs         = __webpack_require__(178)
-  , enumBugKeys = __webpack_require__(39)
-  , IE_PROTO    = __webpack_require__(22)('IE_PROTO')
-  , Empty       = function(){ /* empty */ }
-  , PROTOTYPE   = 'prototype';
-
-// Create object with fake `null` prototype: use iframe Object with cleared prototype
-var createDict = function(){
-  // Thrash, waste and sodomy: IE GC bug
-  var iframe = __webpack_require__(18)('iframe')
-    , i      = enumBugKeys.length
-    , lt     = '<'
-    , gt     = '>'
-    , iframeDocument;
-  iframe.style.display = 'none';
-  __webpack_require__(45).appendChild(iframe);
-  iframe.src = 'javascript:'; // eslint-disable-line no-script-url
-  // createDict = iframe.contentWindow.Object;
-  // html.removeChild(iframe);
-  iframeDocument = iframe.contentWindow.document;
-  iframeDocument.open();
-  iframeDocument.write(lt + 'script' + gt + 'document.F=Object' + lt + '/script' + gt);
-  iframeDocument.close();
-  createDict = iframeDocument.F;
-  while(i--)delete createDict[PROTOTYPE][enumBugKeys[i]];
-  return createDict();
-};
-
-module.exports = Object.create || function create(O, Properties){
-  var result;
-  if(O !== null){
-    Empty[PROTOTYPE] = anObject(O);
-    result = new Empty;
-    Empty[PROTOTYPE] = null;
-    // add "__proto__" for Object.getPrototypeOf polyfill
-    result[IE_PROTO] = O;
-  } else result = createDict();
-  return Properties === undefined ? result : dPs(result, Properties);
-};
-
-
-/***/ }),
-/* 178 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var dP       = __webpack_require__(7)
-  , anObject = __webpack_require__(5)
-  , getKeys  = __webpack_require__(34);
-
-module.exports = __webpack_require__(6) ? Object.defineProperties : function defineProperties(O, Properties){
-  anObject(O);
-  var keys   = getKeys(Properties)
-    , length = keys.length
-    , i = 0
-    , P;
-  while(length > i)dP.f(O, P = keys[i++], Properties[P]);
-  return O;
-};
-
-/***/ }),
-/* 179 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
-var has         = __webpack_require__(13)
-  , toObject    = __webpack_require__(40)
-  , IE_PROTO    = __webpack_require__(22)('IE_PROTO')
-  , ObjectProto = Object.prototype;
-
-module.exports = Object.getPrototypeOf || function(O){
-  O = toObject(O);
-  if(has(O, IE_PROTO))return O[IE_PROTO];
-  if(typeof O.constructor == 'function' && O instanceof O.constructor){
-    return O.constructor.prototype;
-  } return O instanceof Object ? ObjectProto : null;
-};
-
-/***/ }),
-/* 180 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(181);
-var global        = __webpack_require__(2)
-  , hide          = __webpack_require__(4)
-  , Iterators     = __webpack_require__(8)
-  , TO_STRING_TAG = __webpack_require__(1)('toStringTag');
-
-for(var collections = ['NodeList', 'DOMTokenList', 'MediaList', 'StyleSheetList', 'CSSRuleList'], i = 0; i < 5; i++){
-  var NAME       = collections[i]
-    , Collection = global[NAME]
-    , proto      = Collection && Collection.prototype;
-  if(proto && !proto[TO_STRING_TAG])hide(proto, TO_STRING_TAG, NAME);
+for (var i = 0; i < DOMIterables.length; i++) {
+  var NAME = DOMIterables[i];
+  var Collection = global[NAME];
+  var proto = Collection && Collection.prototype;
+  if (proto && !proto[TO_STRING_TAG]) hide(proto, TO_STRING_TAG, NAME);
   Iterators[NAME] = Iterators.Array;
 }
 
+
 /***/ }),
-/* 181 */
+/* 195 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var addToUnscopables = __webpack_require__(182)
-  , step             = __webpack_require__(183)
-  , Iterators        = __webpack_require__(8)
-  , toIObject        = __webpack_require__(19);
+var addToUnscopables = __webpack_require__(196);
+var step = __webpack_require__(197);
+var Iterators = __webpack_require__(12);
+var toIObject = __webpack_require__(25);
 
 // 22.1.3.4 Array.prototype.entries()
 // 22.1.3.13 Array.prototype.keys()
 // 22.1.3.29 Array.prototype.values()
 // 22.1.3.30 Array.prototype[@@iterator]()
-module.exports = __webpack_require__(43)(Array, 'Array', function(iterated, kind){
+module.exports = __webpack_require__(39)(Array, 'Array', function (iterated, kind) {
   this._t = toIObject(iterated); // target
   this._i = 0;                   // next index
   this._k = kind;                // kind
 // 22.1.5.2.1 %ArrayIteratorPrototype%.next()
-}, function(){
-  var O     = this._t
-    , kind  = this._k
-    , index = this._i++;
-  if(!O || index >= O.length){
+}, function () {
+  var O = this._t;
+  var kind = this._k;
+  var index = this._i++;
+  if (!O || index >= O.length) {
     this._t = undefined;
     return step(1);
   }
-  if(kind == 'keys'  )return step(0, index);
-  if(kind == 'values')return step(0, O[index]);
+  if (kind == 'keys') return step(0, index);
+  if (kind == 'values') return step(0, O[index]);
   return step(0, [index, O[index]]);
 }, 'values');
 
@@ -7091,194 +6975,177 @@ addToUnscopables('keys');
 addToUnscopables('values');
 addToUnscopables('entries');
 
-/***/ }),
-/* 182 */
-/***/ (function(module, exports) {
-
-module.exports = function(){ /* empty */ };
 
 /***/ }),
-/* 183 */
+/* 196 */
 /***/ (function(module, exports) {
 
-module.exports = function(done, value){
-  return {value: value, done: !!done};
+module.exports = function () { /* empty */ };
+
+
+/***/ }),
+/* 197 */
+/***/ (function(module, exports) {
+
+module.exports = function (done, value) {
+  return { value: value, done: !!done };
 };
 
+
 /***/ }),
-/* 184 */
+/* 198 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var LIBRARY            = __webpack_require__(44)
-  , global             = __webpack_require__(2)
-  , ctx                = __webpack_require__(11)
-  , classof            = __webpack_require__(46)
-  , $export            = __webpack_require__(10)
-  , isObject           = __webpack_require__(12)
-  , aFunction          = __webpack_require__(16)
-  , anInstance         = __webpack_require__(185)
-  , forOf              = __webpack_require__(186)
-  , speciesConstructor = __webpack_require__(190)
-  , task               = __webpack_require__(47).set
-  , microtask          = __webpack_require__(192)()
-  , PROMISE            = 'Promise'
-  , TypeError          = global.TypeError
-  , process            = global.process
-  , $Promise           = global[PROMISE]
-  , process            = global.process
-  , isNode             = classof(process) == 'process'
-  , empty              = function(){ /* empty */ }
-  , Internal, GenericPromiseCapability, Wrapper;
+var LIBRARY = __webpack_require__(40);
+var global = __webpack_require__(1);
+var ctx = __webpack_require__(10);
+var classof = __webpack_require__(49);
+var $export = __webpack_require__(5);
+var isObject = __webpack_require__(11);
+var aFunction = __webpack_require__(14);
+var anInstance = __webpack_require__(199);
+var forOf = __webpack_require__(200);
+var speciesConstructor = __webpack_require__(52);
+var task = __webpack_require__(53).set;
+var microtask = __webpack_require__(202)();
+var newPromiseCapabilityModule = __webpack_require__(31);
+var perform = __webpack_require__(54);
+var promiseResolve = __webpack_require__(55);
+var PROMISE = 'Promise';
+var TypeError = global.TypeError;
+var process = global.process;
+var $Promise = global[PROMISE];
+var isNode = classof(process) == 'process';
+var empty = function () { /* empty */ };
+var Internal, newGenericPromiseCapability, OwnPromiseCapability, Wrapper;
+var newPromiseCapability = newGenericPromiseCapability = newPromiseCapabilityModule.f;
 
-var USE_NATIVE = !!function(){
+var USE_NATIVE = !!function () {
   try {
     // correct subclassing with @@species support
-    var promise     = $Promise.resolve(1)
-      , FakePromise = (promise.constructor = {})[__webpack_require__(1)('species')] = function(exec){ exec(empty, empty); };
+    var promise = $Promise.resolve(1);
+    var FakePromise = (promise.constructor = {})[__webpack_require__(3)('species')] = function (exec) {
+      exec(empty, empty);
+    };
     // unhandled rejections tracking support, NodeJS Promise without it fails @@species test
     return (isNode || typeof PromiseRejectionEvent == 'function') && promise.then(empty) instanceof FakePromise;
-  } catch(e){ /* empty */ }
+  } catch (e) { /* empty */ }
 }();
 
 // helpers
-var sameConstructor = function(a, b){
-  // with library wrapper special case
-  return a === b || a === $Promise && b === Wrapper;
-};
-var isThenable = function(it){
+var isThenable = function (it) {
   var then;
   return isObject(it) && typeof (then = it.then) == 'function' ? then : false;
 };
-var newPromiseCapability = function(C){
-  return sameConstructor($Promise, C)
-    ? new PromiseCapability(C)
-    : new GenericPromiseCapability(C);
-};
-var PromiseCapability = GenericPromiseCapability = function(C){
-  var resolve, reject;
-  this.promise = new C(function($$resolve, $$reject){
-    if(resolve !== undefined || reject !== undefined)throw TypeError('Bad Promise constructor');
-    resolve = $$resolve;
-    reject  = $$reject;
-  });
-  this.resolve = aFunction(resolve);
-  this.reject  = aFunction(reject);
-};
-var perform = function(exec){
-  try {
-    exec();
-  } catch(e){
-    return {error: e};
-  }
-};
-var notify = function(promise, isReject){
-  if(promise._n)return;
+var notify = function (promise, isReject) {
+  if (promise._n) return;
   promise._n = true;
   var chain = promise._c;
-  microtask(function(){
-    var value = promise._v
-      , ok    = promise._s == 1
-      , i     = 0;
-    var run = function(reaction){
-      var handler = ok ? reaction.ok : reaction.fail
-        , resolve = reaction.resolve
-        , reject  = reaction.reject
-        , domain  = reaction.domain
-        , result, then;
+  microtask(function () {
+    var value = promise._v;
+    var ok = promise._s == 1;
+    var i = 0;
+    var run = function (reaction) {
+      var handler = ok ? reaction.ok : reaction.fail;
+      var resolve = reaction.resolve;
+      var reject = reaction.reject;
+      var domain = reaction.domain;
+      var result, then;
       try {
-        if(handler){
-          if(!ok){
-            if(promise._h == 2)onHandleUnhandled(promise);
+        if (handler) {
+          if (!ok) {
+            if (promise._h == 2) onHandleUnhandled(promise);
             promise._h = 1;
           }
-          if(handler === true)result = value;
+          if (handler === true) result = value;
           else {
-            if(domain)domain.enter();
+            if (domain) domain.enter();
             result = handler(value);
-            if(domain)domain.exit();
+            if (domain) domain.exit();
           }
-          if(result === reaction.promise){
+          if (result === reaction.promise) {
             reject(TypeError('Promise-chain cycle'));
-          } else if(then = isThenable(result)){
+          } else if (then = isThenable(result)) {
             then.call(result, resolve, reject);
           } else resolve(result);
         } else reject(value);
-      } catch(e){
+      } catch (e) {
         reject(e);
       }
     };
-    while(chain.length > i)run(chain[i++]); // variable length - can't use forEach
+    while (chain.length > i) run(chain[i++]); // variable length - can't use forEach
     promise._c = [];
     promise._n = false;
-    if(isReject && !promise._h)onUnhandled(promise);
+    if (isReject && !promise._h) onUnhandled(promise);
   });
 };
-var onUnhandled = function(promise){
-  task.call(global, function(){
-    var value = promise._v
-      , abrupt, handler, console;
-    if(isUnhandled(promise)){
-      abrupt = perform(function(){
-        if(isNode){
+var onUnhandled = function (promise) {
+  task.call(global, function () {
+    var value = promise._v;
+    var unhandled = isUnhandled(promise);
+    var result, handler, console;
+    if (unhandled) {
+      result = perform(function () {
+        if (isNode) {
           process.emit('unhandledRejection', value, promise);
-        } else if(handler = global.onunhandledrejection){
-          handler({promise: promise, reason: value});
-        } else if((console = global.console) && console.error){
+        } else if (handler = global.onunhandledrejection) {
+          handler({ promise: promise, reason: value });
+        } else if ((console = global.console) && console.error) {
           console.error('Unhandled promise rejection', value);
         }
       });
       // Browsers should not trigger `rejectionHandled` event if it was handled here, NodeJS - should
       promise._h = isNode || isUnhandled(promise) ? 2 : 1;
     } promise._a = undefined;
-    if(abrupt)throw abrupt.error;
+    if (unhandled && result.e) throw result.v;
   });
 };
-var isUnhandled = function(promise){
-  if(promise._h == 1)return false;
-  var chain = promise._a || promise._c
-    , i     = 0
-    , reaction;
-  while(chain.length > i){
+var isUnhandled = function (promise) {
+  if (promise._h == 1) return false;
+  var chain = promise._a || promise._c;
+  var i = 0;
+  var reaction;
+  while (chain.length > i) {
     reaction = chain[i++];
-    if(reaction.fail || !isUnhandled(reaction.promise))return false;
+    if (reaction.fail || !isUnhandled(reaction.promise)) return false;
   } return true;
 };
-var onHandleUnhandled = function(promise){
-  task.call(global, function(){
+var onHandleUnhandled = function (promise) {
+  task.call(global, function () {
     var handler;
-    if(isNode){
+    if (isNode) {
       process.emit('rejectionHandled', promise);
-    } else if(handler = global.onrejectionhandled){
-      handler({promise: promise, reason: promise._v});
+    } else if (handler = global.onrejectionhandled) {
+      handler({ promise: promise, reason: promise._v });
     }
   });
 };
-var $reject = function(value){
+var $reject = function (value) {
   var promise = this;
-  if(promise._d)return;
+  if (promise._d) return;
   promise._d = true;
   promise = promise._w || promise; // unwrap
   promise._v = value;
   promise._s = 2;
-  if(!promise._a)promise._a = promise._c.slice();
+  if (!promise._a) promise._a = promise._c.slice();
   notify(promise, true);
 };
-var $resolve = function(value){
-  var promise = this
-    , then;
-  if(promise._d)return;
+var $resolve = function (value) {
+  var promise = this;
+  var then;
+  if (promise._d) return;
   promise._d = true;
   promise = promise._w || promise; // unwrap
   try {
-    if(promise === value)throw TypeError("Promise can't be resolved itself");
-    if(then = isThenable(value)){
-      microtask(function(){
-        var wrapper = {_w: promise, _d: false}; // wrap
+    if (promise === value) throw TypeError("Promise can't be resolved itself");
+    if (then = isThenable(value)) {
+      microtask(function () {
+        var wrapper = { _w: promise, _d: false }; // wrap
         try {
           then.call(value, ctx($resolve, wrapper, 1), ctx($reject, wrapper, 1));
-        } catch(e){
+        } catch (e) {
           $reject.call(wrapper, e);
         }
       });
@@ -7287,25 +7154,26 @@ var $resolve = function(value){
       promise._s = 1;
       notify(promise, false);
     }
-  } catch(e){
-    $reject.call({_w: promise, _d: false}, e); // wrap
+  } catch (e) {
+    $reject.call({ _w: promise, _d: false }, e); // wrap
   }
 };
 
 // constructor polyfill
-if(!USE_NATIVE){
+if (!USE_NATIVE) {
   // 25.4.3.1 Promise(executor)
-  $Promise = function Promise(executor){
+  $Promise = function Promise(executor) {
     anInstance(this, $Promise, PROMISE, '_h');
     aFunction(executor);
     Internal.call(this);
     try {
       executor(ctx($resolve, this, 1), ctx($reject, this, 1));
-    } catch(err){
+    } catch (err) {
       $reject.call(this, err);
     }
   };
-  Internal = function Promise(executor){
+  // eslint-disable-next-line no-unused-vars
+  Internal = function Promise(executor) {
     this._c = [];             // <- awaiting reactions
     this._a = undefined;      // <- checked in isUnhandled reactions
     this._s = 0;              // <- state
@@ -7314,206 +7182,153 @@ if(!USE_NATIVE){
     this._h = 0;              // <- rejection state, 0 - default, 1 - handled, 2 - unhandled
     this._n = false;          // <- notify
   };
-  Internal.prototype = __webpack_require__(193)($Promise.prototype, {
+  Internal.prototype = __webpack_require__(203)($Promise.prototype, {
     // 25.4.5.3 Promise.prototype.then(onFulfilled, onRejected)
-    then: function then(onFulfilled, onRejected){
-      var reaction    = newPromiseCapability(speciesConstructor(this, $Promise));
-      reaction.ok     = typeof onFulfilled == 'function' ? onFulfilled : true;
-      reaction.fail   = typeof onRejected == 'function' && onRejected;
+    then: function then(onFulfilled, onRejected) {
+      var reaction = newPromiseCapability(speciesConstructor(this, $Promise));
+      reaction.ok = typeof onFulfilled == 'function' ? onFulfilled : true;
+      reaction.fail = typeof onRejected == 'function' && onRejected;
       reaction.domain = isNode ? process.domain : undefined;
       this._c.push(reaction);
-      if(this._a)this._a.push(reaction);
-      if(this._s)notify(this, false);
+      if (this._a) this._a.push(reaction);
+      if (this._s) notify(this, false);
       return reaction.promise;
     },
     // 25.4.5.1 Promise.prototype.catch(onRejected)
-    'catch': function(onRejected){
+    'catch': function (onRejected) {
       return this.then(undefined, onRejected);
     }
   });
-  PromiseCapability = function(){
-    var promise  = new Internal;
+  OwnPromiseCapability = function () {
+    var promise = new Internal();
     this.promise = promise;
     this.resolve = ctx($resolve, promise, 1);
-    this.reject  = ctx($reject, promise, 1);
+    this.reject = ctx($reject, promise, 1);
+  };
+  newPromiseCapabilityModule.f = newPromiseCapability = function (C) {
+    return C === $Promise || C === Wrapper
+      ? new OwnPromiseCapability(C)
+      : newGenericPromiseCapability(C);
   };
 }
 
-$export($export.G + $export.W + $export.F * !USE_NATIVE, {Promise: $Promise});
-__webpack_require__(25)($Promise, PROMISE);
-__webpack_require__(194)(PROMISE);
-Wrapper = __webpack_require__(3)[PROMISE];
+$export($export.G + $export.W + $export.F * !USE_NATIVE, { Promise: $Promise });
+__webpack_require__(28)($Promise, PROMISE);
+__webpack_require__(204)(PROMISE);
+Wrapper = __webpack_require__(2)[PROMISE];
 
 // statics
 $export($export.S + $export.F * !USE_NATIVE, PROMISE, {
   // 25.4.4.5 Promise.reject(r)
-  reject: function reject(r){
-    var capability = newPromiseCapability(this)
-      , $$reject   = capability.reject;
+  reject: function reject(r) {
+    var capability = newPromiseCapability(this);
+    var $$reject = capability.reject;
     $$reject(r);
     return capability.promise;
   }
 });
 $export($export.S + $export.F * (LIBRARY || !USE_NATIVE), PROMISE, {
   // 25.4.4.6 Promise.resolve(x)
-  resolve: function resolve(x){
-    // instanceof instead of internal slot check because we should fix it without replacement native Promise core
-    if(x instanceof $Promise && sameConstructor(x.constructor, this))return x;
-    var capability = newPromiseCapability(this)
-      , $$resolve  = capability.resolve;
-    $$resolve(x);
-    return capability.promise;
+  resolve: function resolve(x) {
+    return promiseResolve(LIBRARY && this === Wrapper ? $Promise : this, x);
   }
 });
-$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(195)(function(iter){
+$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(50)(function (iter) {
   $Promise.all(iter)['catch'](empty);
 })), PROMISE, {
   // 25.4.4.1 Promise.all(iterable)
-  all: function all(iterable){
-    var C          = this
-      , capability = newPromiseCapability(C)
-      , resolve    = capability.resolve
-      , reject     = capability.reject;
-    var abrupt = perform(function(){
-      var values    = []
-        , index     = 0
-        , remaining = 1;
-      forOf(iterable, false, function(promise){
-        var $index        = index++
-          , alreadyCalled = false;
+  all: function all(iterable) {
+    var C = this;
+    var capability = newPromiseCapability(C);
+    var resolve = capability.resolve;
+    var reject = capability.reject;
+    var result = perform(function () {
+      var values = [];
+      var index = 0;
+      var remaining = 1;
+      forOf(iterable, false, function (promise) {
+        var $index = index++;
+        var alreadyCalled = false;
         values.push(undefined);
         remaining++;
-        C.resolve(promise).then(function(value){
-          if(alreadyCalled)return;
-          alreadyCalled  = true;
+        C.resolve(promise).then(function (value) {
+          if (alreadyCalled) return;
+          alreadyCalled = true;
           values[$index] = value;
           --remaining || resolve(values);
         }, reject);
       });
       --remaining || resolve(values);
     });
-    if(abrupt)reject(abrupt.error);
+    if (result.e) reject(result.v);
     return capability.promise;
   },
   // 25.4.4.4 Promise.race(iterable)
-  race: function race(iterable){
-    var C          = this
-      , capability = newPromiseCapability(C)
-      , reject     = capability.reject;
-    var abrupt = perform(function(){
-      forOf(iterable, false, function(promise){
+  race: function race(iterable) {
+    var C = this;
+    var capability = newPromiseCapability(C);
+    var reject = capability.reject;
+    var result = perform(function () {
+      forOf(iterable, false, function (promise) {
         C.resolve(promise).then(capability.resolve, reject);
       });
     });
-    if(abrupt)reject(abrupt.error);
+    if (result.e) reject(result.v);
     return capability.promise;
   }
 });
 
+
 /***/ }),
-/* 185 */
+/* 199 */
 /***/ (function(module, exports) {
 
-module.exports = function(it, Constructor, name, forbiddenField){
-  if(!(it instanceof Constructor) || (forbiddenField !== undefined && forbiddenField in it)){
+module.exports = function (it, Constructor, name, forbiddenField) {
+  if (!(it instanceof Constructor) || (forbiddenField !== undefined && forbiddenField in it)) {
     throw TypeError(name + ': incorrect invocation!');
   } return it;
 };
 
+
 /***/ }),
-/* 186 */
+/* 200 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ctx         = __webpack_require__(11)
-  , call        = __webpack_require__(187)
-  , isArrayIter = __webpack_require__(188)
-  , anObject    = __webpack_require__(5)
-  , toLength    = __webpack_require__(36)
-  , getIterFn   = __webpack_require__(189)
-  , BREAK       = {}
-  , RETURN      = {};
-var exports = module.exports = function(iterable, entries, fn, that, ITERATOR){
-  var iterFn = ITERATOR ? function(){ return iterable; } : getIterFn(iterable)
-    , f      = ctx(fn, that, entries ? 2 : 1)
-    , index  = 0
-    , length, step, iterator, result;
-  if(typeof iterFn != 'function')throw TypeError(iterable + ' is not iterable!');
+var ctx = __webpack_require__(10);
+var call = __webpack_require__(46);
+var isArrayIter = __webpack_require__(47);
+var anObject = __webpack_require__(6);
+var toLength = __webpack_require__(26);
+var getIterFn = __webpack_require__(48);
+var BREAK = {};
+var RETURN = {};
+var exports = module.exports = function (iterable, entries, fn, that, ITERATOR) {
+  var iterFn = ITERATOR ? function () { return iterable; } : getIterFn(iterable);
+  var f = ctx(fn, that, entries ? 2 : 1);
+  var index = 0;
+  var length, step, iterator, result;
+  if (typeof iterFn != 'function') throw TypeError(iterable + ' is not iterable!');
   // fast case for arrays with default iterator
-  if(isArrayIter(iterFn))for(length = toLength(iterable.length); length > index; index++){
+  if (isArrayIter(iterFn)) for (length = toLength(iterable.length); length > index; index++) {
     result = entries ? f(anObject(step = iterable[index])[0], step[1]) : f(iterable[index]);
-    if(result === BREAK || result === RETURN)return result;
-  } else for(iterator = iterFn.call(iterable); !(step = iterator.next()).done; ){
+    if (result === BREAK || result === RETURN) return result;
+  } else for (iterator = iterFn.call(iterable); !(step = iterator.next()).done;) {
     result = call(iterator, f, step.value, entries);
-    if(result === BREAK || result === RETURN)return result;
+    if (result === BREAK || result === RETURN) return result;
   }
 };
-exports.BREAK  = BREAK;
+exports.BREAK = BREAK;
 exports.RETURN = RETURN;
 
-/***/ }),
-/* 187 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// call something on iterator step with safe closing on error
-var anObject = __webpack_require__(5);
-module.exports = function(iterator, fn, value, entries){
-  try {
-    return entries ? fn(anObject(value)[0], value[1]) : fn(value);
-  // 7.4.6 IteratorClose(iterator, completion)
-  } catch(e){
-    var ret = iterator['return'];
-    if(ret !== undefined)anObject(ret.call(iterator));
-    throw e;
-  }
-};
 
 /***/ }),
-/* 188 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// check on default Array iterator
-var Iterators  = __webpack_require__(8)
-  , ITERATOR   = __webpack_require__(1)('iterator')
-  , ArrayProto = Array.prototype;
-
-module.exports = function(it){
-  return it !== undefined && (Iterators.Array === it || ArrayProto[ITERATOR] === it);
-};
-
-/***/ }),
-/* 189 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var classof   = __webpack_require__(46)
-  , ITERATOR  = __webpack_require__(1)('iterator')
-  , Iterators = __webpack_require__(8);
-module.exports = __webpack_require__(3).getIteratorMethod = function(it){
-  if(it != undefined)return it[ITERATOR]
-    || it['@@iterator']
-    || Iterators[classof(it)];
-};
-
-/***/ }),
-/* 190 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 7.3.20 SpeciesConstructor(O, defaultConstructor)
-var anObject  = __webpack_require__(5)
-  , aFunction = __webpack_require__(16)
-  , SPECIES   = __webpack_require__(1)('species');
-module.exports = function(O, D){
-  var C = anObject(O).constructor, S;
-  return C === undefined || (S = anObject(C)[SPECIES]) == undefined ? D : aFunction(S);
-};
-
-/***/ }),
-/* 191 */
+/* 201 */
 /***/ (function(module, exports) {
 
 // fast apply, http://jsperf.lnkit.com/fast-apply/5
-module.exports = function(fn, args, that){
+module.exports = function (fn, args, that) {
   var un = that === undefined;
-  switch(args.length){
+  switch (args.length) {
     case 0: return un ? fn()
                       : fn.call(that);
     case 1: return un ? fn(args[0])
@@ -7524,57 +7339,58 @@ module.exports = function(fn, args, that){
                       : fn.call(that, args[0], args[1], args[2]);
     case 4: return un ? fn(args[0], args[1], args[2], args[3])
                       : fn.call(that, args[0], args[1], args[2], args[3]);
-  } return              fn.apply(that, args);
+  } return fn.apply(that, args);
 };
 
+
 /***/ }),
-/* 192 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var global    = __webpack_require__(2)
-  , macrotask = __webpack_require__(47).set
-  , Observer  = global.MutationObserver || global.WebKitMutationObserver
-  , process   = global.process
-  , Promise   = global.Promise
-  , isNode    = __webpack_require__(14)(process) == 'process';
+var global = __webpack_require__(1);
+var macrotask = __webpack_require__(53).set;
+var Observer = global.MutationObserver || global.WebKitMutationObserver;
+var process = global.process;
+var Promise = global.Promise;
+var isNode = __webpack_require__(17)(process) == 'process';
 
-module.exports = function(){
+module.exports = function () {
   var head, last, notify;
 
-  var flush = function(){
+  var flush = function () {
     var parent, fn;
-    if(isNode && (parent = process.domain))parent.exit();
-    while(head){
-      fn   = head.fn;
+    if (isNode && (parent = process.domain)) parent.exit();
+    while (head) {
+      fn = head.fn;
       head = head.next;
       try {
         fn();
-      } catch(e){
-        if(head)notify();
+      } catch (e) {
+        if (head) notify();
         else last = undefined;
         throw e;
       }
     } last = undefined;
-    if(parent)parent.enter();
+    if (parent) parent.enter();
   };
 
   // Node.js
-  if(isNode){
-    notify = function(){
+  if (isNode) {
+    notify = function () {
       process.nextTick(flush);
     };
   // browsers with MutationObserver
-  } else if(Observer){
-    var toggle = true
-      , node   = document.createTextNode('');
-    new Observer(flush).observe(node, {characterData: true}); // eslint-disable-line no-new
-    notify = function(){
+  } else if (Observer) {
+    var toggle = true;
+    var node = document.createTextNode('');
+    new Observer(flush).observe(node, { characterData: true }); // eslint-disable-line no-new
+    notify = function () {
       node.data = toggle = !toggle;
     };
   // environments with maybe non-completely correct, but existent Promise
-  } else if(Promise && Promise.resolve){
+  } else if (Promise && Promise.resolve) {
     var promise = Promise.resolve();
-    notify = function(){
+    notify = function () {
       promise.then(flush);
     };
   // for other environments - macrotask based on:
@@ -7584,116 +7400,123 @@ module.exports = function(){
   // - onreadystatechange
   // - setTimeout
   } else {
-    notify = function(){
+    notify = function () {
       // strange IE + webpack dev server bug - use .call(global)
       macrotask.call(global, flush);
     };
   }
 
-  return function(fn){
-    var task = {fn: fn, next: undefined};
-    if(last)last.next = task;
-    if(!head){
+  return function (fn) {
+    var task = { fn: fn, next: undefined };
+    if (last) last.next = task;
+    if (!head) {
       head = task;
       notify();
     } last = task;
   };
 };
 
+
 /***/ }),
-/* 193 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var hide = __webpack_require__(4);
-module.exports = function(target, src, safe){
-  for(var key in src){
-    if(safe && target[key])target[key] = src[key];
+var hide = __webpack_require__(7);
+module.exports = function (target, src, safe) {
+  for (var key in src) {
+    if (safe && target[key]) target[key] = src[key];
     else hide(target, key, src[key]);
   } return target;
 };
 
+
 /***/ }),
-/* 194 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var global      = __webpack_require__(2)
-  , core        = __webpack_require__(3)
-  , dP          = __webpack_require__(7)
-  , DESCRIPTORS = __webpack_require__(6)
-  , SPECIES     = __webpack_require__(1)('species');
+var global = __webpack_require__(1);
+var core = __webpack_require__(2);
+var dP = __webpack_require__(8);
+var DESCRIPTORS = __webpack_require__(9);
+var SPECIES = __webpack_require__(3)('species');
 
-module.exports = function(KEY){
+module.exports = function (KEY) {
   var C = typeof core[KEY] == 'function' ? core[KEY] : global[KEY];
-  if(DESCRIPTORS && C && !C[SPECIES])dP.f(C, SPECIES, {
+  if (DESCRIPTORS && C && !C[SPECIES]) dP.f(C, SPECIES, {
     configurable: true,
-    get: function(){ return this; }
+    get: function () { return this; }
   });
 };
 
+
 /***/ }),
-/* 195 */
+/* 205 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var ITERATOR     = __webpack_require__(1)('iterator')
-  , SAFE_CLOSING = false;
+"use strict";
+// https://github.com/tc39/proposal-promise-finally
 
-try {
-  var riter = [7][ITERATOR]();
-  riter['return'] = function(){ SAFE_CLOSING = true; };
-  Array.from(riter, function(){ throw 2; });
-} catch(e){ /* empty */ }
+var $export = __webpack_require__(5);
+var core = __webpack_require__(2);
+var global = __webpack_require__(1);
+var speciesConstructor = __webpack_require__(52);
+var promiseResolve = __webpack_require__(55);
 
-module.exports = function(exec, skipClosing){
-  if(!skipClosing && !SAFE_CLOSING)return false;
-  var safe = false;
-  try {
-    var arr  = [7]
-      , iter = arr[ITERATOR]();
-    iter.next = function(){ return {done: safe = true}; };
-    arr[ITERATOR] = function(){ return iter; };
-    exec(arr);
-  } catch(e){ /* empty */ }
-  return safe;
-};
+$export($export.P + $export.R, 'Promise', { 'finally': function (onFinally) {
+  var C = speciesConstructor(this, core.Promise || global.Promise);
+  var isFunction = typeof onFinally == 'function';
+  return this.then(
+    isFunction ? function (x) {
+      return promiseResolve(C, onFinally()).then(function () { return x; });
+    } : onFinally,
+    isFunction ? function (e) {
+      return promiseResolve(C, onFinally()).then(function () { throw e; });
+    } : onFinally
+  );
+} });
+
 
 /***/ }),
-/* 196 */
+/* 206 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+// https://github.com/tc39/proposal-promise-try
+var $export = __webpack_require__(5);
+var newPromiseCapability = __webpack_require__(31);
+var perform = __webpack_require__(54);
+
+$export($export.S, 'Promise', { 'try': function (callbackfn) {
+  var promiseCapability = newPromiseCapability.f(this);
+  var result = perform(callbackfn);
+  (result.e ? promiseCapability.reject : promiseCapability.resolve)(result.v);
+  return promiseCapability.promise;
+} });
+
+
+/***/ }),
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(197),
+  __webpack_require__(208),
   /* template */
-  __webpack_require__(198),
+  __webpack_require__(209),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-dialog/x-dialog.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-dialog.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-09a5b2dc", Component.options)
-  } else {
-    hotAPI.reload("data-v-09a5b2dc", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 197 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7703,13 +7526,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _xButton = __webpack_require__(26);
+var _xButton = __webpack_require__(32);
 
 var _xButton2 = _interopRequireDefault(_xButton);
 
-var _xInput = __webpack_require__(27);
+var _xInput = __webpack_require__(33);
 
 var _xInput2 = _interopRequireDefault(_xInput);
+
+var _dom = __webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7722,7 +7547,8 @@ exports.default = {
     return {
       show: '',
       title: '',
-      type: 'alert',
+      dialogType: 'alert',
+      type: '',
       message: '',
       inputValue: '',
       radius: '',
@@ -7734,30 +7560,32 @@ exports.default = {
       close: '',
       confirm: '',
       maskClose: '',
-      promptRequired: ''
+      promptRequired: '',
+      mask: '',
+      icon: '',
+      escClose: ''
     };
   },
 
   methods: {
     buttonClick: function buttonClick(type) {
-      var params = {
-        el: this.$el
-      };
+      var value = '';
       switch (type) {
         case 'close':
-          this.close(params);
+          value = this.dialogType === 'prompt' ? this.inputValue : undefined;
+          this.close(value);
           this.hide();
           break;
         case 'confirm':
-          if (this.type === 'prompt') {
-            params.value = this.inputValue;
+          if (this.dialogType === 'prompt') {
+            value = this.inputValue;
           }
 
-          if (this.promptRequired && this.inputValue.replace(/(^\s*)|(\s*$)/g, '') === '') {
+          if (this.dialogType === 'prompt' && this.promptRequired && value.replace(/(^\s*)|(\s*$)/g, '') === '') {
             return;
           }
           this.hide();
-          this.confirm(params);
+          this.confirm(value);
           break;
       }
     },
@@ -7767,13 +7595,24 @@ exports.default = {
     maskClick: function maskClick() {
       if (!this.maskClose) return;
       this.buttonClick('close');
+    },
+    keyup: function keyup(_ref) {
+      var keyCode = _ref.keyCode;
+
+      if (this.show && this.escClose && keyCode === 27) this.buttonClick('close');
     }
+  },
+  beforeDestroy: function beforeDestroy() {
+    (0, _dom.off)(window, 'keyup', this.keyup);
+  },
+  mounted: function mounted() {
+    (0, _dom.on)(window, 'keyup', this.keyup);
   }
 };
 
 /***/ }),
-/* 198 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 209 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('transition', {
@@ -7788,12 +7627,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "show"
     }],
     staticClass: "x-dialog-box"
-  }, [_c('div', {
+  }, [(_vm.mask) ? _c('div', {
     staticClass: "x-mask",
     on: {
       "click": _vm.maskClick
     }
-  }), _vm._v(" "), _c('div', {
+  }) : _vm._e(), _vm._v(" "), _c('div', {
     staticClass: "x-dialog",
     class: {
       'x-radius': _vm.radius
@@ -7812,7 +7651,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "x-icon-close-round"
   })]), _vm._v(" "), _c('div', {
     staticClass: "x-dialog-content"
-  }, [(_vm.type === 'prompt') ? _c('x-input', {
+  }, [(_vm.dialogType === 'prompt') ? _c('x-input', {
     attrs: {
       "placeholder": _vm.inputPlaceholder
     },
@@ -7823,7 +7662,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       },
       expression: "inputValue"
     }
-  }) : _c('span', [_vm._v(_vm._s(_vm.message))])], 1), _vm._v(" "), _c('div', {
+  }) : _c('div', {
+    class: [_vm.icon && ("x-dialog-" + _vm.type), _vm.icon && 'x-dialog-show-icon']
+  }, [(_vm.icon) ? _c('i', {
+    class: _vm.icon
+  }) : _vm._e(), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.message))])])], 1), _vm._v(" "), _c('div', {
     staticClass: "x-dialog-footer x-text-r"
   }, [(_vm.showCloseButton) ? _c('x-button', {
     attrs: {
@@ -7846,16 +7689,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v(_vm._s(_vm.confirmButtonText))]) : _vm._e()], 1)])])])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-09a5b2dc", module.exports)
-  }
-}
 
 /***/ }),
-/* 199 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7865,25 +7701,17 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _classCallCheck2 = __webpack_require__(41);
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = __webpack_require__(42);
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-var _assign = __webpack_require__(15);
+var _assign = __webpack_require__(29);
 
 var _assign2 = _interopRequireDefault(_assign);
 
-var _vue = __webpack_require__(24);
+var _vue = __webpack_require__(19);
 
 var _vue2 = _interopRequireDefault(_vue);
 
-var _xToastr = __webpack_require__(200);
+var _xNotice = __webpack_require__(211);
 
-var _xToastr2 = _interopRequireDefault(_xToastr);
+var _xNotice2 = _interopRequireDefault(_xNotice);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7893,16 +7721,21 @@ var defaultConfig = {
   name: '',
   title: '',
   message: '',
-  type: 'primary',
+  type: '',
   timer: 5000,
   showIcon: true,
   showClose: true,
   clickBack: '',
-  close: ''
+  close: '',
+  icon: ''
 };
 
+var types = ['success', 'warning', 'danger', 'dark'];
+
+var type = 'primary';
+
 function initInstance() {
-  var InstanceClass = _vue2.default.extend(_xToastr2.default);
+  var InstanceClass = _vue2.default.extend(_xNotice2.default);
   instance = new InstanceClass({
     el: document.createElement('div')
   });
@@ -7910,114 +7743,95 @@ function initInstance() {
   document.body.appendChild(instance.$el);
 }
 
-function showToastr(options) {
+function showNotice(options) {
   _vue2.default.nextTick(function () {
     instance.add(options);
   });
 }
 
-function createToastr(options, clickBack, close) {
+function createNotice(options, clickBack, close) {
   var config = {};
-  var name = options.name || 'x-toastr-' + Date.now();
-  if (process.env.NODE_ENV !== 'production') {
-    if (!options.message) {
-      console.error('xui -> (x-dialog组件) : message不能为空');
-      return;
-    }
+  var name = options.name || 'x-notice-' + Date.now();
 
-    if (instance === '') {
-      initInstance();
-    }
-    (0, _assign2.default)(config, defaultConfig, options, {
-      clickBack: clickBack,
-      close: close,
-      name: name
-    });
-    showToastr(config);
-    return function () {
-      instance.close(name);
-    };
+  if (instance === '') {
+    initInstance();
   }
+  (0, _assign2.default)(config, options, {
+    name: name
+  });
+  showNotice(config);
+  return function () {
+    instance.close(name);
+  };
 }
 
-var Xtoastr = function () {
-  function Xtoastr() {
-    (0, _classCallCheck3.default)(this, Xtoastr);
-  }
+function initNotice(message) {
+  var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  var clickBack = arguments[2];
+  var close = arguments[3];
 
-  (0, _createClass3.default)(Xtoastr, [{
-    key: 'toastr',
-    value: function toastr(message) {
-      var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var clickBack = arguments[2];
-      var close = arguments[3];
-
-      if (process.env.NODE_ENV !== 'production') {
-        if (options.type && typeof options.type !== 'string') {
-          console.error('xui -> (x-toastr组件) : type只能为String类型');
-        }
-      }
-      options.type = options.type || 'primary';
-      if (typeof options === 'function') {
-        close = clickBack;
-        clickBack = options;
-        options = {};
-      }
-      return createToastr((0, _assign2.default)({}, {
-        message: message
-      }, options), clickBack, close);
+  if (process.env.NODE_ENV !== 'production') {
+    if (typeof message !== 'string' && typeof message !== 'number') {
+      console.error('xui -> (x-dialog组件) : message不能为空, 并且类型只能为 String 或 Number');
+      return;
     }
-  }]);
-  return Xtoastr;
-}();
-
-Xtoastr.prototype.toastr.close = function (name) {
-  if (name && instance) {
-    instance.close(name);
-  } else {
-    instance.close();
   }
+  if (typeof options === 'function') {
+    close = clickBack;
+    clickBack = options;
+    options = {};
+  }
+
+  options.type = type;
+  return createNotice((0, _assign2.default)({}, defaultConfig, {
+    message: message,
+    clickBack: clickBack,
+    close: close
+  }, options), clickBack, close);
+}
+
+function Notice() {
+  return initNotice.apply(this, arguments);
+}
+
+types.forEach(function (item) {
+  Notice[item] = function (message, options, clickBack, close) {
+    type = item;
+    return initNotice.apply(this, arguments);
+  };
+});
+
+Notice.close = function (name) {
+  if (!instance) {
+    console.info('xui -> (x-notice组件) : 当前没有任何通知');
+    return;
+  }
+  name ? instance.close(name) : instance.close();
 };
 
-exports.default = new Xtoastr();
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(23)))
+exports.default = Notice;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(30)))
 
 /***/ }),
-/* 200 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(201),
+  __webpack_require__(212),
   /* template */
-  __webpack_require__(205),
+  __webpack_require__(216),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-toastr/x-toastr.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-toastr.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-4bace5f2", Component.options)
-  } else {
-    hotAPI.reload("data-v-4bace5f2", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 201 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8027,16 +7841,16 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _xToastrItem = __webpack_require__(202);
+var _xNoticeItem = __webpack_require__(213);
 
-var _xToastrItem2 = _interopRequireDefault(_xToastrItem);
+var _xNoticeItem2 = _interopRequireDefault(_xNoticeItem);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
   data: function data() {
     return {
-      toastrList: [],
+      noticeList: [],
       icons: {
         success: 'x-icon-checkmark-circle',
         warning: 'x-icon-alert',
@@ -8050,12 +7864,12 @@ exports.default = {
 
   methods: {
     add: function add(options) {
-      var length = this.toastrList.length;
-      this.$set(this.toastrList, length, options);
+      var length = this.noticeList.length;
+      this.$set(this.noticeList, length, options);
     },
     close: function close(name) {
       if (typeof name === 'string' || typeof name === 'number') {
-        var list = this.toastrList;
+        var list = this.noticeList;
         for (var i = 0; i < list.length; i++) {
           if (list[i].name === name) {
             list.splice(i, 1);
@@ -8063,51 +7877,35 @@ exports.default = {
           }
         }
       } else {
-        this.toastrList = [];
+        this.noticeList = [];
       }
     }
   },
   components: {
-    xToastr: _xToastrItem2.default
+    xNoticeItem: _xNoticeItem2.default
   }
 };
 
 /***/ }),
-/* 202 */
+/* 213 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(0)(
   /* script */
-  __webpack_require__(203),
+  __webpack_require__(214),
   /* template */
-  __webpack_require__(204),
+  __webpack_require__(215),
   /* scopeId */
   null,
   /* cssModules */
   null
 )
-Component.options.__file = "/Volumes/hxxc/项目/xui/src/components/x-toastr/x-toastr-item.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] x-toastr-item.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-790bc43e", Component.options)
-  } else {
-    hotAPI.reload("data-v-790bc43e", Component.options)
-  }
-})()}
 
 module.exports = Component.exports
 
 
 /***/ }),
-/* 203 */
+/* 214 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8144,7 +7942,7 @@ exports.default = {
 
       this.$parent.close(this.options.name);
     },
-    toastrClick: function toastrClick() {
+    noticeClick: function noticeClick() {
       var clickBack = this.options.clickBack;
       clickBack && clickBack(this);
     },
@@ -8178,35 +7976,35 @@ exports.default = {
 };
 
 /***/ }),
-/* 204 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 215 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('transition', {
     attrs: {
-      "name": "x-toastr-let-move"
+      "name": "x-notice-let-move"
     }
   }, [_c('div', {
-    staticClass: "x-toastr",
+    staticClass: "x-notice",
     class: [
-      'x-toastr-' + _vm.options.type,
+      'x-notice-' + _vm.options.type,
       {
-        'x-toastr-show-icon': _vm.options.showIcon,
-        'x-toastr-show-close': _vm.options.showClose
+        'x-notice-show-icon': _vm.options.showIcon,
+        'x-notice-show-close': _vm.options.showClose
       }
     ],
     on: {
-      "click": _vm.toastrClick
+      "click": _vm.noticeClick
     }
   }, [_c('div', {
-    staticClass: "x-toastr-content"
+    staticClass: "x-notice-content"
   }, [_c('i', {
-    staticClass: "x-toastr-icon",
-    class: _vm.options.showIcon && _vm.type
+    staticClass: "x-notice-icon",
+    class: _vm.options.showIcon && (_vm.options.icon || _vm.type)
   }), _vm._v(" "), (_vm.options.title) ? _c('div', {
-    staticClass: "x-toastr-title"
-  }, [_vm._v(_vm._s(_vm.options.title))]) : _vm._e(), _vm._v("\n      " + _vm._s(_vm.options.message) + "\n      "), (_vm.options.showClose) ? _c('i', {
-    staticClass: "x-toastr-close x-icon-close-round",
+    staticClass: "x-notice-title"
+  }, [_vm._v(_vm._s(_vm.options.title))]) : _vm._e(), _vm._v(" "), _c('div', [_vm._v(_vm._s(_vm.options.message))]), _vm._v(" "), (_vm.options.showClose) ? _c('i', {
+    staticClass: "x-notice-close x-icon-close-round",
     on: {
       "click": function($event) {
         $event.stopPropagation();
@@ -8215,23 +8013,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }) : _vm._e()])])])
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-790bc43e", module.exports)
-  }
-}
 
 /***/ }),
-/* 205 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 216 */
+/***/ (function(module, exports) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "x-toastr-box"
-  }, _vm._l((_vm.toastrList), function(item, index) {
-    return _c('x-toastr', {
+    staticClass: "x-notice-box"
+  }, _vm._l((_vm.noticeList), function(item, index) {
+    return _c('x-notice-item', {
       key: item.name,
       attrs: {
         "type": _vm.icons[item.type],
@@ -8240,16 +8031,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     })
   }))
 },staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-4bace5f2", module.exports)
-  }
-}
 
 /***/ }),
-/* 206 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8259,16 +8043,210 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-function clickEvent(event) {
-  console.log(event.target);
+var _keys = __webpack_require__(218);
+
+var _keys2 = _interopRequireDefault(_keys);
+
+var _xTooltipContent = __webpack_require__(222);
+
+var _xTooltipContent2 = _interopRequireDefault(_xTooltipContent);
+
+var _popover = __webpack_require__(51);
+
+var _dom = __webpack_require__(4);
+
+var _vue = __webpack_require__(19);
+
+var _vue2 = _interopRequireDefault(_vue);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var types = ['primary', 'success', 'warning', 'danger', 'dark'];
+
+var direction = ['top', 'right', 'bottom', 'left'];
+
+function createdTip() {
+  var _this = this;
+
+  var tooltip = '';
+
+  if (!this.tooltip) {
+    this.tooltip = (0, _popover.created)({
+      content: this.tipContent,
+      direction: this.tipDirection,
+      type: this.tipType
+    }, _xTooltipContent2.default);
+    var el = this.tooltip.$el;
+
+    (0, _dom.on)(el, 'mouseenter', showTip.bind(this));
+    (0, _dom.on)(el, 'mouseleave', hideTip.bind(this));
+  }
+  tooltip = this.tooltip;
+
+  showTip.call(this);
+  _vue2.default.nextTick(function () {
+    var _computationsPosition = (0, _popover.computationsPosition)(_this.tipDirection, _this, _this.tooltip.$el),
+        left = _computationsPosition.left,
+        top = _computationsPosition.top;
+
+    tooltip.left = left;
+    tooltip.top = top;
+  });
+}
+
+function showTip() {
+  clearTimeout(this.timeout);
+  this.timeout = '';
+  this.tooltip.show = true;
+}
+
+function hideTip() {
+  var _this2 = this;
+
+  if (this.tooltip.show) {
+    this.timeout = setTimeout(function () {
+      _this2.tooltip.show = false;
+    }, 50);
+  }
 }
 
 exports.default = {
   bind: function bind(el, _bind) {
-    document.addEventListener('click', clickEvent);
+    var data = (0, _keys2.default)(_bind.modifiers);
+
+    el.tipContent = _bind.value;
+    if (direction.indexOf(data[0]) > -1) {
+      el.tipDirection = data[0];
+      el.tipType = types.indexOf(data[1]) > -1 ? data[1] : '';
+    } else {
+      if (types.indexOf(data[0]) > -1) {
+        el.tipType = data[0];
+        el.tipDirection = direction[0];
+      } else {
+        el.tipDirection = direction[0];
+
+        el.tipType = types.indexOf(data[1]) > -1 ? data[1] : '';
+      }
+    }
+    (0, _dom.on)(el, 'mouseenter', createdTip.bind(el));
+    (0, _dom.on)(el, 'mouseleave', hideTip.bind(el));
   },
-  unbind: function unbind() {
-    document.removeEventListener('click', clickEvent);
+  update: function update(el, bind) {
+    el.tooltip.content = bind.value;
+  },
+  unbind: function unbind(el) {
+    var tooltip = el.tooltip;
+    if (tooltip) {
+      var tooltipEl = tooltip.$el;
+      (0, _dom.off)(el, 'mouseenter', createdTip);
+      (0, _dom.off)(el, 'mouseleave', hideTip);
+      (0, _dom.off)(tooltipEl, 'mouseenter', showTip);
+      (0, _dom.off)(tooltipEl, 'mouseleave', hideTip);
+      tooltip.$destroy();
+      document.body.removeChild(tooltipEl);
+    }
+  }
+};
+
+/***/ }),
+/* 218 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = { "default": __webpack_require__(219), __esModule: true };
+
+/***/ }),
+/* 219 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(220);
+module.exports = __webpack_require__(2).Object.keys;
+
+
+/***/ }),
+/* 220 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.2.14 Object.keys(O)
+var toObject = __webpack_require__(18);
+var $keys = __webpack_require__(24);
+
+__webpack_require__(221)('keys', function () {
+  return function keys(it) {
+    return $keys(toObject(it));
+  };
+});
+
+
+/***/ }),
+/* 221 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// most Object methods by ES6 should accept primitives
+var $export = __webpack_require__(5);
+var core = __webpack_require__(2);
+var fails = __webpack_require__(15);
+module.exports = function (KEY, exec) {
+  var fn = (core.Object || {})[KEY] || Object[KEY];
+  var exp = {};
+  exp[KEY] = exec(fn);
+  $export($export.S + $export.F * fails(function () { fn(1); }), 'Object', exp);
+};
+
+
+/***/ }),
+/* 222 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
+  data: function data() {
+    return {
+      direction: '',
+      type: '',
+      content: '',
+      show: false,
+      left: '',
+      top: ''
+    };
+  },
+  render: function render(h) {
+    var tipClass = {
+      'x-tooltip': true
+    };
+
+    if (this.type) {
+      tipClass['x-tooltip-' + this.type] = true;
+    }
+
+    tipClass['x-tooltip-' + this.direction] = true;
+
+    var tipStyle = {
+      left: this.left + 'px',
+      top: this.top + 'px'
+    };
+
+    tipStyle.display = this.show ? 'inline-block' : 'none';
+    return h(
+      'div',
+      {
+        'class': tipClass,
+        style: tipStyle
+      },
+      [h(
+        'div',
+        { 'class': 'x-tooltip-text' },
+        [this.content]
+      ), h(
+        'div',
+        { 'class': 'arrow' },
+        []
+      )]
+    );
   }
 };
 

@@ -117,6 +117,70 @@ export default new Router({
             require(['views/doc/components/x-page.vue'], resolve);
           }
         },
+        // 文本输入框
+        {
+          path: 'x-input',
+          name: 'x-input',
+          component (resolve) {
+            require(['views/doc/components/x-input.vue'], resolve);
+          }
+        },
+        // 计数器
+        {
+          path: 'x-counter',
+          name: 'x-counter',
+          component (resolve) {
+            require(['views/doc/components/x-counter.vue'], resolve);
+          }
+        },
+        // 文本域
+        {
+          path: 'x-textarea',
+          name: 'x-textarea',
+          component (resolve) {
+            require(['views/doc/components/x-textarea.vue'], resolve);
+          }
+        },
+        // 单选框
+        {
+          path: 'x-radio',
+          name: 'x-radio',
+          component (resolve) {
+            require(['views/doc/components/x-radio.vue'], resolve);
+          }
+        },
+        // 多选框
+        {
+          path: 'x-checkbox',
+          name: 'x-checkbox',
+          component (resolve) {
+            require(['views/doc/components/x-checkbox.vue'], resolve);
+          }
+        },
+        // 开关
+        {
+          path: 'x-switch',
+          name: 'x-switch',
+          component (resolve) {
+            require(['views/doc/components/x-switch.vue'], resolve);
+          }
+        },
+        // 选择器
+        {
+          path: 'x-select',
+          name: 'x-select',
+          component (resolve) {
+            require(['views/doc/components/x-select.vue'], resolve);
+          }
+        },
+        // 表单
+        {
+          path: 'x-form',
+          name: 'x-form',
+          component (resolve) {
+            require(['views/doc/components/x-form.vue'], resolve);
+          }
+        },
         // 滑动条
         {
           path: 'x-slider',
@@ -125,11 +189,67 @@ export default new Router({
             require(['views/doc/components/x-slider.vue'], resolve);
           }
         },
+        // 表格
         {
-          path: 'x-input',
-          name: 'x-input',
+          path: 'x-table',
+          name: 'x-table',
           component (resolve) {
-            require(['views/doc/components/x-input.vue'], resolve);
+            require(['views/doc/components/x-table.vue'], resolve);
+          }
+        },
+        {
+          path: 'x-alert',
+          name: 'x-alert',
+          component (resolve) {
+            require(['views/doc/components/x-alert.vue'], resolve);
+          }
+        },
+        // 对话框
+        {
+          path: 'x-dialog',
+          name: 'x-dialog',
+          component (resolve) {
+            require(['views/doc/components/x-dialog.vue'], resolve);
+          }
+        },
+        // 模态框
+        {
+          path: 'x-modal',
+          name: 'x-modal',
+          component (resolve) {
+            require(['views/doc/components/x-modal.vue'], resolve);
+          }
+        },
+        // 侧边栏
+        {
+          path: 'x-sidebar',
+          name: 'x-sidebar',
+          component (resolve) {
+            require(['views/doc/components/x-sidebar.vue'], resolve);
+          }
+        },
+        // 通知信息
+        {
+          path: 'x-notice',
+          name: 'x-notice',
+          component (resolve) {
+            require(['views/doc/components/x-notice.vue'], resolve);
+          }
+        },
+        // 文字提示
+        {
+          path: 'x-tooltip',
+          name: 'x-tooltip',
+          component (resolve) {
+            require(['views/doc/components/x-tooltip.vue'], resolve);
+          }
+        },
+        // 弹出层
+        {
+          path: 'x-popover',
+          name: 'x-popover',
+          component (resolve) {
+            require(['views/doc/components/x-popover.vue'], resolve);
           }
         }
       ]

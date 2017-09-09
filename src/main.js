@@ -31,7 +31,7 @@ Vue.prototype.$size = [
 // api props keys
 Vue.prototype.$propsKeys = [
   {
-    label: '属性',
+    label: '名称',
     name: 'attribute'
   },
   {
