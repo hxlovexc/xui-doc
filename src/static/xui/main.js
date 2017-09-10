@@ -206,7 +206,7 @@ function clickOutside(el, callback, useCapture) {
     callback = el;
     el = '';
   }
-  function click(event) {
+  el.clickOutside = function (event) {
     var state = false;
 
     el = [].concat(el);
@@ -222,10 +222,10 @@ function clickOutside(el, callback, useCapture) {
     }
     if (state && callback) {
       callback();
-      off(document, 'click', click, useCapture);
+      el.clickOutside = null;
     }
-  }
-  on(document, 'click', click, useCapture);
+  };
+  on(document, 'click', el.clickOutside, useCapture);
 }
 
 /***/ }),
@@ -5415,7 +5415,10 @@ exports.default = {
   },
   mounted: function mounted() {
     this.calculateColWidth();
-    (0, _dom.on)(window, 'resize', (0, _utils.debounce)(this.calculateColWidth, 200));
+    (0, _dom.on)(window, 'resize', this.calculateColWidth);
+  },
+  beforeDestroy: function beforeDestroy() {
+    (0, _dom.off)(window, 'resize', this.calculateColWidth);
   }
 };
 
@@ -6115,7 +6118,7 @@ exports.default = {
     },
     trigger: {
       type: String,
-      default: 'hover'
+      default: 'click'
     },
     direction: {
       type: String,
@@ -6131,15 +6134,14 @@ exports.default = {
       popover: '',
 
       timeout: '',
-      focusEl: '',
-      showPopover: this.value
+      focusEl: ''
     };
   },
 
   methods: {
     createpopover: function createpopover() {
       var data = {
-        show: this.show,
+        show: this.value,
         direction: this.direction,
         title: this.$slots.title || this.title,
         content: this.$slots.content
@@ -6216,23 +6218,38 @@ exports.default = {
       }, 50);
     },
     hide: function hide() {
-      this.showPopover = this.popover.show = false;
-      this.$emit('input', this.showPopover);
+      var popover = this.popover;
+
+      popover.$el.clickOutside && this.trigger === 'click' && (0, _dom.off)(document, 'click', popover.$el.clickOutside, true);
+      popover.show = false;
+      this.$emit('input', false);
+      this.$emit('change', false);
+
+      (0, _dom.off)(window, 'resize', this.calculationPosition);
     },
     show: function show() {
-      var _this2 = this;
-
       var popover = this.popover || this.createpopover();
 
-      this.showPopover = popover.show = true;
-      this.$emit('input', this.showPopover);
+      popover.show = true;
+      this.$emit('input', true);
+      this.calculationPosition();
+
+      (0, _dom.on)(window, 'resize', this.calculationPosition);
+    },
+    calculationPosition: function calculationPosition() {
+      var _this2 = this;
+
+      console.log(1);
       this.$nextTick(function () {
+        var popover = _this2.popover;
+
         var _computationsPosition = (0, _popover.computationsPosition)(_this2.direction, _this2.$el, popover.$el),
             left = _computationsPosition.left,
             top = _computationsPosition.top;
 
         popover.left = left;
         popover.top = top;
+        _this2.$emit('change', true);
       });
     }
   },
@@ -6267,15 +6284,18 @@ exports.default = {
         }
         break;
     }
+
+    (0, _dom.off)(window, 'resize', this.calculationPosition);
   },
 
   watch: {
     value: function value(_value) {
-      if (_value === this.showPopover) return;
-      if (this.popover === '') {
-        this.show();
+      if (_value === this.popover.show) return;
+      var trigger = this.trigger;
+      if (_value) {
+        trigger === 'click' ? this.clickOpen() : this.show();
       } else {
-        this.showPopover = this.popover.show = _value;
+        this.hide();
       }
     }
   },
@@ -6286,7 +6306,7 @@ exports.default = {
 
     setTimeout(function () {
       _this3.$nextTick(function () {
-        _this3.showPopover === false && _this3.value && _this3.show();
+        _this3.popover.show === false && _this3.value && _this3.show();
       });
     }, 10);
   }
