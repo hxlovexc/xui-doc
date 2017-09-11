@@ -1,10 +1,6 @@
 <template>
   <div id="app" @click="isElClick">
     <header>
-      <!--侧边栏-->
-      <!-- <div class="sidebar-button">
-        <i class="x-icon-menu"></i>
-      </div> -->
       <div class="logo">
         <router-link to="/">XUI</router-link>
       </div>
@@ -12,7 +8,7 @@
         <router-link v-for="item in nav" :exact="item.link === '/'" :key="item.name" :to="item.link">{{item.name}}</router-link>
       </nav>
       <transition name="scale">
-        <nav class="m-nav" ref='m-nav' v-show="showNav">
+        <nav class="m-nav" ref='m-nav' v-show="showNav" @click="showNav = false">
           <router-link v-for="item in nav" :exact="item.link === '/'" :key="item.name" :to="item.link">{{item.name}}</router-link>
         </nav>
       </transition>
@@ -39,15 +35,15 @@
           {
             name: '文档',
             link: '/doc'
-          },
-          {
-            name: '贡献',
-            link: '/doca'
-          },
-          {
-            name: '反馈',
-            link: '/docs'
           }
+          // {
+          //   name: '贡献',
+          //   link: '/doca'
+          // },
+          // {
+          //   name: '反馈',
+          //   link: '/docs'
+          // }
         ]
       };
     },
@@ -197,7 +193,7 @@
 
             // 选中和按下
             &:active,
-            &.active{
+            &.router-link-active{
               background: #eee;
             }
           }

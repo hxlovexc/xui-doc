@@ -35,7 +35,14 @@ let webpackConfig = {
       name: 'manifest',
       chunks: ['vendor']
     }),
-    new webpack.HashedModuleIdsPlugin()
+    new webpack.HashedModuleIdsPlugin(),
+    function () {
+      this.plugin("done", (stats) => {
+        require("fs").writeFileSync(
+          path.join(__dirname, "stats.json"),
+          JSON.stringify(stats.toJson()));
+      });
+    }
   ]
 };
 

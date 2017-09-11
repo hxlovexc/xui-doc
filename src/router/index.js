@@ -3,7 +3,7 @@ import Router from 'vue-router';
 
 Vue.use(Router);
 
-export default new Router({
+let routers = new Router({
   // mode: 'history',
   // scrollBehavior (to, from, savedPosition) {
   //   return savedPosition || { x: 0, y: 0 };
@@ -256,3 +256,10 @@ export default new Router({
     }
   ]
 });
+
+routers.beforeEach((to, from, next) => {
+  document.body.scrollTop = 0;
+  next();
+});
+
+export default routers;

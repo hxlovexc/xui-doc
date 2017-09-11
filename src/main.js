@@ -1,10 +1,10 @@
-import 'static/xui/css/xui.css';
 import 'static/scss/base.scss';
+import 'vue-xui/css/xui.min.css';
 
 import Vue from 'vue';
 import App from './App';
 import router from './router';
-import xui from 'static/xui/main';
+import xui from 'vue-xui';
 import sourceCode from 'components/source-code.vue';
 import apiTable from 'components/api-table.vue';
 

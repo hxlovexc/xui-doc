@@ -30,16 +30,16 @@ module.exports = {
     //输出目录
     outputPath: '../dist/',
     //资源请求地址
-    publicPath: '/',
+    publicPath: '/xui/',
     //源代码追踪
     sourceMap: true,
     //css提取
     cssExtract: true,
     //压缩html
-    htmlMinify: false,
+    htmlMinify: true,
     //压缩css
-    cssMinify: false,
+    cssMinify: true,
     //压缩js
-    jsMinify: false
+    jsMinify: true
   }
 }

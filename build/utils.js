@@ -28,14 +28,16 @@ module.exports = {
         template: this.resolve(viewPath),
         inject: true
       };
-      //判断是否压缩
-      if (this.getPattern === 'build' && config.build.htmlMinify) {
-        options.minify = {
-          removeComments: true,
-          collapseWhitespace: true,
-          removeAttributeQuotes: true
-        };
-      };
+      if (this.getPattern === 'build') {
+        if (config.build.htmlMinify) {
+          options.minify = {
+            removeComments: true,
+            collapseWhitespace: true,
+            removeAttributeQuotes: true
+          };
+        }
+        options.chunksSortMode = 'dependency';
+      }
       //push
       arr.push(
         new htmlWebpackPlugin(options)

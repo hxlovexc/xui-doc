@@ -1,8 +1,8 @@
 <template>
   <div class="doc">
     <!--菜单按钮-->
-    <div class="doc-nav-list">
-      <ul>
+    <div class="doc-nav-list" v-show="sidebar">
+      <ul @click="sidebar = false">
         <li
           v-for="(item, index) in menu"
           :key="index"
@@ -10,7 +10,7 @@
             'open': curNav === index
           }"
         >
-          <!-- <router-link exact :to="{ name: item.name }">{{item.title}}</router-link> -->
+          <router-link exact :to="{ name: item.name }">{{item.title}}</router-link>
           <!--sub-nav-->
           <div v-if="item.subMenu">
             <ul
@@ -28,7 +28,11 @@
       </ul>
     </div>
     <!--mask-->
-    <div class="mask"></div>
+    <div class="mask" @click="sidebar = false" v-show="sidebar"></div>
+    <!--侧边栏按钮-->
+    <div class="sidebar" @click="sidebar = true">
+      <i class="x-icon-menu"></i>
+    </div>
     <div class="doc-content">
       <router-view></router-view>
     </div>
@@ -42,6 +46,7 @@
       return {
         navList: 25,
         curNav: '',
+        sidebar: false,
         // 菜单
         menu: [
           {
@@ -52,10 +57,10 @@
             title: 'hello word',
             name: 'quickstart'
           },
-          {
-            title: '更新日志',
-            name: 'change-log'
-          },
+          // {
+          //   title: '更新日志',
+          //   name: 'change-log'
+          // },
           {
             title: '组件',
             name: 'components',
@@ -214,6 +219,11 @@
         display: none;
       }
 
+      // 侧边栏按钮
+      .sidebar {
+        display: none;
+      }
+
       // 导航
       .doc-nav-list {
         width: $pc-menu-width;
@@ -224,6 +234,7 @@
         border-right: 1px solid #eef4f5;
         overflow-y: auto;
         box-sizing: border-box;
+        display: block!important;
 
         & > ul {
           padding: 0 8px 8px 8px;
@@ -292,19 +303,68 @@
         display: block;
         width: 100%;
         position: fixed;
-        display: none;
+        z-index: 99;
+      }
+
+      // 侧边栏按钮
+      .sidebar {
+        display: inline-block;
+        position: fixed;
+        bottom: 60px;
+        right: 40px;
+        border-radius: 100%;
+        background-color: #fff;
+        width: 45px;
+        height: 45px;
+        text-align: center;
+        line-height: 45px;
+        font-size: 22px;
+        box-shadow: 0px 0 12px 0 $color-min;
+        z-index: 50;
       }
 
       .doc-nav-list {
-        display: none;
         width: 80%;
         background: $color-min;
         z-index: 100;
         overflow-y: auto;
+        background-color: #fff;
+
+        & > ul {
+          padding: 10px 0;
+        }
+
+        ul {
+          padding-left: 20px;
+
+          li a{
+            display: block;
+            line-height: 35px;
+          }
+
+          .head {
+            font-size: 13px;
+            opacity: 0.8;
+            margin: 5px 0;
+          }
+        }
+
+        .sub-nav li{
+          padding-left: 8px;
+        }
+
+        a {
+          font-size: 15px;
+        }
 
         &,
         a {
-          color: #fff;
+          color: #3F536E;
+        }
+
+        // 激活
+        .router-link-active {
+          color: $color-min;
         }
       }
 

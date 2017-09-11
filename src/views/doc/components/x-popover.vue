@@ -23,13 +23,13 @@
       <p>可以通过 trigger 属性设置弹出框的激活方式, 激活方式有 click, hover, focus - 默认click</p>
       <x-quote>
         <div class="margin-10 x-inline">
-          <x-popover title="这是一条弹窗">
+          <x-popover trigger="hover" title="这是一条弹窗">
             <x-button>hover</x-button>
             <template slot="content">hover显示</template>
           </x-popover>
         </div>
         <div class="margin-10 x-inline">
-          <x-popover title="这是一条弹窗" trigger="click">
+          <x-popover title="这是一条弹窗">
             <x-button>click</x-button>
             <template slot="content">click显示</template>
           </x-popover>
