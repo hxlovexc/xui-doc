@@ -17,9 +17,9 @@
   /* eslint-disable */
   const cdnInstall =
 `<!-- 引入css -->
-<link rel="stylesheet" href="//unpkg.com/xui-vue/dist/styles/xui.css">
+<link rel="stylesheet" href="//代码路径/css/xui.min.css">
 <!-- 引入xui组件库 -->
-<script src="//unpkg.com/xui-vue/dist/xui.min.js"><\/script>`
+<script src="//代码路径/xui.min.js"><\/script>`
   
   export default {
     data () {

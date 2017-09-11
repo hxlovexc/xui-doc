@@ -258,7 +258,7 @@ let routers = new Router({
 });
 
 routers.beforeEach((to, from, next) => {
-  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = document.body.scrollTop = 0;
   next();
 });
 
