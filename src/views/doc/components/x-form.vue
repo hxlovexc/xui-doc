@@ -213,7 +213,7 @@
 
   const position =
 `<!--左对齐-->
-<x-form class="margin-top-10" :label-position="left">
+<x-form class="margin-top-10" label-position="left">
   <x-form-item label="用户名">
     <x-input></x-input>
   </x-form-item>
@@ -226,7 +226,7 @@
 </x-form>
 
 <!--顶部对齐-->
-<x-form class="margin-top-10" :label-position="top">
+<x-form class="margin-top-10" label-position="top">
   <x-form-item label="用户名">
     <x-input></x-input>
   </x-form-item>
@@ -239,7 +239,7 @@
 </x-form>
 
 <!--右对齐-->
-<x-form class="margin-top-10" :label-position="right">
+<x-form class="margin-top-10" label-position="right">
   <x-form-item label="用户名">
     <x-input></x-input>
   </x-form-item>

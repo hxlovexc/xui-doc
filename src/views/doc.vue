@@ -54,7 +54,7 @@
             name: 'doc'
           },
           {
-            title: 'hello word',
+            title: 'hello world',
             name: 'quickstart'
           },
           // {
@@ -95,6 +95,10 @@
                   {
                     title: 'tabs 选项卡',
                     name: 'x-tabs'
+                  },
+                  {
+                    title: 'menu 导航菜单',
+                    name: 'x-menu'
                   }
                 ]
               },
@@ -157,7 +161,7 @@
                 ]
               },
               {
-                title: '试图弹窗',
+                title: '视图弹窗',
                 components: [
                   {
                     title: 'alert 警告提示',

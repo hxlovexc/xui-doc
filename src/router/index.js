@@ -109,6 +109,14 @@ let routers = new Router({
             require(['views/doc/components/x-tabs.vue'], resolve);
           }
         },
+        // 导航菜单
+        {
+          path: 'x-menu',
+          name: 'x-menu',
+          component (resolve) {
+            require(['views/doc/components/x-menu.vue'], resolve);
+          }
+        },
         // 分页
         {
           path: 'x-page',

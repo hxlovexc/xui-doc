@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="row">
-      <h3 class="row-title">hello word</h3>
+      <h3 class="row-title">hello world</h3>
       <h4>在使用 xui 之前，我们已经假设您已经使用过 Vue, 如果没有使用过可以先访问 <a target="_blank" href="https://cn.vuejs.org/"> Vue</a>官网进行学习</h4>
     </div>
     <!--快速上手-->
@@ -71,7 +71,7 @@ import xButton from 'xui-vue/src/components/x-button'</source-code>
         el:'#app',
         data: {
           // msg
-          msg: 'hello word'
+          msg: 'hello world'
         }
       })
     <\/script>
