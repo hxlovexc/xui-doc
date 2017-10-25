@@ -5,7 +5,7 @@
       <p>基于 Vue.js 2.0 轻量 简洁 的 PC端UI 组件库</p>
       <router-link class="hello-link" :to="{ name: 'install' }">立即上手</router-link>
       <!--版本-->
-      <span class="version">当前版本：0.1.0-Beta</span>
+      <span class="version">当前版本：0.6.2</span>
     </div>
     <!--快速开始-->
     <div class="install">
