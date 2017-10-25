@@ -1,12 +1,12 @@
 import 'static/scss/base.scss';
-// import 'vue-xui/css/xui.min.css';
-import './static/xui/css/xui.css';
+import 'vue-xui/css/xui.min.css';
+// import './static/xui/css/xui.css';
 
 import Vue from 'vue';
 import App from './App';
 import router from './router';
-// import xui from 'vue-xui';
-import xui from './static/xui/main';
+import xui from 'vue-xui';
+// import xui from './static/xui/main';
 import 'es6-promise/auto';
 import sourceCode from 'components/source-code.vue';
 import apiTable from 'components/api-table.vue';
