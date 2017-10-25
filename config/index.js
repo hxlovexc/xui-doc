@@ -30,7 +30,7 @@ module.exports = {
     //输出目录
     outputPath: '../dist/',
     //资源请求地址
-    publicPath: '/',
+    publicPath: '/xui/',
     //源代码追踪
     sourceMap: true,
     //css提取

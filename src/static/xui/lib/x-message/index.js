@@ -1224,7 +1224,8 @@ var instance = '';
 
 var defaultConfig = {
   top: '18px',
-  timer: 3000
+  timer: 3000,
+  showIcon: true
 };
 
 var types = ['loading', 'primary', 'success', 'warning', 'danger', 'dark'];
@@ -1868,7 +1869,10 @@ exports.default = {
       }, this.options.timer);
     },
     close: function close() {
+      var close = this.options.close;
       this.clearTimeout();
+
+      close && close();
 
       this.$parent.close(this.options.name);
     },
@@ -1884,9 +1888,6 @@ exports.default = {
       return clearTimeout;
     }(function () {
       if (this.timeout) {
-        var close = this.options.close;
-
-        close && close();
         clearTimeout(this.timeout);
         this.timeout = null;
       }
@@ -1938,7 +1939,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     return _c('xMessageItem', {
       key: item.name,
       attrs: {
-        "icon": item.type && _vm.icons[item.type],
+        "icon": item.showIcon ? (item.type && _vm.icons[item.type]) : '',
         "options": item
       }
     })

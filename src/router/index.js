@@ -212,6 +212,13 @@ let routers = new Router({
             require(['views/doc/components/x-alert.vue'], resolve);
           }
         },
+        {
+          path: 'x-message',
+          name: 'x-message',
+          component (resolve) {
+            require(['views/doc/components/x-message.vue'], resolve);
+          }
+        },
         // 对话框
         {
           path: 'x-dialog',

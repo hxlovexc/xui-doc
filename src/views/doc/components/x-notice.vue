@@ -5,19 +5,22 @@
       <p>在页面的右上角全局显示通知提醒信息 - 执行完后返回一个 close 函数, 调用此函数可以关闭弹窗</p>
       <ul class="function-list">
         <li>
-          <span>this.$notice(message, config, clickBack, closeBack)</span>
+          <span>this.$notice(message, options, clickBack, closeBack)</span>
         </li>
         <li>
-          <span>this.$notice(message, config, clickBack, closeBack)</span>
+          <span>this.$notice.primary(message, options, clickBack, closeBack)</span>
         </li>
         <li>
-          <span>this.$notice.warning(message, config, clickBack, closeBack)</span>
+          <span>this.$notice.success(message, options, clickBack, closeBack)</span>
         </li>
         <li>
-          <span>this.$notice.danger(message, config, clickBack, closeBack)</span>
+          <span>this.$notice.warning(message, options, clickBack, closeBack)</span>
         </li>
         <li>
-          <span>this.$notice.dark(message, config, clickBack, closeBack)</span>
+          <span>this.$notice.danger(message, options, clickBack, closeBack)</span>
+        </li>
+        <li>
+          <span>this.$notice.dark(message, options, clickBack, closeBack)</span>
         </li>
         <li>
           <span>this.$notice.close(name)</span>

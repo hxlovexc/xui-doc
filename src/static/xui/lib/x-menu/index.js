@@ -207,9 +207,9 @@ exports.default = {
   },
 
   methods: {
-    selected: function selected(key, path) {
+    selected: function selected(key) {
       this.curActive = key;
-      this.$emit('select', key, path);
+      this.$emit('select', key);
     }
   }
 };
@@ -269,23 +269,15 @@ exports.default = {
     name: {
       type: [String, Number],
       default: ''
-    },
-    path: {
-      type: String,
-      default: ''
     }
   },
-  data: function data() {
-    return {};
-  },
-
   methods: {
     menuClick: function menuClick() {
       if (this.isSub) {
-        this.parent.selected(this.$parent.name, this.path);
+        this.parent.selected(this.$parent.name);
         this.$parent.selected(this.name);
       } else {
-        this.parent.selected(this.name, this.path);
+        this.parent.selected(this.name);
       }
     }
   },

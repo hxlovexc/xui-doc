@@ -21,7 +21,7 @@
     <!--添加序列-->
     <div class="row">
       <h3 class="row-title">添加序列</h3>
-      <p>表格组件内置了一个 $index的 name, 如果需要在那一列添加序号可以将 name 设置为 $index</p>
+      <p>表格组件内置了一个 <span class="highlighted">$index</span> 的 name, 如果需要在那一列添加序号可以将 name 设置为 $index</p>
       <x-quote>
         <x-table :data="list">
           <x-table-column label="序列" name="$index"></x-table-column> 

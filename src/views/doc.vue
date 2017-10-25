@@ -51,7 +51,7 @@
         menu: [
           {
             title: '安装',
-            name: 'doc'
+            name: 'install'
           },
           {
             title: 'hello world',
@@ -168,6 +168,14 @@
                     name: 'x-alert'
                   },
                   {
+                    title: 'message 提示',
+                    name: 'x-message'
+                  },
+                  {
+                    title: 'notice 通知提醒',
+                    name: 'x-notice'
+                  },
+                  {
                     title: 'dialog 对话框',
                     name: 'x-dialog'
                   },
@@ -176,20 +184,16 @@
                     name: 'x-modal'
                   },
                   {
-                    title: 'sidebar 侧边栏',
-                    name: 'x-sidebar'
-                  },
-                  {
-                    title: 'notice 通知提醒',
-                    name: 'x-notice'
-                  },
-                  {
                     title: 'tooltip 文字提示',
                     name: 'x-tooltip'
                   },
                   {
                     title: 'popover 弹出层',
                     name: 'x-popover'
+                  },
+                  {
+                    title: 'sidebar 侧边栏',
+                    name: 'x-sidebar'
                   }
                 ]
               }
