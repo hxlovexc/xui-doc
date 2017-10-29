@@ -54,6 +54,10 @@
             name: 'install'
           },
           {
+            title: '更新日志',
+            name: 'update-log'
+          },
+          {
             title: 'hello world',
             name: 'quickstart'
           },

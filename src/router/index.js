@@ -23,6 +23,14 @@ let routers = new Router({
         require(['views/doc.vue'], resolve);
       },
       children: [
+        // 更新日志
+        {
+          name: 'update-log',
+          path: '/update-log',
+          component (resolve) {
+            require(['views/doc/update-log.vue'], resolve);
+          }
+        },
         // 安装
         {
           path: '/',
